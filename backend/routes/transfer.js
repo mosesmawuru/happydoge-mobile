@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
+//@import models
 const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const keys = require("../config/keys");
+const History = require("../models/History");
 const passport = require("passport");
+//@import validation
 const validateTransferInput = require("../validation/transfer");
 // @route   GET users/test
 // @desc
@@ -19,6 +19,7 @@ router.post(
   async (req, res) => {
     const { errors, isValid } = validateTransferInput(req.body);
     const { owneraddress, toaddress, flag, amount } = req.body;
+
     if (amount <= 0) {
       return res.status(400).send({
         amount: "please input correct amount",
@@ -29,6 +30,7 @@ router.post(
     }
     const owner = await User.findOne({ address: owneraddress });
     const sender = await User.findOne({ address: toaddress });
+
     if (owner && sender) {
       if (flag === "eth") {
         if (owner.countETH >= amount) {
@@ -48,8 +50,17 @@ router.post(
               return res.status(200).json({ msg: "success" });
             })
             .catch((err) => {
+              console.log(err);
               return res.status(400).json({ errors: err });
             });
+          const newHistory = new History({
+            method: flag,
+            from_address: owneraddress,
+            to_address: toaddress,
+            amount: amount,
+            type: 3,
+          });
+          newHistory.save();
         } else {
           return res.status(400).send({
             amount:

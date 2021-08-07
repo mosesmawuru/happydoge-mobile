@@ -19,21 +19,21 @@ const SwapToEth = ({navigation}) => {
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
   const swap = async () => {
-    const price = await fetch(
-      'https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT',
-    );
-    console.log(price);
     await axios
       .get('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT')
-      .then(res => setPrice(res.data.weightedAvgPrice))
-      .final(() => {
+      .then(res => {
+        const price = res.data.weightedAvgPrice;
         if (price > 0) {
           if (isNaN(countHDT)) {
             setError({countHDT: 'only input number'});
           } else {
             if (checked) {
               dispatch(
-                swaptoeth(store.user.id, Number(store.user.countHDT), price),
+                swaptoeth(
+                  store.user.id,
+                  Number(profile.profiledata.countHDT),
+                  price,
+                ),
               );
             } else {
               dispatch(swaptoeth(store.user.id, Number(countHDT), price));
@@ -45,6 +45,7 @@ const SwapToEth = ({navigation}) => {
   useEffect(() => {
     setError(errors);
   }, [errors]);
+
   return (
     <>
       <Header text="SWAP TO ETH" navigation={navigation} />

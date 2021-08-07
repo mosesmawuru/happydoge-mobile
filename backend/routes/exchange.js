@@ -1,8 +1,9 @@
 const express = require("express");
 const passport = require("passport");
 const router = express.Router();
-
+//@import model
 const Exchange = require("../models/Exchange");
+//@import validataion
 const validatePrice = require("../validation/price");
 router.post(
   "/",
@@ -10,7 +11,6 @@ router.post(
   async (req, res) => {
     const { errors, isValid } = validatePrice(req.body);
     const { price } = req.body;
-    console.log(price);
     if (!isValid) {
       return res.status(400).send(errors);
     }

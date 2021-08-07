@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+//@import models
 const Stack = require("../models/Stacking");
 const User = require("../models/User");
+const History = require("../models/History");
+//@import validataion
 const validateStack = require("../validation/stack");
 // @route   GET stack/test
 // @desc    Return current user

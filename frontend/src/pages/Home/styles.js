@@ -103,5 +103,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingRight: 40,
   },
+  iconDiv: {
+    flexDirection: 'row',
+  },
 });
 export default styles;

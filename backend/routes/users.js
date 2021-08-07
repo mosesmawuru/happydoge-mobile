@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+//@import models
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const passport = require("passport");
 let referralCodes = require("referral-codes");
 var nodeEth = require("node-eth-address");
-
+//@import validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 // @route   GET users/test

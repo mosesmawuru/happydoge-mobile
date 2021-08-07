@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
+//@import models
 const User = require("../models/User");
 const Exchange = require("../models/Exchange");
-const jwt = require("jsonwebtoken");
-const keys = require("../config/keys");
-const passport = require("passport");
+const History = require("../models/History");
+//@import validation
 const validateSwap = require("../validation/swap");
 
 // @route   GET users/test
@@ -20,8 +19,6 @@ router.post("/test", async (req, res) => {
 router.post("/swaptohdt", async (req, res) => {
   const { errors, isValid } = validateSwap(req.body);
   const { ID, amount, price } = req.body;
-  console.log(ID, amount, price);
-
   if (!isValid) {
     return res.status(400).send(errors);
   }
@@ -37,6 +34,14 @@ router.post("/swaptohdt", async (req, res) => {
       person
         .save()
         .then((item) => {
+          const newHistory = new History({
+            method: "eth",
+            from_address: item.address,
+            amount: amount,
+            type: 5,
+          });
+          newHistory.save();
+
           return res.status(200).json({ msg: "success" });
         })
         .catch((err) => {
@@ -75,6 +80,13 @@ router.post("/swaptoeth", async (req, res) => {
       person
         .save()
         .then((item) => {
+          const newHistory = new History({
+            method: "hdt",
+            from_address: item.address,
+            amount: amount,
+            type: 5,
+          });
+          newHistory.save();
           return res.status(200).json({ msg: "success" });
         })
         .catch((err) => {

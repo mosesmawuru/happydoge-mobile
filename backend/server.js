@@ -26,6 +26,7 @@ app.use("/price", require("./routes/exchange"));
 app.use("/transfer", require("./routes/transfer"));
 app.use("/stack", require("./routes/stacking"));
 app.use("/swap", require("./routes/swap"));
+app.use("/history", require("./routes/history"));
 // Serve static assets in productioncd
 if (process.env.NODE_ENV === "production") {
   // Set static folder

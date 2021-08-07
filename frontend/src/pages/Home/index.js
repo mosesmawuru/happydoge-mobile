@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {Badge} from 'react-native-elements';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
@@ -25,15 +26,27 @@ const Home = ({navigation}) => {
               navigation.toggleDrawer();
             }}
           />
-          <Icon
-            style={{paddingRight: 10}}
-            name="cog"
-            size={30}
-            color={'rgb(223,100,71)'}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          />
+          <View style={styles.iconDiv}>
+            <Icon
+              style={{paddingLeft: 10}}
+              name="bell"
+              size={30}
+              color={'rgb(223,100,71)'}
+              onPress={() => {
+                navigation.toggleDrawer();
+              }}>
+              <Badge value="2" status="error" />
+            </Icon>
+            <Icon
+              style={{paddingRight: 10}}
+              name="cog"
+              size={30}
+              color={'rgb(223,100,71)'}
+              onPress={() => {
+                navigation.goBack();
+              }}
+            />
+          </View>
         </View>
         <View style={styles.imgDiv}>
           <Image style={styles.img} source={animal} />

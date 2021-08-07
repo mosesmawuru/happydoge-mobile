@@ -21,24 +21,26 @@ const SwapToHdt = ({navigation}) => {
   const swap = async () => {
     await axios
       .get('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT')
-      .then(res => setPrice(res.data.weightedAvgPrice));
-    if (price > 0) {
-      if (isNaN(countETH)) {
-        setError({countETH: 'only input number'});
-      } else {
-        if (checked) {
-          dispatch(
-            swaptohdt(
-              store.user.id,
-              Number(profile.profiledata.countETH),
-              price,
-            ),
-          );
-        } else {
-          dispatch(swaptohdt(store.user.id, Number(countETH), price));
+      .then(res => {
+        const price = res.data.weightedAvgPrice;
+        if (price > 0) {
+          if (isNaN(countETH)) {
+            setError({countETH: 'only input number'});
+          } else {
+            if (checked) {
+              dispatch(
+                swaptohdt(
+                  store.user.id,
+                  Number(profile.profiledata.countETH),
+                  price,
+                ),
+              );
+            } else {
+              dispatch(swaptohdt(store.user.id, Number(countETH), price));
+            }
+          }
         }
-      }
-    }
+      });
   };
   useEffect(() => {
     setError(errors);
@@ -77,6 +79,7 @@ const SwapToHdt = ({navigation}) => {
             errorStyle={{color: 'red'}}
             keyboardType="numeric"
             errorMessage={error.countETH}
+            disabled={checked ? true : false}
           />
         </View>
         <CheckBox
