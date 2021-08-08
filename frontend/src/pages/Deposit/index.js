@@ -3,9 +3,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, TouchableOpacity} from 'react-native';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
+
 import Header from '../../components/Header';
 import {DepositModal} from '../../components/DepositModal';
 import {message} from '../../constant/message';
+
+import {deposit} from '../../actions/depositAction';
+
 import styles from './styles';
 const Deposit = ({navigation}) => {
   const dispatch = useDispatch();
@@ -15,9 +19,21 @@ const Deposit = ({navigation}) => {
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
+  const onSubmit = () => {
+    const data = {
+      address: profile.profiledata.address,
+      flag: selected,
+      amount: amount,
+    };
+    dispatch(deposit(data, DepositModal));
+  };
   return (
     <>
-      <DepositModal item={message[2]} visible={visible} setVisible={setVisible} />
+      <DepositModal
+        item={message[2]}
+        visible={visible}
+        setVisible={setVisible}
+      />
       <Header text="DEPOSIT" navigation={navigation} />
       <View style={styles.container}>
         <View>
@@ -64,10 +80,13 @@ const Deposit = ({navigation}) => {
             }
           />
         </View>
-        <TouchableOpacity style={styles.submitButtonStyle} activeOpacity={0.5} onPress={()=>{
-            setVisible(!visible)
+        <TouchableOpacity
+          style={styles.submitButtonStyle}
+          activeOpacity={0.5}
+          onPress={() => {
+            onSubmit();
           }}>
-          <Text style={styles.TextStyle} >Deposit</Text>
+          <Text style={styles.TextStyle}>Deposit</Text>
         </TouchableOpacity>
       </View>
     </>

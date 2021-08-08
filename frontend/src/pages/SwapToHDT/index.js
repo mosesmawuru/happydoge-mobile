@@ -11,7 +11,6 @@ import styles from './styles';
 const SwapToHdt = ({navigation}) => {
   // const [countHDT, setCountHDT] = useState(0);
   const [countETH, setCountETH] = useState(0);
-  const [price, setPrice] = useState(0);
   const [error, setError] = useState({});
   const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();

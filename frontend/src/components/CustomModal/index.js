@@ -5,7 +5,10 @@ import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 export const CustomModal = props => {
   return (
-    <Overlay overlayStyle={styles.container}>
+    <Overlay
+      overlayStyle={styles.container}
+      isVisible={props.visible}
+      animationType="fade">
       <View style={styles.iconview}>
         <Icon
           name="times"
