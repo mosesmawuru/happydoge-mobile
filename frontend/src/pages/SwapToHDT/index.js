@@ -22,14 +22,7 @@ const SwapToHdt = ({navigation}) => {
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
-  const onShowModal = async flag => {
-    const data = {
-      message: message[1].message,
-      flag: flag,
-    };
-    await setModalData(data);
-    await setVisible(!visible);
-  };
+
   const swap = async () => {
     await axios
       .get('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT')
@@ -49,11 +42,21 @@ const SwapToHdt = ({navigation}) => {
                 ),
               );
             } else {
-              dispatch(swaptohdt(store.user.id, Number(countETH), price));
+              dispatch(
+                swaptohdt(store.user.id, Number(countETH), price, onShowModal),
+              );
             }
           }
         }
       });
+  };
+  const onShowModal = async flag => {
+    const data = {
+      message: message[1].message,
+      flag: flag,
+    };
+    await setModalData(data);
+    await setVisible(!visible);
   };
   useEffect(() => {
     setError(errors);

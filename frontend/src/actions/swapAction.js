@@ -20,6 +20,7 @@ export const swaptoeth = (ID, amount, price, onShowModal) => {
 };
 
 export const swaptohdt = (ID, amount, price, onShowModal) => {
+  console.log(ID, amount, price);
   return async dispatch => {
     await axios
       .post(SERVER_URL + '/swap/swaptohdt', {ID, amount, price})
@@ -28,6 +29,7 @@ export const swaptohdt = (ID, amount, price, onShowModal) => {
         dispatch(getUser(ID));
       })
       .catch(err => {
+        console.log(err.response.data);
         dispatch({type: GET_ERRORS, payload: err.response.data});
       });
   };

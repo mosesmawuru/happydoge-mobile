@@ -39,14 +39,15 @@ const SwapToEth = ({navigation}) => {
                 ),
               );
             } else {
-              dispatch(swaptoeth(store.user.id, Number(countHDT), price));
+              dispatch(
+                swaptoeth(store.user.id, Number(countHDT), price, onShowModal),
+              );
             }
           }
         }
       });
   };
   const onShowModal = async flag => {
-    console.log(flag);
     const data = {
       message: message[1].message,
       flag: flag,
