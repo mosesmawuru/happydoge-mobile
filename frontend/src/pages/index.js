@@ -26,6 +26,7 @@ import Stacking from './Stacking';
 import Profile from './Profile';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
+import Admin from './Admin';
 import {store} from '../store';
 
 import setAuthToken from '../utils/setAuthToken';
@@ -99,40 +100,45 @@ function Main({}) {
       />
       <Drawer.Screen
         name="profile"
-        options={{drawerLabel: 'MY PROFILE'}}
+        options={{drawerLabel: 'My Profile'}}
         component={Profile}
       />
 
       <Drawer.Screen
         name="Transfer"
-        options={{drawerLabel: 'TRANSFER'}}
+        options={{drawerLabel: 'Transfer'}}
         component={Transfer}
       />
 
       <Drawer.Screen
         name="SwapToEth"
-        options={{drawerLabel: 'SWAP TO ETH'}}
+        options={{drawerLabel: 'Swap To ETH'}}
         component={SwapToEth}
       />
       <Drawer.Screen
         name="SwapToHDT"
-        options={{drawerLabel: 'SWAP TO HDT'}}
+        options={{drawerLabel: 'Swap To HDT'}}
         component={SwapToHDT}
       />
       <Drawer.Screen
         name="Price"
-        options={{drawerLabel: 'SET HDT PRICE'}}
+        options={{drawerLabel: 'Set HDT Price'}}
         component={Price}
       />
       <Drawer.Screen
         name="Deposit"
-        options={{drawerLabel: 'DEPOSIT'}}
+        options={{drawerLabel: 'Deposit'}}
         component={Deposit}
       />
       <Drawer.Screen
         name="Withdraw"
-        options={{drawerLabel: 'WITHDRAW'}}
+        options={{drawerLabel: 'Withdraw'}}
         component={Withdraw}
+      />
+      <Drawer.Screen
+        name="Admin Panel"
+        options={{drawerLabel: 'Admin Panel'}}
+        component={Admin}
       />
       <Drawer.Screen
         name="Log Out"

@@ -28,21 +28,15 @@ export const TransferModal = props => {
           <Icon name="check-circle" color={'#df6447'} size={80} />
         </View>
         <View style={styles.countView}>
-          <Text style={styles.countText}>HDT 45</Text>
+          <Text style={styles.countText}>
+            {props.item.flag === 'eth' ? 'ETH' : 'HDT'} {props.item.amount}
+          </Text>
         </View>
         <View style={styles.commonview}>
           <Text style={styles.smallText}>Sent To</Text>
         </View>
         <View style={styles.idView}>
-          <Text style={styles.commonText}>
-            0x8A1213290A64698cE8f9D313fa280BE9c4196B21
-          </Text>
-        </View>
-        <View style={styles.commonview}>
-          <Text style={styles.smallText}>Transaction Id</Text>
-        </View>
-        <View style={styles.idView}>
-          <Text style={styles.commonText}>1234 5678 9012 4567</Text>
+          <Text style={styles.commonText}>{props.item.address}</Text>
         </View>
       </View>
     </Overlay>

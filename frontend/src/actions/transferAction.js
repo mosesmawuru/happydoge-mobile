@@ -9,17 +9,19 @@ export const transfer = (
   flag,
   amount,
   id,
-  setVisible,
+  onShowModal,
 ) => {
   return async dispatch => {
     await axios
       .post(SERVER_URL + '/transfer', {owneraddress, toaddress, flag, amount})
       .then(res => {
-        dispatch(getUser(id));
-        setVisible();
+        console.log(res.data);
+        if (res.data.msg === 'success') {
+          onShowModal(toaddress, flag, amount);
+          dispatch(getUser(id));
+        }
       })
       .catch(err => {
-        console.log(err.response.data);
         dispatch({type: GET_ERRORS, payload: err.response.data});
       });
   };

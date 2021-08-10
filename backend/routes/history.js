@@ -14,8 +14,8 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const { id } = req.body;
-  History.findById(id)
+  const { address } = req.body;
+  History.find({ $or: [{ from_address: address }, { to_address: address }] })
     .then((item) => {
       return res.status(200).json(item);
     })

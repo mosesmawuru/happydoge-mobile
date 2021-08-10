@@ -1,18 +1,17 @@
 import axios from 'axios';
 import {SERVER_URL} from '../constant/server_url';
-import {GET_ERRORS} from './type';
+import {TRANSACTION_LOADING, GET_TRANSACTION_DATA, GET_ERRORS} from './type';
 import {getUser} from '../actions/profileAction';
-export const withdraw = (data, setVisible) => {
+export const getWithdraw = () => {
   return async dispatch => {
+    dispatch({type: TRANSACTION_LOADING});
     await axios
-      .post(SERVER_URL + '/withdraw', data)
+      .get(SERVER_URL + '/withdraw')
       .then(res => {
-        if (res.data.msg === 'success') {
-          setVisible(data.amount, data.flag);
-          dispatch(getUser(data.id));
-        }
+        dispatch({type: GET_TRANSACTION_DATA, payload: res.response.data});
       })
       .catch(err => {
+        console.log(err);
         dispatch({type: GET_ERRORS, payload: err.response.data});
       });
   };

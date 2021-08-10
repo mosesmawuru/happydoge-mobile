@@ -18,7 +18,8 @@ export const message = [
   {
     id: 'withdraw',
     message: 'Withdraw Complete',
-    content: 'adsfsadfadsf',
+    content:
+      'Sometimes withdrawals could take up to 72 hours due to Network Congestion',
   },
   {
     id: 'stack',

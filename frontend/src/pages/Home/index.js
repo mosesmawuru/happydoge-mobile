@@ -1,17 +1,44 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {Badge} from 'react-native-elements';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUser} from '../../actions/profileAction';
+import {getPrice} from '../../actions/exchangeAction';
+import {getHistoryById} from '../../actions/historyAction';
 import animal from '../../assets/img/animal.png';
+import axios from 'axios';
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
+  const [hdtprice, setHdtprice] = useState(0);
+  const [money, setMoney] = useState(0);
+  const price = useSelector(state => state.price);
   const store = useSelector(state => state.auth);
+  const history = useSelector(state => state.history);
   useEffect(() => {
-    dispatch(getUser(store.user.id));
+    let isMount = true;
+    if (isMount) {
+      dispatch(getPrice());
+      dispatch(getUser(store.user.id));
+    }
+    return () => {
+      isMount = false;
+    };
   }, []);
+  // useEffect(() => {
+  //   setInterval(async () => {
+  //     await axios
+  //       .get('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT')
+  //       .then(res => {
+  //         const ethprice = res.data.weightedAvgPrice;
+  //         setMoney(
+  //           profile.profiledata.countETH * ethprice +
+  //             profile.profiledata.countHDT * price.pricedata.price,
+  //         );
+  //       });
+  //   }, 21000);
+  // });
   const profile = useSelector(state => state.profile);
   return (
     <ScrollView>
@@ -52,7 +79,7 @@ const Home = ({navigation}) => {
           <Image style={styles.img} source={animal} />
         </View>
         <View style={styles.curDiv}>
-          <Text style={styles.curMoney}>$4820.86</Text>
+          <Text style={styles.curMoney}>${money}</Text>
         </View>
         <View style={styles.rowDiv}>
           <Image style={styles.imgUnit} source={animal} />

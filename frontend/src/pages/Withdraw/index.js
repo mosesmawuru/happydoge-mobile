@@ -5,7 +5,7 @@ import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import Header from '../../components/Header';
 import {withdraw} from '../../actions/withdrawAction';
-import {CustomModal} from '../../components/CustomModal';
+import {DepositModal} from '../../components/DepositModal';
 import {message} from '../../constant/message';
 import styles from './styles';
 const Withdraw = ({navigation}) => {
@@ -13,11 +13,11 @@ const Withdraw = ({navigation}) => {
   const [amount, setAmount] = useState(0);
   const [error, setError] = useState({});
   const [visible, setVisible] = useState(false);
+  const [modalData, setModalData] = useState('');
   const [selected, setSelected] = useState('eth');
-  const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (isNaN(amount)) {
       setError({amount: 'Only input number'});
     } else {
@@ -25,20 +25,30 @@ const Withdraw = ({navigation}) => {
         address: profile.profiledata.address,
         amount: amount,
         flag: selected,
+        id: profile.profiledata._id,
       };
-      dispatch(withdraw(data, showModal));
+      await dispatch(withdraw(data, showModal));
+      await setAmount(0);
+      await setSelected('eth');
     }
   };
-  const showModal = data => {
-    setVisible(!visible);
+  const showModal = async (amount, flag) => {
+    const modalData = {
+      message: message[3].message,
+      content: message[3].content,
+      flag: flag,
+      amount: amount,
+    };
+    await setModalData(modalData);
+    await setVisible(!visible);
   };
   useEffect(() => {
     setError(errors);
   }, [errors]);
   return (
     <>
-      <CustomModal
-        item={message[3]}
+      <DepositModal
+        item={modalData}
         visible={visible}
         setVisible={setVisible}
       />

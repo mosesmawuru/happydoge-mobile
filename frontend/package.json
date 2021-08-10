@@ -31,6 +31,7 @@
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.4.0",
     "react-native-styled-components": "^2.1.0",
+    "react-native-table-component": "^1.2.1",
     "react-native-vector-icons": "^8.1.0",
     "react-native-windows": "^0.64.14",
     "react-redux": "^7.2.4",

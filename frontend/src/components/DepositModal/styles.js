@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   },
   commonText: {
     textAlign: 'center',
+    height: 'auto',
   },
   iconview: {
     alignSelf: 'flex-end',
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
   headerView: {flex: 0.2},
   checkView: {flex: 0.3},
   countView: {flex: 0.15},
-  idView: {flex: 0.1},
+
+  idView: {flex: 0.2},
 });
 export default styles;

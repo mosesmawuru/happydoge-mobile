@@ -13,6 +13,7 @@ const Transfer = ({navigation}) => {
   const [selected, setSelected] = useState('eth');
   const [error, setError] = useState({});
   const [amount, setAmount] = useState(0);
+  const [modalData, setModalData] = useState('');
   const [visible, setVisible] = useState(false);
   const [address, setAddress] = useState('');
   const store = useSelector(state => state.auth);
@@ -31,10 +32,20 @@ const Transfer = ({navigation}) => {
           selected,
           Number(amount),
           store.user.id,
-          setVisible,
+          onShowModal,
         ),
       );
     }
+  };
+  const onShowModal = async (toaddress, flag, amount) => {
+    const modalData = {
+      message: message[0].message,
+      address: toaddress,
+      flag: flag,
+      amount: amount,
+    };
+    await setModalData(modalData);
+    await setVisible(!visible);
   };
   useEffect(() => {
     setError(errors);
@@ -42,7 +53,7 @@ const Transfer = ({navigation}) => {
   return (
     <>
       <TransferModal
-        item={message[0]}
+        item={modalData}
         visible={visible}
         setVisible={setVisible}
       />

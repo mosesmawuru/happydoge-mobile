@@ -5,32 +5,35 @@ import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 export const DepositModal = props => {
   return (
-    <Overlay overlayStyle={styles.container} isVisible={props.visible} animationType="fade">
+    <Overlay
+      overlayStyle={styles.container}
+      isVisible={props.visible}
+      animationType="fade">
       <View style={styles.iconview}>
         <Icon
           name="times"
           color={'#df6447'}
           style={styles.closeIcon}
           size={30}
-          onPress={()=>{
-            props.setVisible(!props.visible)
+          onPress={() => {
+            props.setVisible(!props.visible);
           }}
         />
       </View>
       <View style={styles.content}>
         <View style={styles.headerView}>
-          <Text style={styles.headerText}>Deposit COmplete</Text>
+          <Text style={styles.headerText}>{props.item.message}</Text>
         </View>
         <View style={styles.checkView}>
           <Icon name="check-circle" color={'#df6447'} size={80} />
         </View>
         <View style={styles.countView}>
-          <Text style={styles.countText}>HDT 45</Text>
+          <Text style={styles.countText}>
+            {props.item.flag === 'eth' ? 'ETH' : 'HDT'} {props.item.amount}
+          </Text>
         </View>
         <View style={styles.idView}>
-          <Text style={styles.commonText}>
-            Tokens will be deposited after network confirmation
-          </Text>
+          <Text style={styles.commonText}>{props.item.content}</Text>
         </View>
       </View>
     </Overlay>

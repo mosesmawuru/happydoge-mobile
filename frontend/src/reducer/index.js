@@ -6,6 +6,7 @@ import profileReducer from './profileReducer';
 import swapReducer from './swapReducer';
 import transferReducer from './transferReducer';
 import priceReducer from './priceReducer';
+import adminReducer from './adminReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
   transfer: transferReducer,
   errors: errorReducer,
   price: priceReducer,
+  transaction: adminReducer,
 });
