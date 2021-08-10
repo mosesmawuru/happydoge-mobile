@@ -36,7 +36,7 @@ router.post("/swaptohdt", async (req, res) => {
         .then((item) => {
           const newHistory = new History({
             method: "eth",
-            from_address: item.address,
+            to_address: item.address,
             amount: amount,
             type: 5,
           });
@@ -82,7 +82,7 @@ router.post("/swaptoeth", async (req, res) => {
         .then((item) => {
           const newHistory = new History({
             method: "hdt",
-            from_address: item.address,
+            to_address: item.address,
             amount: amount,
             type: 5,
           });

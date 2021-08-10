@@ -6,17 +6,30 @@ import axios from 'axios';
 import {swaptohdt} from '../../actions/swapAction';
 import Header from '../../components/Header';
 import {Input} from 'react-native-elements';
+import {CustomModal} from '../../components/CustomModal';
+import {message} from '../../constant/message';
 
 import styles from './styles';
 const SwapToHdt = ({navigation}) => {
+  const dispatch = useDispatch();
   // const [countHDT, setCountHDT] = useState(0);
   const [countETH, setCountETH] = useState(0);
   const [error, setError] = useState({});
   const [checked, setChecked] = useState(true);
-  const dispatch = useDispatch();
+  const [modalData, setModalData] = useState('');
+  const [visible, setVisible] = useState(false);
+
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
+  const onShowModal = async flag => {
+    const data = {
+      message: message[1].message,
+      flag: flag,
+    };
+    await setModalData(data);
+    await setVisible(!visible);
+  };
   const swap = async () => {
     await axios
       .get('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT')
@@ -32,6 +45,7 @@ const SwapToHdt = ({navigation}) => {
                   store.user.id,
                   Number(profile.profiledata.countETH),
                   price,
+                  onShowModal,
                 ),
               );
             } else {
@@ -47,6 +61,7 @@ const SwapToHdt = ({navigation}) => {
   return (
     <>
       <Header text="SWAP TO HDT" navigation={navigation} />
+      <CustomModal item={modalData} visible={visible} setVisible={setVisible} />
       <View style={styles.container}>
         <View>
           <Text style={styles.headText}>SWAP TO HDT</Text>

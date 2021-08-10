@@ -8,10 +8,9 @@ export const getWithdraw = () => {
     await axios
       .get(SERVER_URL + '/withdraw')
       .then(res => {
-        dispatch({type: GET_TRANSACTION_DATA, payload: res.response.data});
+        dispatch({type: GET_TRANSACTION_DATA, payload: res.data});
       })
       .catch(err => {
-        console.log(err);
         dispatch({type: GET_ERRORS, payload: err.response.data});
       });
   };

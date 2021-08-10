@@ -8,7 +8,7 @@ export const message = [
   },
   {
     id: 'swap',
-    message: 'Swapped Successfuly',
+    message: 'Success',
   },
   {
     id: 'deposit',

@@ -27,15 +27,31 @@ export const CustomModal = props => {
         <View style={styles.checkView}>
           <Icon name="check-circle" color={'#df6447'} size={80} />
         </View>
-        <View style={styles.countView}>
-          <Text style={styles.countText}>HDT 45</Text>
-        </View>
-        <View style={styles.commonview}>
-          <Text style={styles.smallText}>Swapped To</Text>
-        </View>
-        <View style={styles.countView}>
-          <Text style={styles.countText}>ETH 4</Text>
-        </View>
+        {props.item.flag === 'eth' ? (
+          <>
+            <View style={styles.countView}>
+              <Text style={styles.countText}>HDT</Text>
+            </View>
+            <View style={styles.commonview}>
+              <Text style={styles.smallText}>Swapped To</Text>
+            </View>
+            <View style={styles.countView}>
+              <Text style={styles.countText}>ETH</Text>
+            </View>
+          </>
+        ) : (
+          <>
+            <View style={styles.countView}>
+              <Text style={styles.countText}>ETH</Text>
+            </View>
+            <View style={styles.commonview}>
+              <Text style={styles.smallText}>Swapped To</Text>
+            </View>
+            <View style={styles.countView}>
+              <Text style={styles.countText}>HDT</Text>
+            </View>
+          </>
+        )}
       </View>
     </Overlay>
   );
