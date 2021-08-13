@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, TouchableOpacity} from 'react-native';
 import {Input} from 'react-native-elements';
@@ -16,21 +16,37 @@ const Deposit = ({navigation}) => {
   const [amount, setAmount] = useState(0);
   const [selected, setSelected] = useState('eth');
   const [visible, setVisible] = useState(false);
+  const [modalData, setModalData] = useState('');
+  const [error, setError] = useState({});
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
   const onSubmit = () => {
     const data = {
+      id: store.user.id,
       address: profile.profiledata.address,
       flag: selected,
+      amount: Number(amount),
+    };
+    dispatch(deposit(data, showModal));
+  };
+  const showModal = async (flag, amount) => {
+    const modalData = {
+      message: message[2].message,
+      content: message[2].content,
+      flag: flag,
       amount: amount,
     };
-    dispatch(deposit(data, DepositModal));
+    await setModalData(modalData);
+    await setVisible(!visible);
   };
+  useEffect(() => {
+    setError(errors);
+  }, [errors]);
   return (
     <>
       <DepositModal
-        item={message[2]}
+        item={modalData}
         visible={visible}
         setVisible={setVisible}
       />
@@ -67,6 +83,7 @@ const Deposit = ({navigation}) => {
             }}
             errorStyle={{color: 'red'}}
             keyboardType="numeric"
+            errorMessage={error.amount}
             rightIcon={
               <Picker
                 style={{width: 100}}

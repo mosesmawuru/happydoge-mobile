@@ -49,8 +49,7 @@ router.post("/swaptohdt", async (req, res) => {
         });
     } else {
       return res.status(400).send({
-        countETH:
-          "The amount to be swapped is greater than the amount of ETH you currently have.",
+        countETH: "Not Sufficiant Balance",
       });
     }
   } else {
@@ -94,8 +93,7 @@ router.post("/swaptoeth", async (req, res) => {
         });
     } else {
       return res.status(400).send({
-        countHDT:
-          "The amount to be swapped is greater than the amount of HDT you currently have.",
+        countHDT: "Not Sufficiant Balance",
       });
     }
   } else {

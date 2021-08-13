@@ -13,7 +13,7 @@ export const message = [
   {
     id: 'deposit',
     message: 'Deposit Complete',
-    content: 'adsfsadfadsf',
+    content: 'Tokens will be deposited after network confirmation',
   },
   {
     id: 'withdraw',

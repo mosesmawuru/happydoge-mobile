@@ -28,8 +28,6 @@ const Withdraw = ({navigation}) => {
         id: profile.profiledata._id,
       };
       await dispatch(withdraw(data, showModal));
-      await setAmount(0);
-      await setSelected('eth');
     }
   };
   const showModal = async (amount, flag) => {
@@ -41,6 +39,8 @@ const Withdraw = ({navigation}) => {
     };
     await setModalData(modalData);
     await setVisible(!visible);
+    await setAmount(0);
+    await setSelected('eth');
   };
   useEffect(() => {
     setError(errors);

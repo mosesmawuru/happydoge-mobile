@@ -32,7 +32,7 @@ const Profile = ({navigation}) => {
   useEffect(() => {
     dispatch(getUser(store.user.id));
   }, []);
-  console.log(profile);
+
   const copyToClipboard = (value, flag) => {
     onCopyText(flag);
     Clipboard.setString(value);

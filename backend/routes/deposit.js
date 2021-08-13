@@ -1,65 +1,98 @@
 const express = require("express");
 const router = express.Router();
-const tokenABI = require("../constant/tokenABI");
+const { hdtABI, ethABI } = require("../constant/tokenABI");
 //@import models
 const User = require("../models/User");
 const Deposit = require("../models/Deposit");
-
+const Web3 = require("web3");
+const Tx = require("ethereumjs-tx").Transaction;
 router.post("/", async (req, res) => {
-  console.log(tokenABI.tokenABI);
-  const address = "0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E";
+  const { address, flag, amount } = req.body;
+  if (amount <= 0) {
+    return res.status(400).send({
+      amount: "Please input correct amount",
+    });
+  }
+  // const address = "0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E";
   const userdata = await User.findOne({ address });
-  const adminAddress = "0x8Ad784720f636DF7cCEb143CCC1dB3F25Afc01A0";
+  const adminAddress = "0xbC6661e61539a3e33F9E5C4AD2952770c62a128b";
   const tokenAddress = "0x08895697055b82890a312dfc9f52df907d8fd001";
-  const amount = 1;
-  const flag = "hdt";
-  const Web3 = require("web3");
+  const privateKey =
+    "09629aa26282f4f6bb7d9792a18e77cc2bcd0fbbb2113ccfeaf7933d45080738";
+  const contractAddress = "0x08895697055b82890a312dfc9f52df907d8fd001";
 
-  const web3 = new Web3(
+  const web3 = await new Web3(
     new Web3.providers.HttpProvider(
-      "https://mainnet.infura.io/v3/43abad80628540079b649332f37de4fb"
+      "https://ropsten.infura.io/v3/43abad80628540079b649332f37de4fb"
     )
   );
-  if (flag === "eth") {
-    web3.eth.getBalance(address, function (err, result) {
-      if (err) {
-        console.log(err);
-      } else {
-        const realAmount = web3.utils.fromWei(result, "ether");
-        if (realAmount >= amount) {
-          // userdata.countETH = userdata.countETH + amount;
-          // userdata
-          //   .save()
-          //   .then((item) => {
-          //     return res.status(200).json({ msg: "success" });
-          //   })
-          //   .catch((err) => {
-          //     return res.status(400).json({ errors: err });
-          //   });
+  var count = await web3.eth.getTransactionCount(address);
+  var gasPrice = await web3.eth.gasPrice;
+  var gasLimit = 1000000;
+  if (userdata) {
+    if (flag === "eth") {
+      web3.eth.getBalance(address, function (err, result) {
+        if (err) {
+          console.log(err);
         } else {
-          return res.status(400).send({
-            amount: "There is no enough eth of your address",
-          });
+          const realAmount = web3.fromWei(result, "ether");
+          if (realAmount >= amount) {
+            var rawTransaction = {
+              from: address,
+              nonce: web3.toHex(count),
+              gasPrice: web3.toHex(gasPrice),
+              gasLimit: web3.toHex(gasLimit),
+              to: adminAddress,
+              value: amount * 1000000000000000000,
+            };
+            var tx = new Tx(rawTransaction, { chain: "ropsten" });
+            var privKey = Buffer.from(privateKey, "hex");
+            tx.sign(privKey);
+            var serializedTx = tx.serialize();
+            web3.eth.sendRawTransaction(
+              "0x" + serializedTx.toString("hex"),
+              function (err, hash) {
+                if (!err) {
+                  userdata.countETH = userdata.countETH + amount;
+                  userdata
+                    .save()
+                    .then((item) => {
+                      return res.status(200).json({ msg: "success" });
+                    })
+                    .catch((err) => {
+                      return res.status(400).json({ errors: err });
+                    });
+                } else {
+                  return res.status(400).send({
+                    err: "The transaction is pending",
+                  });
+                }
+              }
+            );
+          } else {
+            return res.status(400).send({
+              amount: "Not Sufficiant Balance",
+            });
+          }
         }
-      }
-    });
-  } else if (flag === "hdt") {
-    var tokenInst = new Web3.eth.Contract(tokenABI.tokenABI, tokenAddress);
-    tokenInst.methods
-      .balanceOf(address)
-      .call()
-      .then(function (bal) {
-        console.log(bal);
       });
-    // userdata.countHDT = userdata.countHDT + amount;
-    // userdata
-    //   .save()
-    //   .then((item) => {
-    //     return res.status(200).json({ msg: "success" });
-    //   })
-    //   .catch((err) => {
-    //     return res.status(400).json({ errors: err });
-    //   });
+    } else if (flag === "hdt") {
+      var tokenInst = web3.eth.contract(hdtABI).at(contractAddress);
+      var data = contract.transfer.getData(account2, 10000, { from: address });
+      // userdata.countHDT = userdata.countHDT + amount;
+      // userdata
+      //   .save()
+      //   .then((item) => {
+      //     return res.status(200).json({ msg: "success" });
+      //   })
+      //   .catch((err) => {
+      //     return res.status(400).json({ errors: err });
+      //   });
+    }
+  } else {
+    return res.status(400).send({
+      err: "User not found",
+    });
   }
 });
 

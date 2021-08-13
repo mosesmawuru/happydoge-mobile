@@ -15,7 +15,6 @@ export const transfer = (
     await axios
       .post(SERVER_URL + '/transfer', {owneraddress, toaddress, flag, amount})
       .then(res => {
-        console.log(res.data);
         if (res.data.msg === 'success') {
           onShowModal(toaddress, flag, amount);
           dispatch(getUser(id));

@@ -63,8 +63,7 @@ router.post(
           newHistory.save();
         } else {
           return res.status(400).send({
-            amount:
-              "The amount to be transferred is greater than the amount of ETH you currently have.",
+            amount: "Not Sufficiant Balance",
           });
         }
       } else if (flag === "hdt") {
@@ -89,8 +88,7 @@ router.post(
             });
         } else {
           return res.status(400).send({
-            amount:
-              "The amount to be transferred is greater than the amount of HDT you currently have.",
+            amount: "Not Sufficiant Balance",
           });
         }
       }

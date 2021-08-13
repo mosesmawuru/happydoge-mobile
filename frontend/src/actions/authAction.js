@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import setAuthToken from '../utils/setAuthToken';
 import {GET_ERRORS, SET_CURRENT_USER} from './type';
 
+//@user Login
 export const userLogin = (username, password, navigation) => {
   return async dispatch => {
     await axios
@@ -23,6 +24,7 @@ export const userLogin = (username, password, navigation) => {
       });
   };
 };
+//@user Register
 export const userRegister = (
   username,
   password,
@@ -48,6 +50,7 @@ export const userRegister = (
       });
   };
 };
+//@user Logout
 export const logoutUser = () => dispatch => {
   // Remove token from localStorage
   AsyncStorage.removeItem('jwtToken');
@@ -56,7 +59,7 @@ export const logoutUser = () => dispatch => {
   // Set current user to {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
 };
-
+//@set Current User
 export const setCurrentUser = decoded => {
   return {
     type: SET_CURRENT_USER,

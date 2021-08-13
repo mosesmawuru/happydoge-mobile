@@ -79,8 +79,7 @@ router.post(
         }
       } else {
         return res.status(400).send({
-          stackamount:
-            "The amount to be stacked is greater than the amount of HDT you currently have.",
+          stackamount: "Not Sufficiant Balance",
         });
       }
     } else {

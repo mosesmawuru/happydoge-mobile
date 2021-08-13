@@ -139,7 +139,6 @@ router.post(
   "/getuser",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    console.log(req.body);
     const { id } = req.body;
     User.findOne({ _id: id })
       .then((user) => {

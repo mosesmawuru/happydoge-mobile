@@ -17,7 +17,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Passport middleware
 app.use(passport.initialize());
-
+// SOCKET
+const http = require("http");
+const socketio = require("socket.io");
+const server = http.createServer(app);
+const io = socketio(server);
+try {
+  io.on("connect", (socket) => {
+    socket.on("join", ({}, callback) => {
+      try {
+      } catch (error) {}
+      callback();
+    });
+    socket.on("disconnect", () => {});
+  });
+} catch (e) {}
 // Passport Config
 require("./config/passport")(passport);
 // Define Routes
