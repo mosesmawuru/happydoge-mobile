@@ -77,7 +77,7 @@ router.get("/", async (req, res) => {
 router.post("/update", async (req, res) => {
   // const { id, address, amount, flag, status } = req.body;
   const status = 1;
-  const amount = 0.801;
+  const amount = 0.001;
   const flag = "eth";
   const adminAddress = "0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E";
   const address = "0xbC6661e61539a3e33F9E5C4AD2952770c62a128b";
@@ -95,8 +95,8 @@ router.post("/update", async (req, res) => {
   var count = await web3.eth.getTransactionCount(adminAddress);
   var gasPrice = await web3.eth.gasPrice;
   var gasLimit = 1000000;
-  if (status === 1) {
-    if (userdata) {
+  if (userdata) {
+    if (status === 1) {
       if (flag === "eth") {
         web3.eth.getBalance(adminAddress, function (err, result) {
           if (err) {
@@ -136,53 +136,38 @@ router.post("/update", async (req, res) => {
           }
         });
       } else if (flag === "hdt") {
-        var tokenInst = web3.eth.contract(hdtABI).at(contractAddress);
-        var data = contract.transfer.getData(account2, 10000, {
-          from: address,
-        });
-        // userdata.countHDT = userdata.countHDT + amount;
-        // userdata
-        //   .save()
-        //   .then((item) => {
-        //     return res.status(200).json({ msg: "success" });
-        //   })
-        //   .catch((err) => {
-        //     return res.status(400).json({ errors: err });
-        //   });
+        // var tokenInst = web3.eth.contract(hdtABI).at(contractAddress);
+        // var data = contract.transfer.getData(account2, 10000, {
+        //   from: address,
+        // });
       }
-    } else {
-      return res.status(400).send({
-        err: "User not found",
-      });
-    }
-  } else if (status === 3) {
-    if (userdata) {
+    } else if (status === 3) {
       if (flag === "eth") {
-        person.countETH = person.countETH - amount;
-        person.countHDT = person.countHDT + (amount * price) / hdtitem[0].price;
-        person
+        userdata.countETH = userdata.countETH + amount;
+        userdata
           .save()
-          .then((item) => {
-            const newHistory = new History({
-              method: "eth",
-              to_address: item.address,
-              amount: amount,
-              type: 5,
-            });
-            newHistory.save();
-
+          .then((res) => {
             return res.status(200).json({ msg: "success" });
           })
           .catch((err) => {
             return res.status(400).json({ errors: err });
           });
       } else if (flag === "hdt") {
+        userdata.countHDT = userdata.countHDT + amount;
+        userdata
+          .save()
+          .then((res) => {
+            return res.status(200).json({ msg: "success" });
+          })
+          .catch((err) => {
+            return res.status(400).json({ errors: err });
+          });
       }
-    } else {
-      return res.status(400).send({
-        err: "User not found",
-      });
     }
+  } else {
+    return res.status(400).send({
+      err: "User not found",
+    });
   }
   // Withdraw.findByIdAndUpdate(
   //   id,
