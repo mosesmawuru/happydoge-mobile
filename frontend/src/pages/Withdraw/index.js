@@ -79,7 +79,7 @@ const Withdraw = ({navigation}) => {
 
           <Input
             value={amount.toString()}
-            placeholder="Please input ETH Amount"
+            placeholder="Please input ETH Balance"
             onChangeText={message => {
               setAmount(message);
             }}

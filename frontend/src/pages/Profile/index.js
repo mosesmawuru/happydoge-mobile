@@ -80,14 +80,14 @@ const Profile = ({navigation}) => {
               }
             />
 
-            <Text style={styles.txt}>Amount ETH</Text>
+            <Text style={styles.txt}>Balance ETH</Text>
             <Input
               placeholder="INPUT WITH ERROR MESSAGE"
               value={store.user.countETH + ' ' + 'ETH'}
               disabled
             />
 
-            <Text style={styles.txt}>Amount HDT</Text>
+            <Text style={styles.txt}>Balance HDT</Text>
             <Input
               placeholder="HDT"
               value={store.user.countHDT + ' ' + 'HDT'}

@@ -1,8 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const passport = require("passport");
 const path = require("path");
-const cors = require("cors");
+const cron = require("node-cron");
+const Staking = require("./models/Stacking");
 const connectDB = require("./config/db");
 require("dotenv").config();
 const app = express();
@@ -24,6 +26,7 @@ const server = http.createServer(app);
 const io = socketio(server);
 try {
   io.on("connect", (socket) => {
+    console.log("socket is created");
     socket.on("join", ({}, callback) => {
       try {
       } catch (error) {}
@@ -53,6 +56,25 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+cron.schedule("00 00 */1 * * * *", async () => {
+  const emailToday = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + 2,
+    today.getHours(),
+    today.getMinutes(),
+    0
+  );
+  console.log("start");
+  const today = new Date();
+  const startTime = moment(`${date} ${time}`, "D/M/YY h:mm");
+  const endTime = moment(startTime).add(1, "hours");
+  Staking.find({ endTime })
+    .then((item) => {})
+    .cache((err) => {
+      console.log(err);
+    });
+});
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

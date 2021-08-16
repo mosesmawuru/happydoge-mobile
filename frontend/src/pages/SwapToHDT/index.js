@@ -70,12 +70,12 @@ const SwapToHdt = ({navigation}) => {
           <Text style={styles.headText}>SWAP TO HDT</Text>
         </View>
         <View style={styles.userDiv}>
-          <Text style={styles.labelText}>Current ETH Amount</Text>
+          <Text style={styles.labelText}>Current ETH Balance</Text>
           <Input
             value={profile.profiledata.countETH.toString() + ' ETH'}
             disabled
           />
-          <Text style={styles.labelText}>Current HDT Amount</Text>
+          <Text style={styles.labelText}>Current HDT Balance</Text>
           <Input
             value={profile.profiledata.countHDT.toString() + ' HDT'}
             disabled
@@ -89,7 +89,7 @@ const SwapToHdt = ({navigation}) => {
                 ? profile.profiledata.countETH.toString()
                 : countETH.toString()
             }
-            placeholder="Please input ETH Amount"
+            placeholder="Please input ETH "
             onChangeText={message => {
               setCountETH(message);
             }}
@@ -101,7 +101,7 @@ const SwapToHdt = ({navigation}) => {
         </View>
         <CheckBox
           center
-          title="ALL"
+          title="Max"
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
           checked={checked}

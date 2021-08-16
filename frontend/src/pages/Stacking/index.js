@@ -42,9 +42,9 @@ const Stacking = ({navigation}) => {
         </View>
 
         <View style={styles.userDiv}>
-          <Text style={styles.labelText}>Current HDT Amount</Text>
+          <Text style={styles.labelText}>Current HDT Balance</Text>
           <Input value={profile.profiledata.countHDT.toString()} disabled />
-          <Text style={styles.labelText}>Amount</Text>
+          <Text style={styles.labelText}>Balance</Text>
 
           <Input
             value={
@@ -52,7 +52,7 @@ const Stacking = ({navigation}) => {
                 ? profile.profiledata.countHDT.toString()
                 : amount.toString()
             }
-            placeholder="Please input Amount"
+            placeholder="Please input balance"
             onChangeText={message => {
               setAmount(message);
             }}
@@ -63,7 +63,7 @@ const Stacking = ({navigation}) => {
           />
           <CheckBox
             center
-            title="ALL"
+            title="Max"
             checkedIcon="dot-circle-o"
             uncheckedIcon="circle-o"
             checked={checked}

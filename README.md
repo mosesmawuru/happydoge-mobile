@@ -1,2 +1,0 @@
-# HappyDoge
-Ethereum project

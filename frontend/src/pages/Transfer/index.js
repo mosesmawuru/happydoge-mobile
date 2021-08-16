@@ -20,7 +20,7 @@ const Transfer = ({navigation}) => {
   const errors = useSelector(state => state.errors);
   const send = () => {
     if (amount === 0) {
-      setError({amount: 'Please input correct amount'});
+      setError({amount: 'Please input correct balance'});
     }
     if (isNaN(amount)) {
       setError({amount: 'Please only input number'});
@@ -100,10 +100,10 @@ const Transfer = ({navigation}) => {
           </View>
 
           <View>
-            <Text style={styles.labelText}>Amount</Text>
+            <Text style={styles.labelText}>Balance</Text>
             <Input
               value={amount.toString()}
-              placeholder="Please input Amount"
+              placeholder="Please input blance"
               onChangeText={message => {
                 setAmount(message);
               }}

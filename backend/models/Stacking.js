@@ -13,6 +13,11 @@ const ExchangeSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  flag: {
+    type: Boolean,
+    require: true,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("stacking", ExchangeSchema);
