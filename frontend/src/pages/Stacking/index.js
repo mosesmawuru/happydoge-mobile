@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Input} from 'react-native-elements';
 import {CheckBox} from 'react-native-elements';
@@ -36,50 +36,78 @@ const Stacking = ({navigation}) => {
   return (
     <>
       <Header text="STACKING" navigation={navigation} />
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.headText}>Stacking</Text>
+      <ScrollView>
+        <View style={styles.container}>
+          <View>
+            <Text style={styles.headText}>Stacking Details</Text>
+          </View>
+
+          <View style={styles.userDiv}>
+            <Text style={styles.labelText}>Current HDT Balance</Text>
+            <Input value={profile.profiledata.countHDT.toString()} disabled />
+            <Text style={styles.labelText}>Balance</Text>
+
+            <Input
+              value={
+                checked
+                  ? profile.profiledata.countHDT.toString()
+                  : amount.toString()
+              }
+              placeholder="Please input balance"
+              onChangeText={message => {
+                setAmount(message);
+              }}
+              errorStyle={{color: 'red'}}
+              keyboardType="numeric"
+              disabled={checked ? true : false}
+              errorMessage={error.stackamount}
+            />
+            <CheckBox
+              center
+              title="Max"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checked={checked}
+              onPress={() => setChecked(!checked)}
+            />
+          </View>
+
+          <View style={styles.circleView}>
+            <TouchableOpacity
+              style={styles.clickWeek}
+              activeOpacity={0.5}
+              onPress={() => {
+                onStack();
+              }}>
+              <Text style={styles.TextStyle}>Stacking</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.clickWeek}
+              activeOpacity={0.5}
+              onPress={() => {
+                onStack();
+              }}>
+              <Text style={styles.TextStyle}>Stacking</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.clickWeek}
+              activeOpacity={0.5}
+              onPress={() => {
+                onStack();
+              }}>
+              <Text style={styles.TextStyle}>Stacking</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={styles.submitButtonStyle}
+            activeOpacity={0.5}
+            onPress={() => {
+              onStack();
+            }}>
+            <Text style={styles.TextStyle}>Stacking</Text>
+          </TouchableOpacity>
         </View>
-
-        <View style={styles.userDiv}>
-          <Text style={styles.labelText}>Current HDT Balance</Text>
-          <Input value={profile.profiledata.countHDT.toString()} disabled />
-          <Text style={styles.labelText}>Balance</Text>
-
-          <Input
-            value={
-              checked
-                ? profile.profiledata.countHDT.toString()
-                : amount.toString()
-            }
-            placeholder="Please input balance"
-            onChangeText={message => {
-              setAmount(message);
-            }}
-            errorStyle={{color: 'red'}}
-            keyboardType="numeric"
-            disabled={checked ? true : false}
-            errorMessage={error.stackamount}
-          />
-          <CheckBox
-            center
-            title="Max"
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={checked}
-            onPress={() => setChecked(!checked)}
-          />
-        </View>
-
-        <TouchableOpacity
-          style={styles.submitButtonStyle}
-          activeOpacity={0.5}
-          onPress={() => {
-            onStack();
-          }}>
-          <Text style={styles.TextStyle}>Stacking</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </>
   );
 };

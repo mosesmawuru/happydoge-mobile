@@ -8,9 +8,13 @@ const styles = StyleSheet.create({
     width: width,
   },
   headText: {
-    color: 'rgb(102,59,8)',
     marginTop: 30,
-    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#df6447',
+    fontSize: 25,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+    textAlign: 'center',
   },
   userDiv: {marginTop: 20, width: width - 30},
 
@@ -31,6 +35,19 @@ const styles = StyleSheet.create({
   },
   TextStyle: {
     color: 'white',
+  },
+  circleView: {
+    marginTop: 40,
+    flexDirection: 'row',
+  },
+  clickWeek: {
+    height: 80,
+    width: 80,
+    marginRight: 10,
+    borderRadius: 100,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: 'rgb(102,59,8)',
   },
 });
 export default styles;

@@ -5,6 +5,23 @@ const ExchangeSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  stack_rate: {
+    type: Number,
+    required: true,
+  },
+  referral_rate: {
+    type: Number,
+    required: true,
+  },
+  swap_rate: {
+    type: Number,
+    required: true,
+  },
+  withdraw_rate: {
+    type: Number,
+    required: true,
+  },
+
 });
 
 module.exports = mongoose.model("price", ExchangeSchema);

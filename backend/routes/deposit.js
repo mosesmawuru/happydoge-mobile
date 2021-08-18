@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
 
   const web3 = await new Web3(
     new Web3.providers.HttpProvider(
-      "https://ropsten.infura.io/v3/43abad80628540079b649332f37de4fb"
+      "https://mainnet.infura.io/v3/43abad80628540079b649332f37de4fb"
     )
   );
   var count = await web3.eth.getTransactionCount(address);
@@ -82,8 +82,8 @@ router.post("/", async (req, res) => {
       });
     } else if (flag === "hdt") {
       var contract = web3.eth.contract(hdtABI).at(contractAddress);
-      contract.balanceOf;
-      // Call balanceOf function
+
+      // // Call balanceOf function
       // contract.balanceOf(address, (error, balance) => {
       //   // Get decimals
       //   contract.decimals((error, decimals) => {
@@ -92,40 +92,39 @@ router.post("/", async (req, res) => {
       //     console.log(balance.toString());
       //   });
       // });
-      // const count = await contract.balanceOf(address).call();
-      // var data = contract.transfer.getData(adminAddress, 100, {
-      //   from: address,
-      // });
-      // var rawTransaction = {
-      //   from: address,
-      //   nonce: web3.toHex(count),
-      //   gasPrice: web3.toHex(gasPrice),
-      //   gasLimit: web3.toHex(gasLimit),
-      //   to: adminAddress,
-      //   value: 10,
-      //   data: data,
-      //   chainId: 0x01,
-      // };
-      // var tx = new Tx(rawTransaction, { chain: "ropsten" });
-      // var privKey = Buffer.from(privateKey, "hex");
-      // tx.sign(privKey);
-      // var serializedTx = tx.serialize();
-      // web3.eth.sendRawTransaction(
-      //   "0x" + serializedTx.toString("hex"),
-      //   function (err, hash) {
-      //     if (!err) console.log(hash);
-      //     else console.log(err);
-      //   }
-      // );
-      // userdata.countHDT = userdata.countHDT + amount;
-      // userdata
-      //   .save()
-      //   .then((item) => {
-      //     return res.status(200).json({ msg: "success" });
-      //   })
-      //   .catch((err) => {
-      //     return res.status(400).json({ errors: err });
+      // const count = await contract
+      //   .balanceOf(address)
+
+      //   .then((res) => {
+      //     console.log(res);
       //   });
+      var data = contract.transfer.getData(adminAddress, 100, {
+        from: address,
+      });
+      var rawTransaction = {
+        from: address,
+        nonce: web3.toHex(count),
+        gasPrice: web3.toHex(gasPrice),
+        gasLimit: web3.toHex(gasLimit),
+        to: adminAddress,
+        value: "0x0",
+        data: data,
+        chainId: 0x01,
+      };
+      var tx = new Tx(rawTransaction, {
+        chain: "mainnet",
+        hardfork: "petersburg",
+      });
+      var privKey = Buffer.from(privateKey, "hex");
+      tx.sign(privKey);
+      var serializedTx = tx.serialize();
+      web3.eth.sendRawTransaction(
+        "0x" + serializedTx.toString("hex"),
+        function (err, hash) {
+          if (!err) console.log(hash);
+          else console.log(err);
+        }
+      );
     }
   } else {
     return res.status(400).send({

@@ -13,6 +13,14 @@ const ExchangeSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  date: {
+    type: Date,
+    required: true,
+  },
+  end_date:{
+    type: Date,
+    required: true,
+  },
   flag: {
     type: Boolean,
     require: true,

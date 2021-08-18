@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {Text, View, TouchableOpacity, ScrollView, Switch} from 'react-native';
-import {ListItem, Avatar} from 'react-native-elements';
+import {ListItem, Avatar, Button} from 'react-native-elements';
 import moment from 'moment';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {SearchBar, Badge} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import Header from '../../components/Header';
 import styles from './styles';
 import {getWithdraw} from '../../actions/adminAction';
+import animal from '../../assets/img/animal.png';
 const Price = ({navigation}) => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState('');
@@ -27,26 +29,44 @@ const Price = ({navigation}) => {
     .map((item, key) => {
       return (
         <View key={key + 1}>
-          <ListItem bottomDivider>
-            <Avatar
-              source={{
-                uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+          <ListItem.Swipeable
+            rightContent={
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  alignContent: 'center',
+                }}>
+                <Button
+                  icon={{name: 'check', color: 'white'}}
+                  buttonStyle={{backgroundColor: 'green'}}
+                />
+                <Button
+                  icon={{name: 'close', color: 'white'}}
+                  buttonStyle={{backgroundColor: 'red'}}
+                />
+              </View>
+            }>
+            <Icon
+              style={{paddingLeft: 10}}
+              name="user"
+              size={30}
+              color={'rgb(223,100,71)'}
+              onPress={() => {
+                navigation.toggleDrawer();
               }}
-              rounded
-              title="LW"
             />
-            <ListItem.Content>
+            <ListItem.Content bottomDivider>
               <ListItem.Title>
-                <Text>
-                  {item.address
-                    ? item.address.substring(0, 10) +
-                      '....' +
-                      item.address.substring(
-                        item.address.length - 10,
-                        item.address.length,
-                      )
-                    : ''}
-                </Text>
+                {item.address
+                  ? item.address.substring(0, 10) +
+                    '....' +
+                    item.address.substring(
+                      item.address.length - 10,
+                      item.address.length,
+                    )
+                  : ''}
               </ListItem.Title>
               <ListItem.Subtitle>
                 <Badge
@@ -71,8 +91,8 @@ const Price = ({navigation}) => {
               </ListItem.Subtitle>
             </ListItem.Content>
 
-            <Switch value={false} />
-          </ListItem>
+            <ListItem.Chevron />
+          </ListItem.Swipeable>
         </View>
       );
     });
