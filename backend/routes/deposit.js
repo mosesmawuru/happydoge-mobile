@@ -9,6 +9,7 @@ const Web3 = require("web3");
 const Tx = require("ethereumjs-tx").Transaction;
 router.post("/", async (req, res) => {
   const flag = "hdt";
+  const amount = 100;
   const price = await Price.find();
   // console.log(price[0].price);
   // const { address, flag, amount } = req.body;
@@ -84,47 +85,47 @@ router.post("/", async (req, res) => {
       var contract = web3.eth.contract(hdtABI).at(contractAddress);
 
       // // Call balanceOf function
-      // contract.balanceOf(address, (error, balance) => {
-      //   // Get decimals
-      //   contract.decimals((error, decimals) => {
-      //     // calculate a balance
-      //     balance = balance.div(10 ** decimals);
-      //     console.log(balance.toString());
-      //   });
-      // });
-      // const count = await contract
-      //   .balanceOf(address)
+      contract.balanceOf(address, (error, balance) => {
+        // Get decimals
+        contract.decimals((error, decimals) => {
+          // calculate a balance
+          balance = balance.div(10 ** decimals);
+          if (balance >= amount) {
+            console.log(amount);
+          } else {
+            return res.status(400).send({
+              amount: "Not Sufficiant Balance",
+            });
+          }
+        });
+      });
 
-      //   .then((res) => {
-      //     console.log(res);
+      //   var data = contract.transfer.getData(adminAddress, 100, {
+      //     from: address,
       //   });
-      var data = contract.transfer.getData(adminAddress, 100, {
-        from: address,
-      });
-      var rawTransaction = {
-        from: address,
-        nonce: web3.toHex(count),
-        gasPrice: web3.toHex(gasPrice),
-        gasLimit: web3.toHex(gasLimit),
-        to: adminAddress,
-        value: "0x0",
-        data: data,
-        chainId: 0x01,
-      };
-      var tx = new Tx(rawTransaction, {
-        chain: "mainnet",
-        hardfork: "petersburg",
-      });
-      var privKey = Buffer.from(privateKey, "hex");
-      tx.sign(privKey);
-      var serializedTx = tx.serialize();
-      web3.eth.sendRawTransaction(
-        "0x" + serializedTx.toString("hex"),
-        function (err, hash) {
-          if (!err) console.log(hash);
-          else console.log(err);
-        }
-      );
+      //   var rawTransaction = {
+      //     from: address,
+      //     nonce: web3.toHex(count),
+      //     gasPrice: web3.toHex(gasPrice),
+      //     gasLimit: web3.toHex(gasLimit),
+      //     to: adminAddress,
+      //     data: data,
+      //     chainId: 0x01,
+      //   };
+      //   var tx = new Tx(rawTransaction, {
+      //     chain: "mainnet",
+      //     hardfork: "petersburg",
+      //   });
+      //   var privKey = Buffer.from(privateKey, "hex");
+      //   tx.sign(privKey);
+      //   var serializedTx = tx.serialize();
+      //   web3.eth.sendRawTransaction(
+      //     "0x" + serializedTx.toString("hex"),
+      //     function (err, hash) {
+      //       if (!err) console.log(hash);
+      //       else console.log(err);
+      //     }
+      //   );
     }
   } else {
     return res.status(400).send({

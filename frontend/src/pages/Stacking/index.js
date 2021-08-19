@@ -38,65 +38,50 @@ const Stacking = ({navigation}) => {
       <Header text="STACKING" navigation={navigation} />
       <ScrollView>
         <View style={styles.container}>
-          <View>
+          <View style={styles.headerView}>
             <Text style={styles.headText}>Stacking Details</Text>
           </View>
-
-          <View style={styles.userDiv}>
-            <Text style={styles.labelText}>Current HDT Balance</Text>
-            <Input value={profile.profiledata.countHDT.toString()} disabled />
-            <Text style={styles.labelText}>Balance</Text>
-
-            <Input
-              value={
-                checked
-                  ? profile.profiledata.countHDT.toString()
-                  : amount.toString()
-              }
-              placeholder="Please input balance"
-              onChangeText={message => {
-                setAmount(message);
-              }}
-              errorStyle={{color: 'red'}}
-              keyboardType="numeric"
-              disabled={checked ? true : false}
-              errorMessage={error.stackamount}
-            />
-            <CheckBox
-              center
-              title="Max"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={checked}
-              onPress={() => setChecked(!checked)}
-            />
+          <View style={styles.earnTextView}>
+            <TouchableOpacity style={styles.clickEarn} activeOpacity={0.5}>
+              <View style={styles.rowLayout}>
+                <Text style={styles.earnHdtText}>250</Text>
+                {/* <Text style={styles.earnHdt}>HDT</Text> */}
+              </View>
+              <Text style={styles.TextStyle}>earned</Text>
+            </TouchableOpacity>
+            <View style={styles.progressLayer}></View>
           </View>
-
           <View style={styles.circleView}>
-            <TouchableOpacity
-              style={styles.clickWeek}
-              activeOpacity={0.5}
-              onPress={() => {
-                onStack();
-              }}>
-              <Text style={styles.TextStyle}>Stacking</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.clickWeek}
-              activeOpacity={0.5}
-              onPress={() => {
-                onStack();
-              }}>
-              <Text style={styles.TextStyle}>Stacking</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.clickWeek}
-              activeOpacity={0.5}
-              onPress={() => {
-                onStack();
-              }}>
-              <Text style={styles.TextStyle}>Stacking</Text>
-            </TouchableOpacity>
+            <View style={styles.detailCircle}>
+              <TouchableOpacity style={styles.clickWeek} activeOpacity={0.5}>
+                <View style={styles.rowLayout}>
+                  <Text style={styles.TextStyle}>250</Text>
+                  <Text style={styles.tokenTxt}>HDT</Text>
+                </View>
+                <Text style={styles.SubTextStyle}>weekly</Text>
+              </TouchableOpacity>
+              <Text style={styles.stackTitle}>Staking 1</Text>
+            </View>
+            <View style={styles.detailCircle}>
+              <TouchableOpacity style={styles.clickWeek} activeOpacity={0.5}>
+                <View style={styles.rowLayout}>
+                  <Text style={styles.TextStyle}>450</Text>
+                  <Text style={styles.tokenTxt}>HDT</Text>
+                </View>
+                <Text style={styles.SubTextStyle}>monthly</Text>
+              </TouchableOpacity>
+              <Text style={styles.stackTitle}>Staking 2</Text>
+            </View>
+            <View style={styles.detailCircle}>
+              <TouchableOpacity style={styles.clickWeek} activeOpacity={0.5}>
+                <View style={styles.rowLayout}>
+                  <Text style={styles.TextStyle}>750</Text>
+                  <Text style={styles.tokenTxt}>HDT</Text>
+                </View>
+                <Text style={styles.SubTextStyle}>yearly</Text>
+              </TouchableOpacity>
+              <Text style={styles.stackTitle}>Staking 3</Text>
+            </View>
           </View>
           <TouchableOpacity
             style={styles.submitButtonStyle}
@@ -104,8 +89,38 @@ const Stacking = ({navigation}) => {
             onPress={() => {
               onStack();
             }}>
-            <Text style={styles.TextStyle}>Stacking</Text>
+            <Text style={styles.btnText}>Stake More</Text>
           </TouchableOpacity>
+        </View>
+
+        <View style={styles.userDiv}>
+          <Text style={styles.labelText}>Current HDT Balance</Text>
+          <Input value={profile.profiledata.countHDT.toString()} disabled />
+          <Text style={styles.labelText}>Balance</Text>
+
+          <Input
+            value={
+              checked
+                ? profile.profiledata.countHDT.toString()
+                : amount.toString()
+            }
+            placeholder="Please input balance"
+            onChangeText={message => {
+              setAmount(message);
+            }}
+            errorStyle={{color: 'red'}}
+            keyboardType="numeric"
+            disabled={checked ? true : false}
+            errorMessage={error.stackamount}
+          />
+          <CheckBox
+            center
+            title="Max"
+            checkedIcon="dot-circle-o"
+            uncheckedIcon="circle-o"
+            checked={checked}
+            onPress={() => setChecked(!checked)}
+          />
         </View>
       </ScrollView>
     </>

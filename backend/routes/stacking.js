@@ -21,6 +21,7 @@ router.post(
   async (req, res) => {
     const { errors, isValid } = validateStack(req.body);
     const { ID, amount } = req.body;
+    const num = 15;
     if (amount <= 0) {
       return res.status(400).send({
         stackamount: "please input correct amount",
@@ -57,7 +58,7 @@ router.post(
           const newData = new Stack({
             user: ID,
             stack_amount: amount,
-            date: Date.now(),
+            end_date: moment(date).add(1, "hours"),
           });
           person.countHDT = person.countHDT - amount;
           person
