@@ -8,6 +8,8 @@ import {getUser} from '../../actions/profileAction';
 import {getPrice} from '../../actions/exchangeAction';
 import {getHistoryById} from '../../actions/historyAction';
 import animal from '../../assets/img/animal.png';
+import {SERVER_URL} from '../../constant/server_url';
+import io from 'socket.io-client';
 import axios from 'axios';
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -17,6 +19,10 @@ const Home = ({navigation}) => {
   const store = useSelector(state => state.auth);
   const history = useSelector(state => state.history);
   useEffect(() => {
+    const socket = io(SERVER_URL);
+    socket.on('FromAPI', data => {
+      setResponse(data);
+    });
     let isMount = true;
     if (isMount) {
       dispatch(getPrice());
