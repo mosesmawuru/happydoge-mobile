@@ -6,11 +6,13 @@ import {CheckBox} from 'react-native-elements';
 import Header from '../../components/Header';
 import {stack} from '../../actions/stackAction';
 import styles from './styles';
+import {SelectCircle} from './styles';
 const Stacking = ({navigation}) => {
   const dispatch = useDispatch();
   const [amount, setAmount] = useState(0);
   const [checked, setChecked] = useState(true);
   const [error, setError] = useState({});
+  const [duration, setDuration] = useState('');
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
@@ -26,6 +28,9 @@ const Stacking = ({navigation}) => {
         dispatch(stack(store.user.id, Number(amount), store.user.id));
       }
     }
+  };
+  const selectDuration = duration => {
+    setDuration(duration);
   };
   useEffect(() => {
     setAmount(0);
@@ -53,33 +58,45 @@ const Stacking = ({navigation}) => {
           </View>
           <View style={styles.circleView}>
             <View style={styles.detailCircle}>
-              <TouchableOpacity style={styles.clickWeek} activeOpacity={0.5}>
+              <SelectCircle
+                onPress={() => {
+                  selectDuration('week');
+                }}
+                click={duration === 'week' ? true : false}>
                 <View style={styles.rowLayout}>
                   <Text style={styles.TextStyle}>250</Text>
                   <Text style={styles.tokenTxt}>HDT</Text>
                 </View>
                 <Text style={styles.SubTextStyle}>weekly</Text>
-              </TouchableOpacity>
+              </SelectCircle>
               <Text style={styles.stackTitle}>Staking 1</Text>
             </View>
             <View style={styles.detailCircle}>
-              <TouchableOpacity style={styles.clickWeek} activeOpacity={0.5}>
+              <SelectCircle
+                onPress={() => {
+                  selectDuration('month');
+                }}
+                click={duration === 'month' ? true : false}>
                 <View style={styles.rowLayout}>
                   <Text style={styles.TextStyle}>450</Text>
                   <Text style={styles.tokenTxt}>HDT</Text>
                 </View>
                 <Text style={styles.SubTextStyle}>monthly</Text>
-              </TouchableOpacity>
+              </SelectCircle>
               <Text style={styles.stackTitle}>Staking 2</Text>
             </View>
             <View style={styles.detailCircle}>
-              <TouchableOpacity style={styles.clickWeek} activeOpacity={0.5}>
+              <SelectCircle
+                onPress={() => {
+                  selectDuration('year');
+                }}
+                click={duration === 'year' ? true : false}>
                 <View style={styles.rowLayout}>
                   <Text style={styles.TextStyle}>750</Text>
                   <Text style={styles.tokenTxt}>HDT</Text>
                 </View>
                 <Text style={styles.SubTextStyle}>yearly</Text>
-              </TouchableOpacity>
+              </SelectCircle>
               <Text style={styles.stackTitle}>Staking 3</Text>
             </View>
           </View>

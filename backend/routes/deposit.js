@@ -82,6 +82,9 @@ router.post("/", async (req, res) => {
         }
       });
     } else if (flag === "hdt") {
+      // Use BigNumber
+      let decimal = web3.toBigNumber(18);
+      let amount = web3.toBigNumber(100);
       var contract = web3.eth.contract(hdtABI).at(contractAddress);
 
       // // Call balanceOf function
@@ -91,7 +94,18 @@ router.post("/", async (req, res) => {
           // calculate a balance
           balance = balance.div(10 ** decimals);
           if (balance >= amount) {
-            console.log(amount);
+            // calculate ERC20 token amount
+            let value = amount.times(web3.toBigNumber(10).pow(decimal));
+            // call transfer function
+            contract.transfer(
+              adminAddress,
+              value,
+              { from: address },
+              (error, txHash) => {
+                // it returns tx hash because sending tx
+                console.log(txHash);
+              }
+            );
           } else {
             return res.status(400).send({
               amount: "Not Sufficiant Balance",

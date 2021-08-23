@@ -1,65 +1,309 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Alert} from 'react-native';
-import {Table, TableWrapper, Row, Cell} from 'react-native-table-component';
-
-export default class ExampleFour extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tableHead: ['Head', 'Head2', 'Head3', 'Head4'],
-      tableData: [
-        ['1', '2', '3', '4'],
-        ['a', 'b', 'c', 'd'],
-        ['1', '2', '3', '4'],
-        ['a', 'b', 'c', 'd'],
-      ],
-    };
-  }
-
-  _alertIndex(index) {
-    Alert.alert(`This is row ${index + 1}`);
-  }
-
-  render() {
-    const state = this.state;
-    const element = (data, index) => (
-      <TouchableOpacity onPress={() => this._alertIndex(index)}>
-        <View style={styles.btn}>
-          <Text style={styles.btnText}>button</Text>
-        </View>
-      </TouchableOpacity>
-    );
-
-    return (
-      <View style={styles.container}>
-        <Table borderStyle={{borderColor: 'transparent'}}>
-          <Row
-            data={state.tableHead}
-            style={styles.head}
-            textStyle={styles.text}
-          />
-          {state.tableData.map((rowData, index) => (
-            <TableWrapper key={index} style={styles.row}>
-              {rowData.map((cellData, cellIndex) => (
-                <Cell
-                  key={cellIndex}
-                  data={cellIndex === 3 ? element(cellData, index) : cellData}
-                  textStyle={styles.text}
+import React from 'react';
+import {View, TextInput, ScrollView, TouchableOpacity} from 'react-native';
+import {FlexLayout, CommonText} from '../../components/Common';
+const SetValue = () => {
+  return (
+    <ScrollView>
+      <View>
+        <View style={{padding: 20}}>
+          <View style={{paddingBottom: 30}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: 'rgb(223,100,71)',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingTop: 10,
+                paddingRight: 30,
+                paddingLeft: 30,
+                paddingBottom: 10,
+              }}>
+              <CommonText maxWidth="50%">HDT PRICE</CommonText>
+              <CommonText color="black">$1</CommonText>
+            </View>
+            <View
+              style={{
+                backgroundColor: 'rgb(248,227,224)',
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: 15,
+                paddingBottom: 15,
+              }}>
+              <FlexLayout width="50%" justify="center">
+                <TextInput
+                  placeholder="ENTER NEW PRICE"
+                  style={{
+                    borderColor: 'rgb(223,100,71)',
+                    borderWidth: 2,
+                    borderRadius: 30,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    fontWeight: 'bold',
+                  }}
                 />
-              ))}
-            </TableWrapper>
-          ))}
-        </Table>
+              </FlexLayout>
+              <FlexLayout width="50%" justify="center">
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{
+                    paddingTop: 8,
+                    paddingBottom: 8,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    backgroundColor: 'rgb(223,100,71)',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    width: 130,
+                    borderColor: '#fff',
+                  }}>
+                  <CommonText color="white" fontSize="18px">
+                    APPLY
+                  </CommonText>
+                </TouchableOpacity>
+              </FlexLayout>
+            </View>
+          </View>
+          <View style={{paddingBottom: 30}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: 'rgb(223,100,71)',
+                justifyContent: 'space-between',
+                paddingTop: 10,
+                paddingRight: 30,
+                paddingLeft: 30,
+                paddingBottom: 10,
+                alignItems: 'center',
+              }}>
+              <CommonText maxWidth="50%">STAKING RATE</CommonText>
+              <CommonText color="black">0.125%</CommonText>
+            </View>
+            <View
+              style={{
+                backgroundColor: 'rgb(248,227,224)',
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: 15,
+                paddingBottom: 15,
+              }}>
+              <FlexLayout width="50%" justify="center">
+                <TextInput
+                  placeholder="ENTER NEW PRICE"
+                  style={{
+                    borderColor: 'rgb(223,100,71)',
+                    borderWidth: 2,
+                    borderRadius: 30,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    fontWeight: 'bold',
+                  }}
+                />
+              </FlexLayout>
+              <FlexLayout width="50%" justify="center">
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{
+                    paddingTop: 8,
+                    paddingBottom: 8,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    backgroundColor: 'rgb(223,100,71)',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    width: 130,
+                    borderColor: '#fff',
+                  }}>
+                  <CommonText color="white" fontSize="18px">
+                    APPLY
+                  </CommonText>
+                </TouchableOpacity>
+              </FlexLayout>
+            </View>
+          </View>
+          <View style={{paddingBottom: 30}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: 'rgb(223,100,71)',
+                justifyContent: 'space-between',
+                paddingTop: 10,
+                paddingRight: 30,
+                paddingLeft: 30,
+                paddingBottom: 10,
+                alignItems: 'center',
+              }}>
+              <CommonText maxWidth="60%">REFERRAL COMMISION RATE</CommonText>
+              <CommonText color="black">30%</CommonText>
+            </View>
+            <View
+              style={{
+                backgroundColor: 'rgb(248,227,224)',
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: 15,
+                paddingBottom: 15,
+              }}>
+              <FlexLayout width="50%" justify="center">
+                <TextInput
+                  placeholder="ENTER NEW PRICE"
+                  style={{
+                    borderColor: 'rgb(223,100,71)',
+                    borderWidth: 2,
+                    borderRadius: 30,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    fontWeight: 'bold',
+                  }}
+                />
+              </FlexLayout>
+              <FlexLayout width="50%" justify="center">
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{
+                    paddingTop: 8,
+                    paddingBottom: 8,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    backgroundColor: 'rgb(223,100,71)',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    width: 130,
+                    borderColor: '#fff',
+                  }}>
+                  <CommonText color="white" fontSize="18px">
+                    APPLY
+                  </CommonText>
+                </TouchableOpacity>
+              </FlexLayout>
+            </View>
+          </View>
+          <View style={{paddingBottom: 30}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: 'rgb(223,100,71)',
+                justifyContent: 'space-between',
+                paddingTop: 10,
+                paddingRight: 30,
+                paddingLeft: 30,
+                paddingBottom: 10,
+                alignItems: 'center',
+              }}>
+              <CommonText maxWidth="40%">HDT TO ETH SWAP RATE</CommonText>
+              <CommonText color="black">50%</CommonText>
+            </View>
+            <View
+              style={{
+                backgroundColor: 'rgb(248,227,224)',
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: 15,
+                paddingBottom: 15,
+              }}>
+              <FlexLayout width="50%" justify="center">
+                <TextInput
+                  placeholder="ENTER NEW PRICE"
+                  style={{
+                    borderColor: 'rgb(223,100,71)',
+                    borderWidth: 2,
+                    borderRadius: 30,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    fontWeight: 'bold',
+                  }}
+                />
+              </FlexLayout>
+              <FlexLayout width="50%" justify="center">
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{
+                    paddingTop: 8,
+                    paddingBottom: 8,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    backgroundColor: 'rgb(223,100,71)',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    width: 130,
+                    borderColor: '#fff',
+                  }}>
+                  <CommonText color="white" fontSize="18px">
+                    APPLY
+                  </CommonText>
+                </TouchableOpacity>
+              </FlexLayout>
+            </View>
+          </View>
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: 'rgb(223,100,71)',
+                justifyContent: 'space-between',
+                paddingTop: 10,
+                paddingRight: 30,
+                paddingLeft: 30,
+                paddingBottom: 10,
+                alignItems: 'center',
+              }}>
+              <CommonText maxWidth="50%">ETH WITHDRAW FEE RATE</CommonText>
+              <CommonText color="black">50%</CommonText>
+            </View>
+            <View
+              style={{
+                backgroundColor: 'rgb(248,227,224)',
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: 15,
+                paddingBottom: 15,
+              }}>
+              <FlexLayout width="50%" justify="center">
+                <TextInput
+                  placeholder="ENTER NEW PRICE"
+                  style={{
+                    borderColor: 'rgb(223,100,71)',
+                    borderWidth: 2,
+                    borderRadius: 30,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    fontWeight: 'bold',
+                  }}
+                />
+              </FlexLayout>
+              <FlexLayout width="50%" justify="center">
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{
+                    paddingTop: 8,
+                    paddingBottom: 8,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    backgroundColor: 'rgb(223,100,71)',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    width: 130,
+                    borderColor: '#fff',
+                  }}>
+                  <CommonText color="white" fontSize="18px">
+                    APPLY
+                  </CommonText>
+                </TouchableOpacity>
+              </FlexLayout>
+            </View>
+          </View>
+        </View>
       </View>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff'},
-  head: {height: 40, backgroundColor: '#808B97'},
-  text: {margin: 6},
-  row: {flexDirection: 'row', backgroundColor: '#FFF1C1'},
-  btn: {width: 58, height: 18, backgroundColor: '#78B7BB', borderRadius: 2},
-  btnText: {textAlign: 'center', color: '#fff'},
-});
+    </ScrollView>
+  );
+};
+export default SetValue;

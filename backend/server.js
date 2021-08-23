@@ -29,15 +29,12 @@ const doEveryMinute = (socket) => {
     const emailToday = new Date(
       today.getFullYear(),
       today.getMonth(),
-      today.getDate() + 2,
+      today.getDate(),
       today.getHours(),
       today.getMinutes(),
       0
     );
-    console.log("start");
     const today = new Date();
-    const startTime = moment(`${date} ${time}`, "D/M/YY h:mm");
-    const endTime = moment(startTime).add(1, "hours");
     Staking.find({ endTime })
       .then((item) => {})
       .cache((err) => {

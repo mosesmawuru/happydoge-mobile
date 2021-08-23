@@ -3,6 +3,8 @@ import {Text} from 'react-native';
 import {Tab, TabView} from 'react-native-elements';
 import Header from '../../components/Header';
 import SetValue from './SetValue';
+import UserList from './UserList';
+import UserProfile from './UserProfile';
 const index = ({navigation}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   return (
@@ -26,11 +28,11 @@ const index = ({navigation}) => {
         <TabView.Item style={{width: '100%'}}>
           <SetValue />
         </TabView.Item>
-        <TabView.Item style={{backgroundColor: 'blue', width: '100%'}}>
-          <Text h1>Favorite</Text>
+        <TabView.Item style={{width: '100%'}}>
+          <UserList />
         </TabView.Item>
-        <TabView.Item style={{backgroundColor: 'green', width: '100%'}}>
-          <Text h1>Cart</Text>
+        <TabView.Item style={{width: '100%'}}>
+          <UserProfile />
         </TabView.Item>
       </TabView>
     </>

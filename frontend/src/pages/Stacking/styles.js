@@ -1,5 +1,7 @@
 import {StyleSheet, Dimensions} from 'react-native';
+import styled from 'styled-components/native';
 const {width} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -120,3 +122,18 @@ const styles = StyleSheet.create({
   },
 });
 export default styles;
+export const SelectCircle = styled.TouchableOpacity`
+  display: flex;
+  width: 90%;
+  height: ${((width - 40) / 3 / 100) * 90}px;
+  padding: 12px;
+  border-radius: 100px;
+  border-width: 2px;
+  border-color: ${props => (props.click === true ? 'red' : 'rgb(224,180,82)')};
+  justify-content: center;
+  align-items: center;
+  shadow-opacity: 0.75;
+  shadow-radius: 15px;
+  shadow-color: red;
+  shadow-offset: 10px 10px;
+`;
