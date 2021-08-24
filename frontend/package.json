@@ -25,6 +25,7 @@
     "react-copy-to-clipboard": "^5.0.3",
     "react-native": "0.64.2",
     "react-native-appearance": "^0.3.4",
+    "react-native-collapsible": "^1.6.0",
     "react-native-easy-grid": "^0.2.2",
     "react-native-eject": "^0.1.2",
     "react-native-elements": "^3.4.2",
