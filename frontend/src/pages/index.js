@@ -27,6 +27,9 @@ import Profile from './Profile';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Admin from './Admin';
+import SetValue from './SetValue';
+import UserSelect from './UserSelect';
+import SelectedUser from './SelectedUser';
 import {store} from '../store';
 
 import setAuthToken from '../utils/setAuthToken';
@@ -34,14 +37,14 @@ import {setCurrentUser, logoutUser} from '../actions/authAction';
 // if (AsyncStorage.getItem('jwtToken')) {
 //   setAuthToken(AsyncStorage.getItem('jwtToken'));
 
-//   const decoded = AsyncStorage.getItem('jwtToken', (err, result) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       return jwt_decode(result);
-//     }
-//   });
-
+// AsyncStorage.getItem('jwtToken', (err, result) => {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     return jwt_decode(result);
+//   }
+// });
+// const data = new Promise((resolve, reject))
 // store.dispatch(setCurrentUser(decoded));
 // console.log(decoded);
 // const currentTime = Date.now() / 1000;
@@ -80,6 +83,11 @@ function firstScreenStack({navigation}) {
       <Stack.Screen
         name="Stacking"
         component={Stacking}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="UserDetail"
+        component={SelectedUser}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -139,6 +147,17 @@ function Main({}) {
         name="Admin Panel"
         options={{drawerLabel: 'Admin Panel'}}
         component={Admin}
+      />
+      <Drawer.Screen
+        name="Set Value"
+        options={{drawerLabel: 'Set Value'}}
+        component={SetValue}
+      />
+
+      <Drawer.Screen
+        name="User Select"
+        options={{drawerLabel: 'User Select'}}
+        component={UserSelect}
       />
       <Drawer.Screen
         name="Log Out"

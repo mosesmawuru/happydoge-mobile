@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {CommonText} from '../../components/Common';
 
@@ -58,7 +64,12 @@ const UserProfile = () => {
   return (
     <ScrollView>
       <View style={{width: '100%', padding: 20}}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
           <View>
             <CommonText color="rgb(223, 100, 71)" fontSize="15px">
               USER ETH ADDRESS
@@ -73,7 +84,12 @@ const UserProfile = () => {
             </CommonText>
           </View>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
           <View>
             <CommonText color="rgb(223, 100, 71)" fontSize="15px">
               PASSWORD
@@ -88,7 +104,12 @@ const UserProfile = () => {
             </CommonText>
           </View>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
           <View>
             <CommonText color="rgb(223, 100, 71)" fontSize="15px">
               USER BALANCE
@@ -110,98 +131,118 @@ const UserProfile = () => {
             marginTop: 60,
           }}>
           <View>
-            <View style={{backgroundColor: 'rgb(223, 100, 71)'}}>
+            <View style={{backgroundColor: 'rgb(223, 100, 71)', padding: 10}}>
               <CommonText>HDT BALANCE</CommonText>
-            </View>
-            <View style={{padding: 5}}>
-              <View
-                style={{
-                  borderWidth: 3,
-                  borderColor: 'rgb(223, 100, 71)',
-                }}>
-                <Text style={{padding: 5}}>8423423.32</Text>
-              </View>
             </View>
             <View
               style={{
-                flexDirection: 'row',
+                backgroundColor: 'rgb(248,227,224)',
               }}>
-              <TouchableOpacity
-                activeOpacity={0.5}
+              <View style={{padding: 15}}>
+                <View
+                  style={{
+                    borderWidth: 3,
+                    borderColor: 'rgb(223, 100, 71)',
+                  }}>
+                  <TextInput style={{padding: 4, fontWeight: 'bold'}}>
+                    8423423.32
+                  </TextInput>
+                </View>
+              </View>
+              <View
                 style={{
-                  paddingVertical: 3,
-                  paddingHorizontal: 15,
-                  backgroundColor: 'rgb(223,100,71)',
-                  borderRadius: 20,
-                  borderWidth: 1,
-                  width: 80,
-                  borderColor: '#fff',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginHorizontal: 10,
+                  marginBottom: 10,
                 }}>
-                <CommonText color="white" fontSize="13px">
-                  EDIT
-                </CommonText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                style={{
-                  paddingVertical: 3,
-                  paddingHorizontal: 15,
-                  backgroundColor: 'rgb(223,100,71)',
-                  borderRadius: 20,
-                  borderWidth: 1,
-                  width: 80,
-                  borderColor: '#fff',
-                }}>
-                <CommonText color="white" fontSize="13px">
-                  APPLY
-                </CommonText>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{
+                    paddingVertical: 3,
+                    backgroundColor: 'rgb(223,100,71)',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    width: 60,
+                    borderColor: '#fff',
+                  }}>
+                  <CommonText color="white" fontSize="12px">
+                    EDIT
+                  </CommonText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{
+                    paddingVertical: 3,
+                    backgroundColor: 'rgb(223,100,71)',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    width: 60,
+                    borderColor: '#fff',
+                  }}>
+                  <CommonText color="white" fontSize="12px">
+                    APPLY
+                  </CommonText>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           <View>
-            <View style={{backgroundColor: 'rgb(223, 100, 71)'}}>
+            <View style={{backgroundColor: 'rgb(223, 100, 71)', padding: 10}}>
               <CommonText>ETH BALANCE</CommonText>
             </View>
-            <View style={{padding: 5}}>
+            <View
+              style={{
+                backgroundColor: 'rgb(248,227,224)',
+              }}>
+              <View style={{padding: 15}}>
+                <View
+                  style={{
+                    borderWidth: 3,
+                    borderColor: 'rgb(223, 100, 71)',
+                  }}>
+                  <TextInput style={{padding: 4, fontWeight: 'bold'}}>
+                    8423423.32
+                  </TextInput>
+                </View>
+              </View>
               <View
                 style={{
-                  borderWidth: 3,
-                  borderColor: 'rgb(223, 100, 71)',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginHorizontal: 10,
+                  marginBottom: 10,
                 }}>
-                <Text style={{padding: 5}}>8423423.32</Text>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{
+                    paddingVertical: 3,
+                    backgroundColor: 'rgb(223,100,71)',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    width: 60,
+                    borderColor: '#fff',
+                  }}>
+                  <CommonText color="white" fontSize="12px">
+                    EDIT
+                  </CommonText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{
+                    paddingVertical: 3,
+
+                    backgroundColor: 'rgb(223,100,71)',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    width: 60,
+                    borderColor: '#fff',
+                  }}>
+                  <CommonText color="white" fontSize="12px">
+                    APPLY
+                  </CommonText>
+                </TouchableOpacity>
               </View>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                style={{
-                  paddingVertical: 3,
-                  paddingHorizontal: 15,
-                  backgroundColor: 'rgb(223,100,71)',
-                  borderRadius: 20,
-                  borderWidth: 1,
-                  width: 80,
-                  borderColor: '#fff',
-                }}>
-                <CommonText color="white" fontSize="13px">
-                  EDIT
-                </CommonText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                style={{
-                  paddingVertical: 3,
-                  paddingHorizontal: 15,
-                  backgroundColor: 'rgb(223,100,71)',
-                  borderRadius: 20,
-                  borderWidth: 1,
-                  width: 80,
-                  borderColor: '#fff',
-                }}>
-                <CommonText color="white" fontSize="13px">
-                  APPLY
-                </CommonText>
-              </TouchableOpacity>
             </View>
           </View>
         </View>
