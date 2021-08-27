@@ -20,9 +20,10 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const { errors, isValid } = validateStack(req.body);
-    const { ID, amount } = req.body;
-    const num = 15;
-    if (amount <= 0) {
+    console.log(req.body);
+    const { ID, amount, duration } = req.body;
+    //   const num = 15;
+    if (amount <= 0 || duration <= 0) {
       return res.status(400).send({
         stackamount: "please input correct amount",
       });
@@ -31,63 +32,63 @@ router.post(
     if (!isValid) {
       return res.status(400).send(errors);
     }
-    const person = await User.findOne({ _id: ID });
-    const stackdata = await Stack.findOne({ user: ID });
-    if (person) {
-      if (person.countHDT >= amount) {
-        if (stackdata) {
-          stackdata.stack_amount = stackdata.stack_amount + amount;
-          person.countHDT = person.countHDT - amount;
-          person
-            .save()
-            .then((item) => {
-              return res.status(200).json({ msg: "success" });
-            })
-            .catch((err) => {
-              res.status(400).json({ errors: err });
-            });
-          stackdata
-            .save()
-            .then((item) => {
-              return res.status(200).json({ msg: "success" });
-            })
-            .catch((err) => {
-              res.status(400).json({ errors: err });
-            });
-        } else {
-          const newData = new Stack({
-            user: ID,
-            stack_amount: amount,
-            end_date: moment(date).add(1, "hours"),
-          });
-          person.countHDT = person.countHDT - amount;
-          person
-            .save()
-            .then((item) => {
-              return res.status(200).json({ msg: "success" });
-            })
-            .catch((err) => {
-              res.status(400).json({ errors: err });
-            });
-          newData
-            .save()
-            .then((item) => {
-              return res.status(200).json({ msg: "success" });
-            })
-            .catch((err) => {
-              res.status(400).json({ errors: err });
-            });
-        }
-      } else {
-        return res.status(400).send({
-          stackamount: "Not Sufficiant Balance",
-        });
-      }
-    } else {
-      return res.status(400).send({
-        errors: "user not found",
-      });
-    }
+    //   const person = await User.findOne({ _id: ID });
+    //   const stackdata = await Stack.findOne({ user: ID });
+    //   if (person) {
+    //     if (person.countHDT >= amount) {
+    //       if (stackdata) {
+    //         stackdata.stack_amount = stackdata.stack_amount + amount;
+    //         person.countHDT = person.countHDT - amount;
+    //         person
+    //           .save()
+    //           .then((item) => {
+    //             return res.status(200).json({ msg: "success" });
+    //           })
+    //           .catch((err) => {
+    //             res.status(400).json({ errors: err });
+    //           });
+    //         stackdata
+    //           .save()
+    //           .then((item) => {
+    //             return res.status(200).json({ msg: "success" });
+    //           })
+    //           .catch((err) => {
+    //             res.status(400).json({ errors: err });
+    //           });
+    //       } else {
+    //         const newData = new Stack({
+    //           user: ID,
+    //           stack_amount: amount,
+    //           end_date: moment(date).add(1, "hours"),
+    //         });
+    //         person.countHDT = person.countHDT - amount;
+    //         person
+    //           .save()
+    //           .then((item) => {
+    //             return res.status(200).json({ msg: "success" });
+    //           })
+    //           .catch((err) => {
+    //             res.status(400).json({ errors: err });
+    //           });
+    //         newData
+    //           .save()
+    //           .then((item) => {
+    //             return res.status(200).json({ msg: "success" });
+    //           })
+    //           .catch((err) => {
+    //             res.status(400).json({ errors: err });
+    //           });
+    //       }
+    //     } else {
+    //       return res.status(400).send({
+    //         stackamount: "Not Sufficiant Balance",
+    //       });
+    //     }
+    //   } else {
+    //     return res.status(400).send({
+    //       errors: "user not found",
+    //     });
+    //   }
   }
 );
 module.exports = router;

@@ -18,6 +18,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
+  description: {
+    marginTop: 30,
+    fontWeight: 'bold',
+    color: '#df6447',
+    fontSize: 25,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+    textAlign: 'center',
+    marginBottom: 10,
+  },
   userDiv: {marginTop: 20, width: width - 30},
   headerView: {
     borderBottomColor: 'grey',
@@ -57,7 +67,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'rgb(103,62,50)',
   },
-  btnText: {color: 'white', letterSpacing: 3, fontSize: 15},
+  btnText: {color: 'white', letterSpacing: 3, fontSize: 15, fontWeight: 'bold'},
   circleView: {
     marginTop: 40,
     flexDirection: 'row',

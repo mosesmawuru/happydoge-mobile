@@ -9,6 +9,7 @@ import {getPrice} from '../../actions/exchangeAction';
 import {getHistoryById} from '../../actions/historyAction';
 import animal from '../../assets/img/animal.png';
 import {SERVER_URL} from '../../constant/server_url';
+import {mainText, subText} from '../../constant/history';
 import io from 'socket.io-client';
 import axios from 'axios';
 const Home = ({navigation}) => {
@@ -27,6 +28,7 @@ const Home = ({navigation}) => {
     if (isMount) {
       dispatch(getPrice());
       dispatch(getUser(store.user.id));
+      dispatch(getHistoryById(store.user.address));
     }
     return () => {
       isMount = false;
@@ -46,6 +48,7 @@ const Home = ({navigation}) => {
   //   }, 21000);
   // });
   const profile = useSelector(state => state.profile);
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -135,47 +138,44 @@ const Home = ({navigation}) => {
           <Text style={styles.transText}>LATEST TRANSACTIONS</Text>
         </View>
         <View>
-          <View style={styles.historyDiv}>
-            <View style={styles.rowDiv}>
-              <View style={styles.circle} />
-              <View>
-                <Text>Eth Deposit</Text>
-                <Text>Received payment</Text>
+          {history.historydata.map((item, key) => {
+            return (
+              <View style={styles.historyDiv} key={key + 1}>
+                <View style={styles.rowDiv}>
+                  <View style={styles.circle} />
+                  <View>
+                    <Text>
+                      {item.type === 1
+                        ? mainText[1].text
+                        : item.type === 2
+                        ? mainText[1].text
+                        : item.type === 3
+                        ? mainText[1].text
+                        : item.type === 4
+                        ? mainText[1].text
+                        : item.type === 5
+                        ? mainText[1].text
+                        : ''}
+                    </Text>
+                    <Text>Received payment</Text>
+                    {/* <Text>{item.from_address}</Text>
+                    <Text>{store.user.address}</Text> */}
+                  </View>
+                </View>
+
+                <Text>
+                  {item.from_address
+                    ? item.from_address === store.user.address
+                      ? '-'
+                      : ''
+                    : ''}
+                  {item.amount} {item.method === 'eth' ? 'ETH' : 'HDT'}
+                </Text>
               </View>
-            </View>
-            <Text>2.14 ETH</Text>
-          </View>
-          <View style={styles.historyDiv}>
-            <View style={styles.rowDiv}>
-              <View style={styles.circle} />
-              <View>
-                <Text>Your refferal</Text>
-                <Text>Transfer money</Text>
-              </View>
-            </View>
-            <Text>-450.00 HDT</Text>
-          </View>
-          <View style={styles.historyDiv}>
-            <View style={styles.rowDiv}>
-              <View style={styles.circle} />
-              <View>
-                <Text>Your refferal</Text>
-                <Text>Transfer money</Text>
-              </View>
-            </View>
-            <Text>-20050.00 HDT</Text>
-          </View>
-          <View style={styles.historyDiv}>
-            <View style={styles.rowDiv}>
-              <View style={styles.circle} />
-              <View>
-                <Text>Your refferal</Text>
-                <Text>Transfer money</Text>
-              </View>
-            </View>
-            <Text>-4110.00 HDT</Text>
-          </View>
+            );
+          })}
         </View>
+        <View></View>
         <View style={styles.footTxt}>
           <Text
             style={styles.moreText}

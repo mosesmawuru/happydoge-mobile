@@ -13,11 +13,7 @@ const ExchangeSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  date: {
-    type: Date,
-    required: true,
-  },
-  end_date:{
+  end_date: {
     type: Date,
     required: true,
   },

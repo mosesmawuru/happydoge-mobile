@@ -30,6 +30,7 @@ import Admin from './Admin';
 import SetValue from './SetValue';
 import UserSelect from './UserSelect';
 import SelectedUser from './SelectedUser';
+import AddStake from './Stacking/Add';
 import {store} from '../store';
 
 import setAuthToken from '../utils/setAuthToken';
@@ -83,6 +84,22 @@ function firstScreenStack({navigation}) {
       <Stack.Screen
         name="Stacking"
         component={Stacking}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AddStake"
+        component={AddStake}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+}
+function User({navigation}) {
+  return (
+    <Stack.Navigator initialRouteName="UserSelect">
+      <Stack.Screen
+        name="UserSelect"
+        component={UserSelect}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -157,7 +174,7 @@ function Main({}) {
       <Drawer.Screen
         name="User Select"
         options={{drawerLabel: 'User Select'}}
-        component={UserSelect}
+        component={User}
       />
       <Drawer.Screen
         name="Log Out"
@@ -173,7 +190,7 @@ function Routes({}) {
   return (
     <AppearanceProvider>
       <NavigationContainer theme={schema === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Login">
           <Stack.Screen
             name="Login"
             component={Login}
