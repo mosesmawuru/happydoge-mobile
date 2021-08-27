@@ -4,12 +4,11 @@ const isEmpty = require("../utils/is-Empty");
 module.exports = function validatePrice(data) {
   let errors = {};
 
-  data.price = !isEmpty(data.price) ? data.price : "";
+  data.amount = !isEmpty(data.amount) ? data.amount : "";
 
-  if (Validator.isEmpty(data.price)) {
-    errors.price = "Price field is required";
+  if (Validator.isEmpty(data.amount)) {
+    errors.amount = "Amount field is required";
   }
-
   return {
     errors,
     isValid: isEmpty(errors),

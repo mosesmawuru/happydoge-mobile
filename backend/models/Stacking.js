@@ -20,7 +20,7 @@ const ExchangeSchema = new mongoose.Schema({
   flag: {
     type: Boolean,
     require: true,
-    default: false,
+    default: true,
   },
 });
 

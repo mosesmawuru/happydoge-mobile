@@ -6,6 +6,8 @@ const Exchange = require("../models/Exchange");
 const History = require("../models/History");
 //@import validation
 const validateSwap = require("../validation/swap");
+//@import util
+const isEmpty = require("../utils/is-Empty");
 
 // @route   GET users/test
 // @desc    Return current user
@@ -25,12 +27,12 @@ router.post("/swaptohdt", async (req, res) => {
   if (amount <= 0) {
     return res.status(400).send({ countETH: "please input correct" });
   }
-  const hdtitem = await Exchange.find();
+  const hdtitem = await Exchange.find({});
   const person = await User.findOne({ _id: ID });
   if (person && hdtitem) {
     if (person.countETH >= amount) {
       person.countETH = person.countETH - amount;
-      person.countHDT = person.countHDT + (amount * price) / hdtitem[0].price;
+      person.countHDT = person.countHDT + (amount * price) / hdtitem.price;
       person
         .save()
         .then((item) => {
@@ -69,28 +71,39 @@ router.post("/swaptoeth", async (req, res) => {
   if (amount <= 0) {
     return res.status(400).send({ countHDT: "please input correct" });
   }
-  const hdtitem = await Exchange.find();
+  const hdtitem = await Exchange.findOne({});
   const person = await User.findOne({ _id: ID });
   if (person && hdtitem) {
     if (person.countHDT >= amount) {
-      person.countHDT = person.countHDT - amount;
-      person.countETH =
-        person.countETH + (amount * hdtitem[0].price) / price / 2;
-      person
-        .save()
-        .then((item) => {
-          const newHistory = new History({
-            method: "hdt",
-            to_address: item.address,
-            amount: amount,
-            type: 5,
-          });
-          newHistory.save();
-          return res.status(200).json({ msg: "success" });
-        })
-        .catch((err) => {
-          return res.status(400).json({ errors: err });
+      if (isEmpty(value.minium_amount)) {
+        return res.status(400).send({
+          error: "Minimum amount is not setted",
         });
+      } else if (isEmpty(value.price)) {
+        return res.status(400).send({
+          error: "HDT price is not setted",
+        });
+      } else {
+        person.countHDT = person.countHDT - amount;
+        person.countETH =
+          person.countETH +
+          (((amount * hdtitem.price) / price) * hdtitem.swap_rate) / 100;
+        person
+          .save()
+          .then((item) => {
+            const newHistory = new History({
+              method: "hdt",
+              to_address: item.address,
+              amount: amount,
+              type: 5,
+            });
+            newHistory.save();
+            return res.status(200).json({ msg: "success" });
+          })
+          .catch((err) => {
+            return res.status(400).json({ errors: err });
+          });
+      }
     } else {
       return res.status(400).send({
         countHDT: "Not Sufficiant Balance",

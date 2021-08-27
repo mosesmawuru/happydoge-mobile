@@ -166,12 +166,6 @@ function Main({}) {
         component={Admin}
       />
       <Drawer.Screen
-        name="Set Value"
-        options={{drawerLabel: 'Set Value'}}
-        component={SetValue}
-      />
-
-      <Drawer.Screen
         name="User Select"
         options={{drawerLabel: 'User Select'}}
         component={User}
