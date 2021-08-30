@@ -10,14 +10,66 @@ import {
 import Accordion from 'react-native-collapsible/Accordion';
 import {CommonText} from '../../components/Common';
 import Header from '../../components/Header';
-import {getUserById} from '../../actions/userAction';
+import {getUserById, getStakeData} from '../../actions/userAction';
 const SelectedUser = ({navigation, route}) => {
   const dispatch = useDispatch();
+  const store = useSelector(state => state.user);
   const [activeSections, setActiveSections] = useState([]);
   const SECTIONS = [
     {
       title: 'STAKING DETAILS',
-      content: <Text>'Lorem ipsum...'</Text>,
+      content: (
+        <View>
+          {store.stakedata.length > 0 ? (
+            store.stakedata.map((item, key) => {
+              return (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'rgb(223, 100, 71)',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      padding: 10,
+                      textAlign: 'center',
+                    }}>
+                    {item.stack_amount} HDT
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'rgb(223, 100, 71)',
+                      fontSize: 23,
+                      fontWeight: 'bold',
+                      padding: 10,
+                      textAlign: 'center',
+                    }}>
+                    {Math.floor(
+                      (new Date(item.end_date).getTime() -
+                        new Date(item.date).getTime()) /
+                        (1000 * 60 * 60 * 24),
+                    )}{' '}
+                    days
+                  </Text>
+                </View>
+              );
+            })
+          ) : (
+            <Text
+              style={{
+                color: 'rgb(223, 100, 71)',
+                fontSize: 23,
+                fontWeight: 'bold',
+                padding: 10,
+                textAlign: 'center',
+              }}>
+              No Staking History{' '}
+            </Text>
+          )}
+        </View>
+      ),
     },
     {
       title: 'REFERRAL DETAILS',
@@ -45,6 +97,8 @@ const SelectedUser = ({navigation, route}) => {
               color: 'white',
               textAlign: 'center',
               fontWeight: 'bold',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
             }}>
             {section.title}
           </Text>
@@ -55,7 +109,13 @@ const SelectedUser = ({navigation, route}) => {
 
   const _renderContent = section => {
     return (
-      <View>
+      <View
+        style={{
+          backgroundColor: 'rgb(248,227,224)',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
         <Text>{section.content}</Text>
       </View>
     );
@@ -64,9 +124,10 @@ const SelectedUser = ({navigation, route}) => {
   const _updateSections = activeSections => {
     setActiveSections(activeSections);
   };
-  const store = useSelector(state => state.user);
+
   useEffect(() => {
     dispatch(getUserById(route.params.id));
+    dispatch(getStakeData(route.params.id));
   }, [route]);
   return (
     <>
