@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+
 import authReducer from './authReducer';
 import errorReducer from './errorReducer';
 import historyReducer from './historyReducer';
@@ -7,6 +8,8 @@ import swapReducer from './swapReducer';
 import transferReducer from './transferReducer';
 import priceReducer from './priceReducer';
 import adminReducer from './adminReducer';
+import stakeReducer from './stakeReducer';
+import userReducer from './userReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -17,4 +20,6 @@ export default combineReducers({
   errors: errorReducer,
   price: priceReducer,
   transaction: adminReducer,
+  stake: stakeReducer,
+  user:userReducer
 });

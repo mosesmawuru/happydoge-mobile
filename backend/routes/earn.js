@@ -39,7 +39,7 @@ router.post(
     if (!isValid) {
       return res.status(400).send(errors);
     }
-    Earn.find({ user: ID })
+    Earn.findOne({ user: ID })
       .then((item) => {
         return res.status(200).json(item);
       })

@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
   },
   SubTextStyle: {
-    fontSize: 10,
+    fontSize: 12,
     color: 'rgb(103,62,50)',
   },
   TextStyle: {

@@ -12,6 +12,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const { errors, isValid } = validatePrice(req.body);
+    console.log(req.body);
     const { amount, label } = req.body;
     if (!isValid) {
       return res.status(400).send(errors);
@@ -189,7 +190,7 @@ router.get(
   (req, res) => {
     Exchange.findOne()
       .then((item) => {
-        return res.status(200).json(item[0]);
+        return res.status(200).json(item);
       })
       .catch((err) => {
         return res.status(400).json({ errors: err });

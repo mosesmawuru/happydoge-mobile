@@ -161,9 +161,9 @@ function Main({}) {
         component={Withdraw}
       />
       <Drawer.Screen
-        name="Admin Panel"
-        options={{drawerLabel: 'Admin Panel'}}
-        component={Admin}
+        name="Set Value"
+        options={{drawerLabel: 'Set Value'}}
+        component={SetValue}
       />
       <Drawer.Screen
         name="User Select"

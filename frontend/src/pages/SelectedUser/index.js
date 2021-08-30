@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   ScrollView,
   View,
@@ -9,7 +10,9 @@ import {
 import Accordion from 'react-native-collapsible/Accordion';
 import {CommonText} from '../../components/Common';
 import Header from '../../components/Header';
-const SelectedUser = ({navigation}) => {
+import {getUserById} from '../../actions/userAction';
+const SelectedUser = ({navigation, route}) => {
+  const dispatch = useDispatch();
   const [activeSections, setActiveSections] = useState([]);
   const SECTIONS = [
     {
@@ -61,6 +64,10 @@ const SelectedUser = ({navigation}) => {
   const _updateSections = activeSections => {
     setActiveSections(activeSections);
   };
+  const store = useSelector(state => state.user);
+  useEffect(() => {
+    dispatch(getUserById(route.params.id));
+  }, [route]);
   return (
     <>
       <Header text="User Detail" navigation={navigation} />
@@ -82,7 +89,7 @@ const SelectedUser = ({navigation}) => {
                 width: '50%',
               }}>
               <CommonText color="rgb(223, 100, 71)" fontSize="14px">
-                0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E
+                {store.selectedUser.address}
               </CommonText>
             </View>
           </View>
@@ -102,7 +109,7 @@ const SelectedUser = ({navigation}) => {
                 width: '50%',
               }}>
               <CommonText color="rgb(223, 100, 71)" fontSize="14px">
-                asddaf
+                {store.selectedUser.password}
               </CommonText>
             </View>
           </View>
@@ -146,8 +153,14 @@ const SelectedUser = ({navigation}) => {
                       borderWidth: 3,
                       borderColor: 'rgb(223, 100, 71)',
                     }}>
-                    <TextInput style={{padding: 4, fontWeight: 'bold'}}>
-                      8423423.32
+                    <TextInput
+                      keyboardType="numeric"
+                      style={{
+                        padding: 4,
+                        fontWeight: 'bold',
+                        maxWidth: 110,
+                      }}>
+                      {store.selectedUser.countHDT}
                     </TextInput>
                   </View>
                 </View>
@@ -203,8 +216,10 @@ const SelectedUser = ({navigation}) => {
                       borderWidth: 3,
                       borderColor: 'rgb(223, 100, 71)',
                     }}>
-                    <TextInput style={{padding: 4, fontWeight: 'bold'}}>
-                      8423423.32
+                    <TextInput
+                      keyboardType="numeric"
+                      style={{padding: 4, fontWeight: 'bold', maxWidth: 110}}>
+                      {store.selectedUser.countETH}
                     </TextInput>
                   </View>
                 </View>

@@ -1,22 +1,45 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {View, TextInput, ScrollView, TouchableOpacity} from 'react-native';
 import NumberFormat from 'react-number-format';
 import {FlexLayout, CommonText} from '../../components/Common';
 import Header from '../../components/Header';
+import {getPrice, setPrice} from '../../actions/exchangeAction';
 const SetValue = ({navigation}) => {
-  const [data, setData] = useState({
-    hdtprice: 1,
-    stakeRate: 0.125,
-    referRate: 30,
-    swapRate: 50,
-    feeRate: 50,
-  });
-  const [hdtprice, setHdtprice] = useState(1);
-  const [stakeRate, setStakeRate] = useState(0.125);
-  const [referRate, setReferRate] = useState(30);
-  const [swapRate, setSwapRate] = useState(50);
-  const [feeRate, setFeeRate] = useState(50);
-  const [minimum, setMinimum] = useState(100000);
+  const dispatch = useDispatch();
+  const [hdtprice, setHdtprice] = useState();
+  const [stakeRate, setStakeRate] = useState();
+  const [referRate, setReferRate] = useState();
+  const [swapRate, setSwapRate] = useState();
+  const [feeRate, setFeeRate] = useState();
+  const [minimum, setMinimum] = useState();
+  const state = useSelector(state => state.price);
+  const onSetValue = msg => {
+    let data = {};
+    if (msg === 'price') {
+      data.amount = hdtprice;
+    }
+    if (msg === 'stack_rate') {
+      data.amount = stakeRate;
+    }
+    if (msg === 'referral_rate') {
+      data.amount = referRate;
+    }
+    if (msg === 'swap_rate') {
+      data.amount = swapRate;
+    }
+    if (msg === 'withdraw_rate') {
+      data.amount = feeRate;
+    }
+    if (msg === 'minium_amount') {
+      data.amount = minimum;
+    }
+    data.label = msg;
+    dispatch(setPrice(data));
+  };
+  useEffect(() => {
+    dispatch(getPrice());
+  }, []);
   return (
     <>
       <Header text="SET VALUE" navigation={navigation} />
@@ -36,7 +59,11 @@ const SetValue = ({navigation}) => {
                   paddingBottom: 10,
                 }}>
                 <CommonText maxWidth="50%">HDT PRICE</CommonText>
-                <CommonText color="black">${data.hdtprice}</CommonText>
+                <CommonText color="black">
+                  {state.pricedata.price
+                    ? `$${state.pricedata.price}`
+                    : 'not setted'}
+                </CommonText>
               </View>
               <View
                 style={{
@@ -59,8 +86,9 @@ const SetValue = ({navigation}) => {
                       paddingBottom: 5,
                       fontWeight: 'bold',
                     }}
+                    keyboardType="numeric"
                     onChangeText={msg => {
-                      +setHdtprice(msg);
+                      setHdtprice(msg);
                     }}
                   />
                 </FlexLayout>
@@ -80,13 +108,7 @@ const SetValue = ({navigation}) => {
                     }}
                     keyboardType="numeric"
                     onPress={() => {
-                      setData({
-                        hdtprice,
-                        stakeRate: 0.125,
-                        referRate: 30,
-                        swapRate: 50,
-                        feeRate: 50,
-                      });
+                      onSetValue('price');
                     }}>
                     <CommonText color="white" fontSize="18px">
                       APPLY
@@ -108,7 +130,11 @@ const SetValue = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <CommonText maxWidth="50%">STAKING RATE</CommonText>
-                <CommonText color="black">{data.stakeRate}%</CommonText>
+                <CommonText color="black">
+                  {state.pricedata.stack_rate
+                    ? `${state.pricedata.stack_rate}%`
+                    : 'not setted'}
+                </CommonText>
               </View>
               <View
                 style={{
@@ -152,13 +178,7 @@ const SetValue = ({navigation}) => {
                       borderColor: '#fff',
                     }}
                     onPress={() => {
-                      setData({
-                        hdtprice: 30,
-                        stakeRate,
-                        referRate: 30,
-                        swapRate: 50,
-                        feeRate: 50,
-                      });
+                      onSetValue('stack_rate');
                     }}>
                     <CommonText color="white" fontSize="18px">
                       APPLY
@@ -180,7 +200,11 @@ const SetValue = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <CommonText maxWidth="60%">REFERRAL COMMISION RATE</CommonText>
-                <CommonText color="black">{data.referRate}%</CommonText>
+                <CommonText color="black">
+                  {state.pricedata.referral_rate
+                    ? `${state.pricedata.referral_rate}%`
+                    : 'not setted'}
+                </CommonText>
               </View>
               <View
                 style={{
@@ -224,13 +248,7 @@ const SetValue = ({navigation}) => {
                       borderColor: '#fff',
                     }}
                     onPress={() => {
-                      setData({
-                        hdtprice: 30,
-                        stakeRate: 20,
-                        referRate,
-                        swapRate: 50,
-                        feeRate: 50,
-                      });
+                      onSetValue('referral_rate');
                     }}>
                     <CommonText color="white" fontSize="18px">
                       APPLY
@@ -252,7 +270,11 @@ const SetValue = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <CommonText maxWidth="40%">HDT TO ETH SWAP RATE</CommonText>
-                <CommonText color="black">{data.swapRate}%</CommonText>
+                <CommonText color="black">
+                  {state.pricedata.swap_rate
+                    ? `${state.pricedata.swap_rate}%`
+                    : 'not setted'}
+                </CommonText>
               </View>
               <View
                 style={{
@@ -296,13 +318,7 @@ const SetValue = ({navigation}) => {
                       borderColor: '#fff',
                     }}
                     onPress={() => {
-                      setData({
-                        hdtprice: 30,
-                        stakeRate: 20,
-                        referRate: 20,
-                        swapRate,
-                        feeRate: 50,
-                      });
+                      onSetValue('swap_rate');
                     }}>
                     <CommonText color="white" fontSize="18px">
                       APPLY
@@ -324,7 +340,11 @@ const SetValue = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <CommonText maxWidth="50%">ETH WITHDRAW FEE RATE</CommonText>
-                <CommonText color="black">{data.feeRate}%</CommonText>
+                <CommonText color="black">
+                  {state.pricedata.withdraw_rate
+                    ? `${state.pricedata.withdraw_rate}%`
+                    : 'not setted'}
+                </CommonText>
               </View>
               <View
                 style={{
@@ -368,13 +388,7 @@ const SetValue = ({navigation}) => {
                       borderColor: '#fff',
                     }}
                     onPress={() => {
-                      setData({
-                        hdtprice: 30,
-                        stakeRate: 20,
-                        referRate: 20,
-                        swapRate: 40,
-                        feeRate: 60,
-                      });
+                      onSetValue('withdraw_rate');
                     }}>
                     <CommonText color="white" fontSize="18px">
                       APPLY
@@ -396,15 +410,18 @@ const SetValue = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <CommonText maxWidth="40%">MINIMUM AMOUNT</CommonText>
-
-                <NumberFormat
-                  value={10000000}
-                  displayType={'text'}
-                  thousandSeparator={true}
-                  renderText={formattedValue => (
-                    <CommonText color="black">{formattedValue} </CommonText>
-                  )} // <--- Don't forget this!
-                />
+                {state.pricedata.minium_amount ? (
+                  <NumberFormat
+                    value={state.pricedata.minium_amount}
+                    displayType={'text'}
+                    thousandSeparator={true}
+                    renderText={formattedValue => (
+                      <CommonText color="black">{formattedValue} </CommonText>
+                    )} // <--- Don't forget this!
+                  />
+                ) : (
+                  'not setted'
+                )}
               </View>
               <View
                 style={{
@@ -429,7 +446,7 @@ const SetValue = ({navigation}) => {
                     }}
                     keyboardType="numeric"
                     onChangeText={msg => {
-                      setSwapRate(msg);
+                      setMinimum(msg);
                     }}
                   />
                 </FlexLayout>
@@ -446,6 +463,9 @@ const SetValue = ({navigation}) => {
                       borderWidth: 1,
                       width: 130,
                       borderColor: '#fff',
+                    }}
+                    onPress={() => {
+                      onSetValue('minium_amount');
                     }}>
                     <CommonText color="white" fontSize="18px">
                       APPLY

@@ -132,7 +132,7 @@ router.get(
     return res.status(200).json(req.user);
   }
 );
-// @route   GET users by id
+// @route   post users/getuser
 // @desc    Return user by id
 // @access  Private
 router.post(
@@ -149,5 +149,20 @@ router.post(
       });
   }
 );
-
+// @route   GET users/all
+// @desc    Return all users info
+// @access  Private
+router.get(
+  "/all",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.find()
+      .then((item) => {
+        return res.status(200).json(item);
+      })
+      .catch((err) => {
+        return res.status(400).json({ errors: err });
+      });
+  }
+);
 module.exports = router;

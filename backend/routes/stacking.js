@@ -9,6 +9,7 @@ const User = require("../models/User");
 const History = require("../models/History");
 //@import validataion
 const validateStack = require("../validation/stack");
+const validateEarn = require("../validation/earn");
 //@import util
 const isEmpty = require("../utils/is-Empty");
 // @route   GET stack/test
@@ -25,7 +26,6 @@ router.post(
   async (req, res) => {
     const { errors, isValid } = validateStack(req.body);
     const { ID, amount, duration } = req.body;
-    //   const num = 15;
     if (!isValid) {
       return res.status(400).send(errors);
     }
@@ -112,8 +112,24 @@ router.post(
 // @route   Get stake info by user
 // @access  private
 router.post(
-  "/",
+  "/getStake",
   passport.authenticate("jwt", { session: false }),
-  async (req, res) => {}
+  async (req, res) => {
+    console.log(req.body);
+    const { errors, isValid } = validateEarn(req.body);
+
+    const { ID } = req.body;
+    if (!isValid) {
+      return res.status(400).send(errors);
+    }
+    Stack.find({ user: ID, flag: true })
+      .then((item) => {
+        return res.status(200).json(item);
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.status(400).json({ errors: err });
+      });
+  }
 );
 module.exports = router;

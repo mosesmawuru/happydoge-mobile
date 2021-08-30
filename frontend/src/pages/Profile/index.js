@@ -40,113 +40,115 @@ const Profile = ({navigation}) => {
 
   const {color} = useTheme();
   return (
-    <ScrollView>
+    <>
       <Header text="MY PROFILE" navigation={navigation} />
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.headText}>MY PROFILE</Text>
-        </View>
-
-        <View style={styles.imgDiv}>
-          <Image style={styles.img} source={animal} />
-        </View>
-        <View style={styles.wrapper}>
+      <ScrollView>
+        <View style={styles.container}>
           <View>
-            <Text style={styles.txt}>Name</Text>
-            <Input placeholder="Name" value={store.user.name} disabled />
-            <Text style={styles.txt}>Address</Text>
-            <Input
-              placeholder="Address"
-              value={
-                store.user.address
-                  ? store.user.address.substring(0, 6) +
-                    '....' +
-                    store.user.address.substring(
-                      store.user.address.length - 6,
-                      store.user.address.length,
-                    )
-                  : ''
-              }
-              disabled
-              rightIcon={
-                <Icon
-                  name={isCopied ? 'check' : 'copy'}
-                  size={24}
-                  color="gray"
-                  onPress={() => {
-                    copyToClipboard(store.user.address, 'address');
-                  }}
-                />
-              }
-            />
-
-            <Text style={styles.txt}>Balance ETH</Text>
-            <Input
-              placeholder="INPUT WITH ERROR MESSAGE"
-              value={store.user.countETH + ' ' + 'ETH'}
-              disabled
-            />
-
-            <Text style={styles.txt}>Balance HDT</Text>
-            <Input
-              placeholder="HDT"
-              value={store.user.countHDT + ' ' + 'HDT'}
-              disabled
-            />
-
-            <Text style={styles.txt}>My ReferralCode</Text>
-
-            <Input
-              placeholder="Referral Code"
-              value={store.user.owncode}
-              disabled
-              rightIcon={
-                <Icon
-                  name={codeCopied ? 'check' : 'copy'}
-                  onPress={() => {
-                    copyToClipboard(store.user.owncode, 'referralcode');
-                  }}
-                  size={24}
-                  color="gray"
-                />
-              }
-            />
-            {store.user.referralcode ? (
-              <>
-                <Text style={styles.txt}>Friend ReferralCode</Text>
-
-                <Input
-                  placeholder="Referral Code"
-                  value={store.user.referralcode}
-                  disabled
-                  rightIcon={
-                    <Icon
-                      name={codeCopied ? 'check' : 'copy'}
-                      onPress={() => {
-                        copyToClipboard(
-                          store.user.referralcode,
-                          'referralcode',
-                        );
-                      }}
-                      size={24}
-                      color="gray"
-                    />
-                  }
-                />
-              </>
-            ) : (
-              <></>
-            )}
+            <Text style={styles.headText}>MY PROFILE</Text>
           </View>
+
+          <View style={styles.imgDiv}>
+            <Image style={styles.img} source={animal} />
+          </View>
+          <View style={styles.wrapper}>
+            <View>
+              <Text style={styles.txt}>Name</Text>
+              <Input placeholder="Name" value={store.user.name} disabled />
+              <Text style={styles.txt}>Address</Text>
+              <Input
+                placeholder="Address"
+                value={
+                  store.user.address
+                    ? store.user.address.substring(0, 6) +
+                      '....' +
+                      store.user.address.substring(
+                        store.user.address.length - 6,
+                        store.user.address.length,
+                      )
+                    : ''
+                }
+                disabled
+                rightIcon={
+                  <Icon
+                    name={isCopied ? 'check' : 'copy'}
+                    size={24}
+                    color="gray"
+                    onPress={() => {
+                      copyToClipboard(store.user.address, 'address');
+                    }}
+                  />
+                }
+              />
+
+              <Text style={styles.txt}>Balance ETH</Text>
+              <Input
+                placeholder="INPUT WITH ERROR MESSAGE"
+                value={store.user.countETH + ' ' + 'ETH'}
+                disabled
+              />
+
+              <Text style={styles.txt}>Balance HDT</Text>
+              <Input
+                placeholder="HDT"
+                value={store.user.countHDT + ' ' + 'HDT'}
+                disabled
+              />
+
+              <Text style={styles.txt}>My ReferralCode</Text>
+
+              <Input
+                placeholder="Referral Code"
+                value={store.user.owncode}
+                disabled
+                rightIcon={
+                  <Icon
+                    name={codeCopied ? 'check' : 'copy'}
+                    onPress={() => {
+                      copyToClipboard(store.user.owncode, 'referralcode');
+                    }}
+                    size={24}
+                    color="gray"
+                  />
+                }
+              />
+              {store.user.referralcode ? (
+                <>
+                  <Text style={styles.txt}>Friend ReferralCode</Text>
+
+                  <Input
+                    placeholder="Referral Code"
+                    value={store.user.referralcode}
+                    disabled
+                    rightIcon={
+                      <Icon
+                        name={codeCopied ? 'check' : 'copy'}
+                        onPress={() => {
+                          copyToClipboard(
+                            store.user.referralcode,
+                            'referralcode',
+                          );
+                        }}
+                        size={24}
+                        color="gray"
+                      />
+                    }
+                  />
+                </>
+              ) : (
+                <></>
+              )}
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.submitButtonStyle}
+            activeOpacity={0.5}
+            onPress={() => navigation.goBack()}>
+            <Text style={styles.TextStyle}>Go Back</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.submitButtonStyle}
-          activeOpacity={0.5}
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.TextStyle}>Go Back</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 };
 export default Profile;

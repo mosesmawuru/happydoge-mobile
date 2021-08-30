@@ -23,7 +23,7 @@ const Stacking = ({navigation}) => {
       amount,
       duration,
     };
-    dispatch(addStake(data));
+    dispatch(addStake(data, navigation));
   };
   return (
     <>
@@ -82,7 +82,7 @@ const Stacking = ({navigation}) => {
                         </Text>
 
                         <NumberFormat
-                          value={100000000}
+                          value={5000}
                           displayType={'text'}
                           thousandSeparator={true}
                           suffix={'HDT'}
