@@ -24,4 +24,18 @@ router.post("/", (req, res) => {
     });
 });
 
+router.post("/gethistory", (req, res) => {
+  const { address } = req.body;
+  History.find({
+    $or: [{ from_address: address }, { to_address: address }],
+    type: 3,
+  })
+    .then((item) => {
+      return res.status(200).json(item);
+    })
+    .catch((err) => {
+      return res.status(404).json(err);
+    });
+});
+
 module.exports = router;

@@ -191,20 +191,24 @@ router.post(
   }
 );
 //@multi update withdraw state
-router.post("/updates", async (req, res) => {
-  const data = [
-    { id: "610ff0a49827e14470d19762", status: 10 },
-    { id: "610ff0bf9827e14470d19765", status: 11 },
-  ];
+router.post(
+  "/updates",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const data = [
+      { id: "610ff0a49827e14470d19762", status: 10 },
+      { id: "610ff0bf9827e14470d19765", status: 11 },
+    ];
 
-  async.mapSeries(data, UpdateWithdraw, function (err, result) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.status(200).json(result);
-    }
-  });
-});
+    async.mapSeries(data, UpdateWithdraw, function (err, result) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.status(200).json(result);
+      }
+    });
+  }
+);
 
 const UpdateWithdraw = (item, callback) => {
   const { id, status } = item;
@@ -217,4 +221,18 @@ const UpdateWithdraw = (item, callback) => {
   });
 };
 
+router.post(
+  "/getwithdraw",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const { address } = req.body;
+    Withdraw.find({ address, status: 1 })
+      .then((item) => {
+        return res.status(200).json(item);
+      })
+      .catch((err) => {
+        return res.status(404).json(err);
+      });
+  }
+);
 module.exports = router;

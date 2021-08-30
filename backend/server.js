@@ -72,6 +72,7 @@ app.use("/history", require("./routes/history"));
 app.use("/deposit", require("./routes/deposit"));
 app.use("/withdraw", require("./routes/withdraw"));
 app.use("/earn", require("./routes/earn"));
+app.use("/referral", require("./routes/referral"));
 // Serve static assets in productioncd
 if (process.env.NODE_ENV === "production") {
   // Set static folder
