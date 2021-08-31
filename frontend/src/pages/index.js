@@ -2,6 +2,7 @@
 import 'react-native-gesture-handler';
 
 import * as React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {View, TouchableOpacity, Image} from 'react-native';
 
 import {
@@ -26,7 +27,7 @@ import Stacking from './Stacking';
 import Profile from './Profile';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
-import Admin from './Admin';
+import Admin from './Admin/user';
 import SetValue from './SetValue';
 import UserSelect from './UserSelect';
 import SelectedUser from './SelectedUser';
@@ -112,6 +113,9 @@ function User({navigation}) {
 }
 
 function Main({}) {
+  const dispatch = useDispatch();
+  const store = useSelector(state => state.auth);
+  console.log(store);
   return (
     <Drawer.Navigator
       drawerContentOptions={{
@@ -160,16 +164,27 @@ function Main({}) {
         options={{drawerLabel: 'Withdraw'}}
         component={Withdraw}
       />
-      <Drawer.Screen
-        name="Set Value"
-        options={{drawerLabel: 'Set Value'}}
-        component={SetValue}
-      />
-      <Drawer.Screen
-        name="User Select"
-        options={{drawerLabel: 'User Select'}}
-        component={User}
-      />
+      {store.user.role === 'admin' ? (
+        <>
+          <Drawer.Screen
+            name="Admin"
+            options={{drawerLabel: 'Admin'}}
+            component={Admin}
+          />
+          <Drawer.Screen
+            name="Set Value"
+            options={{drawerLabel: 'Set Value'}}
+            component={SetValue}
+          />
+          <Drawer.Screen
+            name="User Select"
+            options={{drawerLabel: 'User Select'}}
+            component={User}
+          />
+        </>
+      ) : (
+        <></>
+      )}
       <Drawer.Screen
         name="Log Out"
         options={{drawerLabel: 'Log Out'}}
