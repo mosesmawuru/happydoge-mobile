@@ -53,7 +53,7 @@ const UserSelect = ({navigation}) => {
                 <TouchableOpacity
                   key={key + 1}
                   onPress={() =>
-                    navigation.navigate('UserDetail', {id: item._id})
+                    navigation.navigate('UserDetail', {item: item})
                   }>
                   <Row
                     style={{

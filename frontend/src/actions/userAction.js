@@ -49,3 +49,42 @@ export const getStakeData = ID => {
       });
   };
 };
+
+export const getTransferData = address => {
+  return async dispatch => {
+    await axios
+      .post(SERVER_URL + '/history/gethistory', {address})
+      .then(res => {
+        dispatch({type: GET_USER_TRANSFER_DATA, payload: res.data});
+      })
+      .catch(err => {
+        dispatch({type: GET_ERRORS, payload: err.response.data});
+      });
+  };
+};
+
+export const getWithdrawData = address => {
+  return async dispatch => {
+    await axios
+      .post(SERVER_URL + '/withdraw/getwithdraw', {address})
+      .then(res => {
+        dispatch({type: GET_USER_WITHDRAW_DATA, payload: res.data});
+      })
+      .catch(err => {
+        dispatch({type: GET_ERRORS, payload: err.response.data});
+      });
+  };
+};
+
+export const getReferralData = address => {
+  return async dispatch => {
+    await axios
+      .post(SERVER_URL + '/referral/getreferral', {address})
+      .then(res => {
+        dispatch({type: GET_USER_REFERRAL_DATA, payload: res.data});
+      })
+      .catch(err => {
+        dispatch({type: GET_ERRORS, payload: err.response.data});
+      });
+  };
+};

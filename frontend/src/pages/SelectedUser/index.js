@@ -7,10 +7,17 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import NumberFormat from 'react-number-format';
 import Accordion from 'react-native-collapsible/Accordion';
 import {CommonText} from '../../components/Common';
 import Header from '../../components/Header';
-import {getUserById, getStakeData} from '../../actions/userAction';
+import {
+  getUserById,
+  getStakeData,
+  getTransferData,
+  getWithdrawData,
+  getReferralData,
+} from '../../actions/userAction';
 const SelectedUser = ({navigation, route}) => {
   const dispatch = useDispatch();
   const store = useSelector(state => state.user);
@@ -24,20 +31,30 @@ const SelectedUser = ({navigation, route}) => {
             store.stakedata.map((item, key) => {
               return (
                 <View
+                  key={key + 1}
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <Text
-                    style={{
-                      color: 'rgb(223, 100, 71)',
-                      fontSize: 20,
-                      fontWeight: 'bold',
-                      padding: 10,
-                      textAlign: 'center',
-                    }}>
-                    {item.stack_amount} HDT
-                  </Text>
+                  <NumberFormat
+                    value={item.stack_amount}
+                    displayType={'text'}
+                    thousandSeparator={true}
+                    suffix={'HDT'}
+                    renderText={formattedValue => (
+                      <Text
+                        style={{
+                          color: 'rgb(223, 100, 71)',
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                          padding: 10,
+                          textAlign: 'center',
+                        }}>
+                        {formattedValue}
+                      </Text>
+                    )} // <--- Don't forget this!
+                  />
+
                   <Text
                     style={{
                       color: 'rgb(223, 100, 71)',
@@ -65,7 +82,7 @@ const SelectedUser = ({navigation, route}) => {
                 padding: 10,
                 textAlign: 'center',
               }}>
-              No Staking History{' '}
+              No Staking History
             </Text>
           )}
         </View>
@@ -77,11 +94,108 @@ const SelectedUser = ({navigation, route}) => {
     },
     {
       title: 'WITHDRAWAL DETAILS',
-      content: <Text>'Lorem ipsum...'</Text>,
+      content: (
+        <View>
+          {store.withdrawdata.length > 0 ? (
+            store.withdrawdata.map((item, key) => {
+              return (
+                <View
+                  key={key + 1}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'rgb(223, 100, 71)',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      padding: 10,
+                      textAlign: 'center',
+                    }}>
+                    WITHDRAWED {item.method === 'eth' ? 'ETH' : 'HDT'}
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'rgb(223, 100, 71)',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      padding: 10,
+                      textAlign: 'center',
+                    }}>
+                    {item.amount} {item.method === 'eth' ? 'ETH' : 'HDT'}
+                  </Text>
+                </View>
+              );
+            })
+          ) : (
+            <Text
+              style={{
+                color: 'rgb(223, 100, 71)',
+                fontSize: 23,
+                fontWeight: 'bold',
+                padding: 10,
+                textAlign: 'center',
+              }}>
+              No Withdraw History
+            </Text>
+          )}
+        </View>
+      ),
     },
     {
       title: 'TRANSFER DETAILS',
-      content: <Text>'Lorem ipsum...'</Text>,
+      content: (
+        <View>
+          {store.transferdata.length > 0 ? (
+            store.transferdata.map((item, key) => {
+              return (
+                <View
+                  key={key + 1}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'rgb(223, 100, 71)',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      padding: 10,
+                      textAlign: 'center',
+                    }}>
+                    {route.params.item.address === item.to_address
+                      ? 'Received'
+                      : 'Sent'}{' '}
+                    {item.method === 'eth' ? 'ETH' : 'HDT'}
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'rgb(223, 100, 71)',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      padding: 10,
+                      textAlign: 'center',
+                    }}>
+                    {item.amount} {item.method === 'eth' ? 'ETH' : 'HDT'}
+                  </Text>
+                </View>
+              );
+            })
+          ) : (
+            <Text
+              style={{
+                color: 'rgb(223, 100, 71)',
+                fontSize: 23,
+                fontWeight: 'bold',
+                padding: 10,
+                textAlign: 'center',
+              }}>
+              No Transfer History
+            </Text>
+          )}
+        </View>
+      ),
     },
   ];
 
@@ -126,14 +240,19 @@ const SelectedUser = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    dispatch(getUserById(route.params.id));
-    dispatch(getStakeData(route.params.id));
+    dispatch(getUserById(route.params.item._id));
+    dispatch(getStakeData(route.params.item._id));
+    dispatch(getTransferData(route.params.item.address));
+    dispatch(getWithdrawData(route.params.item.address));
+    dispatch(getReferralData(route.params.item.address));
   }, [route]);
+  console.log(store.withdrawdata);
   return (
     <>
       <Header text="User Detail" navigation={navigation} />
       <ScrollView>
-        <View style={{width: '100%', padding: 20}}>
+        <View
+          style={{width: '100%', paddingHorizontal: 20, paddingVertical: 30}}>
           <View
             style={{
               flexDirection: 'row',
@@ -189,9 +308,17 @@ const SelectedUser = ({navigation, route}) => {
               style={{
                 width: '50%',
               }}>
-              <CommonText color="rgb(223, 100, 71)" fontSize="14px">
-                $5000
-              </CommonText>
+              <NumberFormat
+                value={5000}
+                displayType={'text'}
+                thousandSeparator={true}
+                prefix={'$'}
+                renderText={formattedValue => (
+                  <CommonText color="rgb(223, 100, 71)" fontSize="14px">
+                    {formattedValue}
+                  </CommonText>
+                )} // <--- Don't forget this!
+              />
             </View>
           </View>
           <View

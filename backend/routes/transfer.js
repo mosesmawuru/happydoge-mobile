@@ -86,6 +86,14 @@ router.post(
             .catch((err) => {
               return res.status(400).json({ errors: err });
             });
+          const newHistory = new History({
+            method: flag,
+            from_address: owneraddress,
+            to_address: toaddress,
+            amount: amount,
+            type: 3,
+          });
+          newHistory.save();
         } else {
           return res.status(400).send({
             amount: "Not Sufficiant Balance",
