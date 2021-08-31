@@ -15,8 +15,12 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
   const { address } = req.body;
-  History.find({ $or: [{ from_address: address }, { to_address: address }] })
+  History.find({
+    $or: [{ from_address: address }, { to_address: address }],
+  })
+    .sort({ date: -1 })
     .then((item) => {
+      // console.log(item);
       return res.status(200).json(item);
     })
     .catch((err) => {

@@ -7,11 +7,12 @@ import {
   Dimensions,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import Header from '../../components/Header';
+import {ActivityIndicator, Colors} from 'react-native-paper';
 import {getStake} from '../../actions/stackAction';
-import styles from './styles';
-import {SelectCircle} from './styles';
 import Carousel from 'react-native-snap-carousel';
+import Header from '../../components/Header';
+import {SelectCircle} from './styles';
+import styles from './styles';
 const SLIDER_WIDTH = Dimensions.get('window').width + 80;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.3);
 const Stacking = ({navigation}) => {
@@ -57,11 +58,33 @@ const Stacking = ({navigation}) => {
           <View style={styles.headerView}>
             <Text style={styles.headText}>Stacking Details</Text>
           </View>
+          {stake.stakedata.length > 0 ? (
+            <View style={styles.earnTextView}>
+              <TouchableOpacity style={styles.clickEarn} activeOpacity={0.5}>
+                <View style={styles.rowLayout}>
+                  <Text style={styles.earnHdtText}>325.74</Text>
+                  {/* <ActivityIndicator
+                animating={true}
+                size="large"
+                color={Colors.red800}
+              /> */}
+                  {/* <Text style={styles.earnHdt}>HDT</Text> */}
+                </View>
+                <Text style={styles.TextStyle}>earned</Text>
+              </TouchableOpacity>
+              <View style={styles.progressLayer}></View>
+            </View>
+          ) : (
+            <></>
+          )}
           <View style={styles.circleView}>
-            {stake.stakedata.length > 0 ? (
-              // stake.stakedata.map((item, key) => {
-              // if (key < 3) {
-              // return (
+            {stake.loading ? (
+              <ActivityIndicator
+                animating={true}
+                size="large"
+                color={Colors.red800}
+              />
+            ) : stake.stakedata.length > 0 ? (
               <View>
                 <Carousel
                   layout="default"
@@ -76,9 +99,6 @@ const Stacking = ({navigation}) => {
                 />
               </View>
             ) : (
-              // );
-              // }
-              // })
               <View>
                 <Text style={styles.description}>
                   You Have No Staking Contract. Click On Stake More To Add A New

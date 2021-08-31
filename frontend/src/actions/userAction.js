@@ -13,6 +13,7 @@ import {
 
 export const getAllUser = () => {
   return async dispatch => {
+    dispatch({type: USER_LOADING});
     await axios
       .get(SERVER_URL + '/users/all')
       .then(res => {
@@ -26,6 +27,7 @@ export const getAllUser = () => {
 
 export const getUserById = id => {
   return async dispatch => {
+    dispatch({type: USER_LOADING});
     await axios
       .post(SERVER_URL + '/users/getuser', {id})
       .then(res => {

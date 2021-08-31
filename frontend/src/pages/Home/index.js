@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {Badge} from 'react-native-elements';
+import {ActivityIndicator, Colors} from 'react-native-paper';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
@@ -50,7 +51,7 @@ const Home = ({navigation}) => {
   const profile = useSelector(state => state.profile);
 
   return (
-    <ScrollView>
+    <>
       <View style={styles.container}>
         <View style={styles.menuDiv}>
           <Icon
@@ -84,6 +85,7 @@ const Home = ({navigation}) => {
             />
           </View>
         </View>
+
         <View style={styles.imgDiv}>
           <Image style={styles.img} source={animal} />
         </View>
@@ -137,52 +139,75 @@ const Home = ({navigation}) => {
         <View>
           <Text style={styles.transText}>LATEST TRANSACTIONS</Text>
         </View>
-        <View>
-          {history.historydata.map((item, key) => {
-            return (
-              <View style={styles.historyDiv} key={key + 1}>
-                <View style={styles.rowDiv}>
-                  <View style={styles.circle} />
-                  <View>
-                    <Text>
-                      {item.type === 1
-                        ? mainText[1].text
-                        : item.type === 2
-                        ? mainText[1].text
-                        : item.type === 3
-                        ? mainText[1].text
-                        : item.type === 4
-                        ? mainText[1].text
-                        : item.type === 5
-                        ? mainText[1].text
-                        : ''}
-                    </Text>
-                    <Text>Received payment</Text>
-                    {/* <Text>{item.from_address}</Text>
-                    <Text>{store.user.address}</Text> */}
-                  </View>
-                </View>
+        <ScrollView>
+          <View>
+            {history.loading ? (
+              <ActivityIndicator
+                animating={true}
+                size="large"
+                color={Colors.red800}
+              />
+            ) : (
+              history.historydata.map((item, key) => {
+                if (key < 4) {
+                  return (
+                    <View style={styles.historyDiv} key={key + 1}>
+                      <View style={styles.rowDiv}>
+                        <View style={styles.circle} />
+                        <View>
+                          <Text>
+                            {item.type === 1
+                              ? item.method === 'eth'
+                                ? mainText[1].text
+                                : mainText[5].text
+                              : item.type === 2
+                              ? mainText[1].text
+                              : item.type === 3
+                              ? item.from_address === store.user.address
+                                ? mainText[0].text
+                                : subText[0].description
+                              : item.type === 4
+                              ? mainText[0].text
+                              : item.type === 5
+                              ? mainText[0].text
+                              : ''}
+                          </Text>
+                          <Text>
+                            {item.type === 3
+                              ? 'Transfer Money'
+                              : item.type === 5
+                              ? 'Swapped Money'
+                              : item.type === 4
+                              ? 'Staked HDT'
+                              : ''}
+                          </Text>
+                        </View>
+                      </View>
 
-                <Text>
-                  {item.from_address
-                    ? item.from_address === store.user.address
-                      ? '-'
-                      : ''
-                    : ''}
-                  {item.amount} {item.method === 'eth' ? 'ETH' : 'HDT'}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-        <View></View>
+                      <Text>
+                        {item.from_address
+                          ? item.from_address === store.user.address ||
+                            item.type === 4
+                            ? '-'
+                            : ''
+                          : ''}
+                        {item.type === 4 ? '-' : ''}
+                        {item.amount} {item.method === 'eth' ? 'ETH' : 'HDT'}
+                      </Text>
+                    </View>
+                  );
+                }
+              })
+            )}
+          </View>
+        </ScrollView>
         <View style={styles.footTxt}>
           <Text
             style={styles.moreText}
-            onPress={() => navigation.navigate('Pages')}>{`more>>`}</Text>
+            onPress={() => navigation.navigate('MoreHistory')}>{`more>>`}</Text>
         </View>
       </View>
-    </ScrollView>
+    </>
   );
 };
 

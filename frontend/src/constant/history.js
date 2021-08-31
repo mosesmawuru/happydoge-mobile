@@ -30,4 +30,6 @@ export const mainText = [
   {text: 'HDT Swapped'},
   {text: 'HDT Deposit'},
   {text: 'HDT Withdraw'},
+  {text: 'Staked Money'},
+  {text: 'Swapped Money'},
 ];

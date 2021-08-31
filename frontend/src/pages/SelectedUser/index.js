@@ -10,6 +10,7 @@ import {
 import NumberFormat from 'react-number-format';
 import Accordion from 'react-native-collapsible/Accordion';
 import {CommonText} from '../../components/Common';
+import {ActivityIndicator, Colors} from 'react-native-paper';
 import Header from '../../components/Header';
 import {
   getUserById,
@@ -20,6 +21,8 @@ import {
 } from '../../actions/userAction';
 const SelectedUser = ({navigation, route}) => {
   const dispatch = useDispatch();
+  const [countHDT, setCountHDT] = useState();
+  const [countETH, setCountETH] = useState();
   const store = useSelector(state => state.user);
   const [activeSections, setActiveSections] = useState([]);
   const SECTIONS = [
@@ -246,225 +249,254 @@ const SelectedUser = ({navigation, route}) => {
     dispatch(getWithdrawData(route.params.item.address));
     dispatch(getReferralData(route.params.item.address));
   }, [route]);
-  console.log(store.withdrawdata);
   return (
     <>
       <Header text="User Detail" navigation={navigation} />
-      <ScrollView>
-        <View
-          style={{width: '100%', paddingHorizontal: 20, paddingVertical: 30}}>
+      {store.loading ? (
+        <ActivityIndicator
+          animating={true}
+          size="large"
+          color={Colors.red800}
+          style={{marginTop: 20}}
+        />
+      ) : (
+        <ScrollView>
           <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginBottom: 10,
-            }}>
-            <View>
-              <CommonText color="rgb(223, 100, 71)" fontSize="15px">
-                USER ETH ADDRESS
-              </CommonText>
+            style={{width: '100%', paddingHorizontal: 20, paddingVertical: 30}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 10,
+              }}>
+              <View>
+                <CommonText color="rgb(223, 100, 71)" fontSize="15px">
+                  USER ETH ADDRESS
+                </CommonText>
+              </View>
+              <View
+                style={{
+                  width: '50%',
+                }}>
+                <CommonText color="rgb(223, 100, 71)" fontSize="14px">
+                  {store.selectedUser.address}
+                </CommonText>
+              </View>
             </View>
             <View
               style={{
-                width: '50%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 10,
               }}>
-              <CommonText color="rgb(223, 100, 71)" fontSize="14px">
-                {store.selectedUser.address}
-              </CommonText>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginBottom: 10,
-            }}>
-            <View>
-              <CommonText color="rgb(223, 100, 71)" fontSize="15px">
-                PASSWORD
-              </CommonText>
+              <View>
+                <CommonText color="rgb(223, 100, 71)" fontSize="15px">
+                  PASSWORD
+                </CommonText>
+              </View>
+              <View
+                style={{
+                  width: '50%',
+                }}>
+                <CommonText color="rgb(223, 100, 71)" fontSize="14px">
+                  {store.selectedUser.password}
+                </CommonText>
+              </View>
             </View>
             <View
               style={{
-                width: '50%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 10,
               }}>
-              <CommonText color="rgb(223, 100, 71)" fontSize="14px">
-                {store.selectedUser.password}
-              </CommonText>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginBottom: 10,
-            }}>
-            <View>
-              <CommonText color="rgb(223, 100, 71)" fontSize="15px">
-                USER BALANCE
-              </CommonText>
+              <View>
+                <CommonText color="rgb(223, 100, 71)" fontSize="15px">
+                  USER BALANCE
+                </CommonText>
+              </View>
+              <View
+                style={{
+                  width: '50%',
+                }}>
+                <NumberFormat
+                  value={5000}
+                  displayType={'text'}
+                  thousandSeparator={true}
+                  prefix={'$'}
+                  renderText={formattedValue => (
+                    <CommonText color="rgb(223, 100, 71)" fontSize="14px">
+                      {formattedValue}
+                    </CommonText>
+                  )} // <--- Don't forget this!
+                />
+              </View>
             </View>
             <View
               style={{
-                width: '50%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 60,
               }}>
-              <NumberFormat
-                value={5000}
-                displayType={'text'}
-                thousandSeparator={true}
-                prefix={'$'}
-                renderText={formattedValue => (
-                  <CommonText color="rgb(223, 100, 71)" fontSize="14px">
-                    {formattedValue}
-                  </CommonText>
-                )} // <--- Don't forget this!
+              <View>
+                <View
+                  style={{backgroundColor: 'rgb(223, 100, 71)', padding: 10}}>
+                  <CommonText>HDT BALANCE</CommonText>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: 'rgb(248,227,224)',
+                  }}>
+                  <View style={{padding: 15}}>
+                    <View
+                      style={{
+                        borderWidth: 3,
+                        borderColor: 'rgb(223, 100, 71)',
+                      }}>
+                      <TextInput
+                        keyboardType="numeric"
+                        style={{
+                          padding: 4,
+                          fontWeight: 'bold',
+                          maxWidth: 110,
+                        }}
+                        onChangeText={msg => {
+                          setCountHDT(msg);
+                        }}>
+                        {store.selectedUser.countHDT}
+                      </TextInput>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginHorizontal: 10,
+                      marginBottom: 10,
+                    }}>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      style={{
+                        paddingVertical: 3,
+                        backgroundColor: 'rgb(223,100,71)',
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        width: 60,
+                        borderColor: '#fff',
+                      }}>
+                      <CommonText color="white" fontSize="12px">
+                        EDIT
+                      </CommonText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      style={{
+                        paddingVertical: 3,
+                        backgroundColor: 'rgb(223,100,71)',
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        width: 60,
+                        borderColor: '#fff',
+                      }}
+                      onPress={() => {
+                        const data = {
+                          ID: route.params.item._id,
+                          amount: countHDT,
+                        };
+                        console.log(data);
+                      }}>
+                      <CommonText color="white" fontSize="12px">
+                        APPLY
+                      </CommonText>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+              <View>
+                <View
+                  style={{backgroundColor: 'rgb(223, 100, 71)', padding: 10}}>
+                  <CommonText>ETH BALANCE</CommonText>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: 'rgb(248,227,224)',
+                  }}>
+                  <View style={{padding: 15}}>
+                    <View
+                      style={{
+                        borderWidth: 3,
+                        borderColor: 'rgb(223, 100, 71)',
+                      }}>
+                      <TextInput
+                        keyboardType="numeric"
+                        style={{padding: 4, fontWeight: 'bold', maxWidth: 110}}
+                        onChangeText={msg => {
+                          setCountETH(msg);
+                        }}>
+                        {store.selectedUser.countETH}
+                      </TextInput>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginHorizontal: 10,
+                      marginBottom: 10,
+                    }}>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      style={{
+                        paddingVertical: 3,
+                        backgroundColor: 'rgb(223,100,71)',
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        width: 60,
+                        borderColor: '#fff',
+                      }}>
+                      <CommonText color="white" fontSize="12px">
+                        EDIT
+                      </CommonText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      style={{
+                        paddingVertical: 3,
+                        backgroundColor: 'rgb(223,100,71)',
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        width: 60,
+                        borderColor: '#fff',
+                      }}
+                      onPress={() => {
+                        const data = {
+                          ID: route.params.item._id,
+                          amount: countETH,
+                        };
+                        console.log(data);
+                      }}>
+                      <CommonText color="white" fontSize="12px">
+                        APPLY
+                      </CommonText>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View
+              style={{
+                marginTop: 40,
+              }}>
+              <Accordion
+                sections={SECTIONS}
+                activeSections={activeSections}
+                renderHeader={_renderHeader}
+                renderContent={_renderContent}
+                onChange={_updateSections}
               />
             </View>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 60,
-            }}>
-            <View>
-              <View style={{backgroundColor: 'rgb(223, 100, 71)', padding: 10}}>
-                <CommonText>HDT BALANCE</CommonText>
-              </View>
-              <View
-                style={{
-                  backgroundColor: 'rgb(248,227,224)',
-                }}>
-                <View style={{padding: 15}}>
-                  <View
-                    style={{
-                      borderWidth: 3,
-                      borderColor: 'rgb(223, 100, 71)',
-                    }}>
-                    <TextInput
-                      keyboardType="numeric"
-                      style={{
-                        padding: 4,
-                        fontWeight: 'bold',
-                        maxWidth: 110,
-                      }}>
-                      {store.selectedUser.countHDT}
-                    </TextInput>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginHorizontal: 10,
-                    marginBottom: 10,
-                  }}>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={{
-                      paddingVertical: 3,
-                      backgroundColor: 'rgb(223,100,71)',
-                      borderRadius: 20,
-                      borderWidth: 1,
-                      width: 60,
-                      borderColor: '#fff',
-                    }}>
-                    <CommonText color="white" fontSize="12px">
-                      EDIT
-                    </CommonText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={{
-                      paddingVertical: 3,
-                      backgroundColor: 'rgb(223,100,71)',
-                      borderRadius: 20,
-                      borderWidth: 1,
-                      width: 60,
-                      borderColor: '#fff',
-                    }}>
-                    <CommonText color="white" fontSize="12px">
-                      APPLY
-                    </CommonText>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-            <View>
-              <View style={{backgroundColor: 'rgb(223, 100, 71)', padding: 10}}>
-                <CommonText>ETH BALANCE</CommonText>
-              </View>
-              <View
-                style={{
-                  backgroundColor: 'rgb(248,227,224)',
-                }}>
-                <View style={{padding: 15}}>
-                  <View
-                    style={{
-                      borderWidth: 3,
-                      borderColor: 'rgb(223, 100, 71)',
-                    }}>
-                    <TextInput
-                      keyboardType="numeric"
-                      style={{padding: 4, fontWeight: 'bold', maxWidth: 110}}>
-                      {store.selectedUser.countETH}
-                    </TextInput>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginHorizontal: 10,
-                    marginBottom: 10,
-                  }}>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={{
-                      paddingVertical: 3,
-                      backgroundColor: 'rgb(223,100,71)',
-                      borderRadius: 20,
-                      borderWidth: 1,
-                      width: 60,
-                      borderColor: '#fff',
-                    }}>
-                    <CommonText color="white" fontSize="12px">
-                      EDIT
-                    </CommonText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={{
-                      paddingVertical: 3,
-
-                      backgroundColor: 'rgb(223,100,71)',
-                      borderRadius: 20,
-                      borderWidth: 1,
-                      width: 60,
-                      borderColor: '#fff',
-                    }}>
-                    <CommonText color="white" fontSize="12px">
-                      APPLY
-                    </CommonText>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View
-            style={{
-              marginTop: 40,
-            }}>
-            <Accordion
-              sections={SECTIONS}
-              activeSections={activeSections}
-              renderHeader={_renderHeader}
-              renderContent={_renderContent}
-              onChange={_updateSections}
-            />
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      )}
     </>
   );
 };

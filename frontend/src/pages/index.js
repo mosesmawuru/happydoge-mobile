@@ -32,6 +32,7 @@ import SetValue from './SetValue';
 import UserSelect from './UserSelect';
 import SelectedUser from './SelectedUser';
 import AddStake from './Stacking/Add';
+import MoreHistory from './Home/MoreHistory';
 import {store} from '../store';
 
 import setAuthToken from '../utils/setAuthToken';
@@ -65,6 +66,11 @@ function firstScreenStack({navigation}) {
       <Stack.Screen
         name="Home"
         component={Home}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MoreHistory"
+        component={MoreHistory}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -115,7 +121,6 @@ function User({navigation}) {
 function Main({}) {
   const dispatch = useDispatch();
   const store = useSelector(state => state.auth);
-  console.log(store);
   return (
     <Drawer.Navigator
       drawerContentOptions={{
@@ -148,11 +153,6 @@ function Main({}) {
         name="SwapToHDT"
         options={{drawerLabel: 'Swap To HDT'}}
         component={SwapToHDT}
-      />
-      <Drawer.Screen
-        name="Price"
-        options={{drawerLabel: 'Set HDT Price'}}
-        component={Price}
       />
       <Drawer.Screen
         name="Deposit"

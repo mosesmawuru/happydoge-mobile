@@ -106,5 +106,11 @@ const styles = StyleSheet.create({
   iconDiv: {
     flexDirection: 'row',
   },
+  headText: {
+    color: 'rgb(102,59,8)',
+    marginTop: 20,
+    marginBottom: 10,
+    fontSize: 30,
+  },
 });
 export default styles;

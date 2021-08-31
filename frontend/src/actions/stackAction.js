@@ -1,9 +1,10 @@
 import axios from 'axios';
 import {SERVER_URL} from '../constant/server_url';
 import {getUser} from './profileAction';
-import {GET_STAKE_DATA, GET_EARN_DATA, GET_ERRORS} from './type';
+import {GET_STAKE_DATA, STAKE_LOADING, GET_EARN_DATA, GET_ERRORS} from './type';
 
 export const addStake = (data, navigation) => {
+  dispatch({type: STAKE_LOADING});
   return async dispatch => {
     await axios
       .post(SERVER_URL + '/stack', data)
@@ -19,6 +20,7 @@ export const addStake = (data, navigation) => {
 };
 export const getStake = ID => {
   return async dispatch => {
+    dispatch({type: STAKE_LOADING});
     await axios
       .post(SERVER_URL + '/stack/getStake', {ID})
       .then(res => {
