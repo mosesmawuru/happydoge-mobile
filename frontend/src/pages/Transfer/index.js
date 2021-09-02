@@ -83,13 +83,7 @@ const Transfer = ({navigation}) => {
           <View style={styles.userDiv}>
             <Text style={styles.labelText}>To</Text>
             <Input
-              value={
-                address
-                  ? address.substring(0, 6) +
-                    '....' +
-                    address.substring(address.length - 6, address.length)
-                  : ''
-              }
+              value={address}
               placeholder="Please input address"
               onChangeText={message => {
                 setAddress(message);

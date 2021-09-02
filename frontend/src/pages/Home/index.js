@@ -13,6 +13,8 @@ import {SERVER_URL} from '../../constant/server_url';
 import {mainText, subText} from '../../constant/history';
 import io from 'socket.io-client';
 import axios from 'axios';
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "http://localhost:5000";
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const [hdtprice, setHdtprice] = useState(0);
@@ -21,10 +23,10 @@ const Home = ({navigation}) => {
   const store = useSelector(state => state.auth);
   const history = useSelector(state => state.history);
   useEffect(() => {
-    const socket = io(SERVER_URL);
-    socket.on('FromAPI', data => {
-      setResponse(data);
-    });
+    // var socket = socketIOClient(ENDPOINT, { transports: ["websocket"] });
+    // socket.on("cron", (item, callback) => {
+    //   console.log(item);
+    // });
     let isMount = true;
     if (isMount) {
       dispatch(getPrice());

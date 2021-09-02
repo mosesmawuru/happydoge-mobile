@@ -35,6 +35,8 @@ const Login = ({navigation}) => {
           }}
           errorStyle={{color: 'red'}}
           errorMessage={errors.name}
+          textAlign={'center'}
+          multiline={true}
         />
 
         <Input
@@ -43,9 +45,11 @@ const Login = ({navigation}) => {
           onChangeText={message => {
             setPassword(message);
           }}
+          secureTextEntry={true}
           errorStyle={{color: 'red'}}
           errorMessage={errors.password}
-          secureTextEntry={true}
+          textAlign={'center'}
+          // multiline={true}
         />
       </View>
 

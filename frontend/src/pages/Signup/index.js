@@ -29,7 +29,10 @@ const Signup = ({navigation}) => {
   //     isMount = false;
   //   };
   // }, [error]);
-
+  const selection = {
+    start: 0,
+    end: 0,
+  };
   return (
     <View style={styles.container}>
       <View style={styles.imgDiv}>
@@ -47,6 +50,8 @@ const Signup = ({navigation}) => {
           }}
           errorStyle={{color: 'red'}}
           errorMessage={errors.name}
+          textAlign={'center'}
+          multiline={true}
         />
 
         <Input
@@ -58,26 +63,32 @@ const Signup = ({navigation}) => {
           errorStyle={{color: 'red'}}
           errorMessage={errors.password}
           secureTextEntry={true}
+          textAlign={'center'}
+          multiline={true}
         />
 
         <Input
           value={address}
-          placeholder="Address"
+          placeholder="Ethererum Address"
           onChangeText={message => {
             setAddress(message);
           }}
+          textAlign={'center'}
+          multiline={true}
           errorStyle={{color: 'red'}}
           errorMessage={errors.address}
         />
 
         <Input
           value={referralcode}
-          placeholder="referralcode Referral Code"
+          placeholder="Referral Code"
           onChangeText={message => {
             setReferralcode(message);
           }}
           errorStyle={{color: 'red'}}
           errorMessage={errors.referralcode}
+          textAlign={'center'}
+          multiline={true}
         />
       </View>
       <TouchableOpacity

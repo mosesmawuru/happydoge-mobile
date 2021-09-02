@@ -13,53 +13,18 @@ const app = express();
 connectDB();
 
 // Init Middleware
-app.use(cors());
+// app.use(cors());
+app.use(
+  cors({
+    origin: ["https://www.section.io", "http://localhost:3000"],
+  })
+);
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Passport middleware
 app.use(passport.initialize());
-// SOCKET
-const http = require("http");
-const socketio = require("socket.io");
-const server = http.createServer(app);
-const io = socketio(server);
-const doEveryMinute = (socket) => {
-  cron.schedule("00 00 */1 * * * *", async () => {
-    const emailToday = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate(),
-      today.getHours(),
-      today.getMinutes(),
-      0
-    );
-    const today = new Date();
-    Staking.find({ endTime })
-      .then((item) => {})
-      .cache((err) => {
-        console.log(err);
-      });
-  });
-};
-try {
-  io.on("connect", (socket) => {
-    console.log("socket is created");
-    socket.on("join", ({}, callback) => {
-      try {
-      } catch (error) {}
-      callback();
-    });
-    socket.on("join", ({}, callback) => {
-      try {
-        doEveryMinute(socket);
-      } catch (error) {}
-      callback();
-    });
 
-    socket.on("disconnect", () => {});
-  });
-} catch (e) {}
 // Passport Config
 require("./config/passport")(passport);
 // Define Routes
@@ -74,15 +39,67 @@ app.use("/withdraw", require("./routes/withdraw"));
 app.use("/earn", require("./routes/earn"));
 app.use("/referral", require("./routes/referral"));
 // Serve static assets in productioncd
-if (process.env.NODE_ENV === "production") {
-  // Set static folder
-  app.use(express.static("client/build"));
+// if (process.env.NODE_ENV === "production") {
+//   // Set static folder
+//   app.use(express.static("client/build"));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+//   });
+// }
+
+const doEveryMinute = (socket) => {
+  const today = new Date();
+  console.log("callEvery");
+  cron.schedule("*/10 * * * * *", function () {
+    const currentHour = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      today.getHours()
+    );
+    Staking.find({ endTime: currentHour })
+      .then((data) => {
+        // if (item) {
+        // } else {
+        // }
+        const item = { data: "adadsfdsf" };
+        socket.emit("cron", item);
+      })
+      .cache((err) => {
+        console.log(err);
+      });
   });
-}
+  // cron.schedule("00 00 */1 * * * *", async () => {
+  // cron.schedule("*/10 * * * * *", async () => {
 
+  //   const today = new Date();
+  //   console.log("adsfsadf");
+  //   Staking.find({ endTime: currntHour })
+  //     .then((item) => {
+  //       console.log(item);
+  //       socket.emit("cron", item);
+  //     })
+  //     .cache((err) => {
+  //       console.log(err);
+  //     });
+  // });
+};
+// SOCKET
+const http = require("http");
+const socketio = require("socket.io");
+const server = http.createServer(app);
+const io = socketio(server);
+try {
+  io.on("connection", (socket) => {
+    console.log("New client connected");
+    doEveryMinute(socket);
+    socket.on("disconnect", () => {
+      console.log("Client disconnected");
+      // clearInterval(interval);
+    });
+  });
+} catch (e) {}
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
