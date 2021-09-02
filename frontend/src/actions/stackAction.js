@@ -33,13 +33,28 @@ export const getStake = ID => {
   };
 };
 
-export const getEarn = ID => {
+// export const getEarn = ID => {
+//   return async dispatch => {
+//     await axios
+//       .post(SERVER_URL + '/earn', {ID})
+//       .then(res => {
+//         dispatch({type: GET_EARN_DATA, payload: res.data});
+//         dispatch(getUser(ID));
+//       })
+//       .catch(err => {
+//         dispatch({type: GET_ERRORS, payload: err.response.data});
+//       });
+//   };
+// };
+
+export const getStakeByID = ID => {
   return async dispatch => {
+    // dispatch({type: STAKE_LOADING});
     await axios
-      .post(SERVER_URL + '/earn', {ID})
+      .put(SERVER_URL + '/stack/getStake', {ID})
       .then(res => {
         dispatch({type: GET_EARN_DATA, payload: res.data});
-        dispatch(getUser(ID));
+        // dispatch(getUser(ID));
       })
       .catch(err => {
         dispatch({type: GET_ERRORS, payload: err.response.data});

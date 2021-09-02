@@ -14,7 +14,7 @@ import {mainText, subText} from '../../constant/history';
 import io from 'socket.io-client';
 import axios from 'axios';
 import socketIOClient from 'socket.io-client';
-const ENDPOINT = 'http://localhost:5000';
+const ENDPOINT = 'http://10.0.2.2:5000';
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const [hdtprice, setHdtprice] = useState(0);

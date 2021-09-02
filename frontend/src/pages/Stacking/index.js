@@ -8,8 +8,10 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {ActivityIndicator, Colors} from 'react-native-paper';
-import {getStake} from '../../actions/stackAction';
+import ProgressCircle from 'react-native-progress-circle';
+import {getStake, getStakeByID} from '../../actions/stackAction';
 import Carousel from 'react-native-snap-carousel';
+import NumberFormat from 'react-number-format';
 import Header from '../../components/Header';
 import {SelectCircle} from './styles';
 import styles from './styles';
@@ -18,14 +20,32 @@ const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.3);
 const Stacking = ({navigation}) => {
   const isCarousel = React.useRef(null);
   const dispatch = useDispatch();
+  const [selected, setSelected] = useState('');
   const store = useSelector(state => state.auth);
   const stake = useSelector(state => state.stake);
+  const onSelect = id => {
+    console.log(id);
+    dispatch(getStakeByID(id));
+    setSelected(id);
+  };
   const CarouselCardItem = ({item, index}) => {
     return (
       <View style={styles.detailCircle} key={index + 1}>
-        <SelectCircle>
+        <SelectCircle
+          onPress={() => {
+            onSelect(item._id);
+          }}
+          click={selected === item._id ? true : false}>
           <View style={styles.rowLayout}>
-            <Text style={styles.TextStyle}>{item.stack_amount}</Text>
+            <NumberFormat
+              value={item.stack_amount}
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={formattedValue => (
+                <Text style={styles.TextStyle}>{formattedValue}</Text>
+              )}
+            />
+
             <Text style={styles.tokenTxt}>HDT</Text>
           </View>
           <Text style={styles.SubTextStyle}>
@@ -60,19 +80,26 @@ const Stacking = ({navigation}) => {
           </View>
           {stake.stakedata.length > 0 ? (
             <View style={styles.earnTextView}>
-              <TouchableOpacity style={styles.clickEarn} activeOpacity={0.5}>
-                <View style={styles.rowLayout}>
+              <ProgressCircle
+                percent={30}
+                radius={80}
+                borderWidth={8}
+                size={300}
+                fill={100}
+                color="rgb(223,100,71)"
+                shadowColor="#999"
+                bgColor="#fff">
+                {/* <View style={styles.rowLayout}>
                   <Text style={styles.earnHdtText}>325.74</Text>
-                  {/* <ActivityIndicator
-                animating={true}
-                size="large"
-                color={Colors.red800}
-              /> */}
-                  {/* <Text style={styles.earnHdt}>HDT</Text> */}
                 </View>
-                <Text style={styles.TextStyle}>earned</Text>
-              </TouchableOpacity>
-              <View style={styles.progressLayer}></View>
+                <Text style={styles.TextStyle}>earned</Text> */}
+                <ActivityIndicator
+                  animating={true}
+                  size="large"
+                  color={Colors.red800}
+                />
+              </ProgressCircle>
+              {/* <View style={styles.progressLayer}></View> */}
             </View>
           ) : (
             <></>

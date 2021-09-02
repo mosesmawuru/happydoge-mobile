@@ -115,7 +115,6 @@ router.post(
   "/getStake",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    console.log(req.body);
     const { errors, isValid } = validateEarn(req.body);
 
     const { ID } = req.body;
@@ -125,6 +124,29 @@ router.post(
     Stack.find({ user: ID, flag: true })
       .then((item) => {
         return res.status(200).json(item);
+      })
+      .catch((err) => {
+        return res.status(400).json({ errors: err });
+      });
+  }
+);
+
+// @route   Get stake info by id
+// @access  private
+router.put(
+  "/getStake",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const { errors, isValid } = validateEarn(req.body);
+
+    const { ID } = req.body;
+    if (!isValid) {
+      return res.status(400).send(errors);
+    }
+    Stack.findOne({ _id: ID, flag: true })
+      .then((item) => {
+        console.log(item);
+        // return res.status(200).json(item);
       })
       .catch((err) => {
         console.log(err);
