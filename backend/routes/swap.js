@@ -21,34 +21,40 @@ router.post("/test", async (req, res) => {
 router.post("/swaptohdt", async (req, res) => {
   const { errors, isValid } = validateSwap(req.body);
   const { ID, amount, price } = req.body;
+
   if (!isValid) {
     return res.status(400).send(errors);
   }
   if (amount <= 0) {
     return res.status(400).send({ countETH: "please input correct" });
   }
-  const hdtitem = await Exchange.find({});
+  const hdtitem = await Exchange.findOne({});
   const person = await User.findOne({ _id: ID });
   if (person && hdtitem) {
     if (person.countETH >= amount) {
-      person.countETH = person.countETH - amount;
-      person.countHDT = person.countHDT + (amount * price) / hdtitem.price;
-      person
-        .save()
-        .then((item) => {
-          const newHistory = new History({
-            method: "eth",
-            to_address: item.address,
-            amount: amount,
-            type: 5,
-          });
-          newHistory.save();
-
-          return res.status(200).json({ msg: "success" });
-        })
-        .catch((err) => {
-          return res.status(400).json({ errors: err });
+      if (isEmpty(hdtitem.price)) {
+        return res.status(400).send({
+          countETH: "ETH price is not setted",
         });
+      } else {
+        person.countETH = person.countETH - amount;
+        person.countHDT = person.countHDT + (amount * price) / hdtitem.price;
+        person
+          .save()
+          .then((item) => {
+            const newHistory = new History({
+              method: "eth",
+              to_address: item.address,
+              amount: amount,
+              type: 5,
+            });
+            newHistory.save();
+            return res.status(200).json({ msg: "success" });
+          })
+          .catch((err) => {
+            return res.status(400).json({ errors: err });
+          });
+      }
     } else {
       return res.status(400).send({
         countETH: "Not Sufficiant Balance",
@@ -64,7 +70,6 @@ router.post("/swaptohdt", async (req, res) => {
 router.post("/swaptoeth", async (req, res) => {
   const { errors, isValid } = validateSwap(req.body);
   const { ID, amount, price } = req.body;
-
   if (!isValid) {
     return res.status(400).send(errors);
   }
@@ -75,11 +80,11 @@ router.post("/swaptoeth", async (req, res) => {
   const person = await User.findOne({ _id: ID });
   if (person && hdtitem) {
     if (person.countHDT >= amount) {
-      if (isEmpty(value.minium_amount)) {
+      if (isEmpty(hdtitem.minium_amount)) {
         return res.status(400).send({
           error: "Minimum amount is not setted",
         });
-      } else if (isEmpty(value.price)) {
+      } else if (isEmpty(hdtitem.price)) {
         return res.status(400).send({
           error: "HDT price is not setted",
         });

@@ -46,6 +46,8 @@ const Transfer = ({navigation}) => {
     };
     await setModalData(modalData);
     await setVisible(!visible);
+    await setAddress('');
+    await setAmount(0);
   };
   useEffect(() => {
     setError(errors);

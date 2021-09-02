@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {SERVER_URL} from '../constant/server_url';
 import {getUser} from './profileAction';
-import {GET_ERRORS} from './type';
+import {GET_ERRORS, CLEAR_ERRORS} from './type';
 
 export const transfer = (
   owneraddress,
@@ -18,6 +18,7 @@ export const transfer = (
         if (res.data.msg === 'success') {
           onShowModal(toaddress, flag, amount);
           dispatch(getUser(id));
+          dispatch({type: CLEAR_ERRORS});
         }
       })
       .catch(err => {
