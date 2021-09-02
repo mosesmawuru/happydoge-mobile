@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {SERVER_URL} from '../constant/server_url';
 import {getUser} from './profileAction';
+import {getHistoryById} from './historyAction';
 import {GET_ERRORS, CLEAR_ERRORS} from './type';
 
 export const transfer = (
@@ -19,6 +20,7 @@ export const transfer = (
           onShowModal(toaddress, flag, amount);
           dispatch(getUser(id));
           dispatch({type: CLEAR_ERRORS});
+          dispatch(getHistoryById(owneraddress));
         }
       })
       .catch(err => {

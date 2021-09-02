@@ -35,12 +35,19 @@ const SwapToEth = ({navigation}) => {
                   store.user.id,
                   Number(profile.profiledata.countHDT),
                   price,
+                  store.user.address,
                   onShowModal,
                 ),
               );
             } else {
               dispatch(
-                swaptoeth(store.user.id, Number(countHDT), price, onShowModal),
+                swaptoeth(
+                  store.user.id,
+                  Number(countHDT),
+                  price,
+                  store.user.address,
+                  onShowModal,
+                ),
               );
             }
           }

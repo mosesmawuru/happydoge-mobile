@@ -38,12 +38,19 @@ const SwapToHdt = ({navigation}) => {
                   store.user.id,
                   Number(profile.profiledata.countETH),
                   price,
+                  store.user.address,
                   onShowModal,
                 ),
               );
             } else {
               dispatch(
-                swaptohdt(store.user.id, Number(countETH), price, onShowModal),
+                swaptohdt(
+                  store.user.id,
+                  Number(countETH),
+                  price,
+                  store.user.address,
+                  onShowModal,
+                ),
               );
             }
           }
