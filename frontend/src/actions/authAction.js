@@ -3,8 +3,8 @@ import {SERVER_URL} from '../constant/server_url';
 import jwt_decode from 'jwt-decode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import setAuthToken from '../utils/setAuthToken';
-import {GET_ERRORS, SET_CURRENT_USER} from './type';
-
+import {GET_ERRORS, SET_CURRENT_USER, GET_SOCKET_DATA} from './type';
+import io from 'socket.io-client';
 //@user Login
 export const userLogin = (username, password, navigation) => {
   return async dispatch => {
@@ -18,6 +18,10 @@ export const userLogin = (username, password, navigation) => {
         const decoded = jwt_decode(token);
         dispatch(setCurrentUser(decoded));
         navigation.navigate('Main');
+        var socket = io(`http://10.0.2.2:5000`, {
+          transports: ['websocket'],
+        });
+        dispatch({type: GET_SOCKET_DATA, payload: socket});
       })
       .catch(err => {
         dispatch({type: GET_ERRORS, payload: err.response.data});

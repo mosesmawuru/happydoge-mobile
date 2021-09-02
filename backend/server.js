@@ -6,6 +6,10 @@ const path = require("path");
 const cron = require("node-cron");
 const Staking = require("./models/Stacking");
 const connectDB = require("./config/db");
+const isEmpty = require("./utils/is-Empty");
+//@import
+const User = require("./models/User");
+const Exchange = require("./models/Exchange");
 require("dotenv").config();
 const app = express();
 
@@ -48,23 +52,161 @@ app.use("/referral", require("./routes/referral"));
 //   });
 // }
 
-const doEveryMinute = (socket) => {
+const doEveryMinute = async (socket) => {
   const today = new Date();
-  console.log("callEvery");
-  cron.schedule("*/10 * * * * *", function () {
+  console.log(today);
+  await cron.schedule("00 00 */1 * * * *", async () => {
     const currentHour = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate(),
       today.getHours()
     );
-    Staking.find({ endTime: currentHour })
+    const hdtitem = await Exchange.findOne({});
+    await Staking.find({ flag: true })
       .then((data) => {
-        // if (item) {
-        // } else {
-        // }
-        const item = { data: "adadsfdsf" };
-        socket.emit("cron", item);
+        console.log(data);
+        if (data) {
+          data.map(async (item, key) => {
+            if (item.end_date === currentHour) {
+              if (isEmpty(hdtitem.stack_rate)) {
+                return res.status(400).send({
+                  error: "Stake rate is not setted",
+                });
+              } else {
+                const userdata = await User.findById(item.user);
+                userdata.countHDT =
+                  userdata.countHDT +
+                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    24 *
+                    Math.floor(
+                      (new Date(currentHour).getTime() -
+                        new Date(item.date).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    );
+                item.flag = false;
+                item.earned_amount =
+                  item.earned_amount +
+                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    24 *
+                    Math.floor(
+                      (new Date(currentHour).getTime() -
+                        new Date(item.date).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    );
+                userdata
+                  .save()
+                  .then((item) => {
+                    return res.status(200).json({ msg: "success" });
+                  })
+                  .catch((err) => {
+                    return res.status(400).json({ errors: err });
+                  });
+                item
+                  .save()
+                  .then((item) => {
+                    return res.status(200).json({ msg: "success" });
+                  })
+                  .catch((err) => {
+                    return res.status(400).json({ errors: err });
+                  });
+              }
+            } else if (item.end_date > currentHour) {
+              if (isEmpty(hdtitem.stack_rate)) {
+                return res.status(400).send({
+                  error: "Stake rate is not setted",
+                });
+              } else {
+                const userdata = await User.findById(item.user);
+                userdata.countHDT =
+                  userdata.countHDT +
+                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    24 *
+                    Math.floor(
+                      (new Date(currentHour).getTime() -
+                        new Date(item.currentDate).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    );
+                item.currentDate = currentHour;
+                item.earned_amount =
+                  item.earned_amount +
+                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    24 *
+                    Math.floor(
+                      (new Date(currentHour).getTime() -
+                        new Date(item.currentDate).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    );
+                userdata
+                  .save()
+                  .then((item) => {
+                    return res.status(200).json({ msg: "success" });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    return res.status(400).json({ errors: err });
+                  });
+                item
+                  .save()
+                  .then((item) => {
+                    return res.status(200).json({ msg: "success" });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    return res.status(400).json({ errors: err });
+                  });
+              }
+            } else if (item.end_date < currentHour) {
+              if (isEmpty(hdtitem.stack_rate)) {
+                return res.status(400).send({
+                  error: "Stake rate is not setted",
+                });
+              } else {
+                const userdata = await User.findById(item.user);
+                userdata.countHDT =
+                  userdata.countHDT +
+                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    24 *
+                    Math.floor(
+                      (new Date(end_date).getTime() -
+                        new Date(item.date).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    );
+                item.flag = false;
+                item.earned_amount =
+                  item.earned_amount +
+                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    24 *
+                    Math.floor(
+                      (new Date(end_date).getTime() -
+                        new Date(item.date).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    );
+                userdata
+                  .save()
+                  .then((item) => {
+                    return res.status(200).json({ msg: "success" });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    return res.status(400).json({ errors: err });
+                  });
+                item
+                  .save()
+                  .then((item) => {
+                    return res.status(200).json({ msg: "success" });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    return res.status(400).json({ errors: err });
+                  });
+              }
+            }
+          });
+        } else {
+        }
+        // const item = { data: "adadsfdsf" };
+        // socket.emit("cron", item);
       })
       .cache((err) => {
         console.log(err);
@@ -90,12 +232,27 @@ const http = require("http");
 const socketio = require("socket.io");
 const server = http.createServer(app);
 const io = socketio(server);
+const onlineUsers = {};
 try {
   io.on("connection", (socket) => {
     console.log("New client connected");
+    // Get connected user id
+    // const userId = socket.handshake.query.userId;
+    // console.log(userId);
+    // Set user as online
+    // onlineUsers[userId] = socket.id;
     doEveryMinute(socket);
     socket.on("disconnect", () => {
       console.log("Client disconnected");
+      // let disconnectedUserId = null;
+      // Remove disconnected user from online users
+      // for (prop in onlineUsers) {
+      //   if (onlineUsers[prop] === socket.id) {
+      //     disconnectedUserId = prop;
+      //     delete onlineUsers[prop];
+      //     break;
+      //   }
+      // }
       // clearInterval(interval);
     });
   });

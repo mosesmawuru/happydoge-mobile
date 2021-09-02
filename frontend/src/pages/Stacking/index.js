@@ -14,6 +14,7 @@ import Carousel from 'react-native-snap-carousel';
 import NumberFormat from 'react-number-format';
 import Header from '../../components/Header';
 import {SelectCircle} from './styles';
+import io from 'socket.io-client';
 import styles from './styles';
 const SLIDER_WIDTH = Dimensions.get('window').width + 80;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.3);
@@ -28,6 +29,7 @@ const Stacking = ({navigation}) => {
     dispatch(getStakeByID(id));
     setSelected(id);
   };
+
   const CarouselCardItem = ({item, index}) => {
     return (
       <View style={styles.detailCircle} key={index + 1}>

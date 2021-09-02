@@ -17,6 +17,14 @@ const ExchangeSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  currentDate: {
+    type: Date,
+    required: true,
+  },
+  earned_amount: {
+    type: Number,
+    default: 0,
+  },
   flag: {
     type: Boolean,
     require: true,

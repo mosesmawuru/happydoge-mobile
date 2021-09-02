@@ -55,6 +55,7 @@ router.post(
               user: ID,
               stack_amount: amount,
               date: date,
+              currentDate: date,
               end_date: moment(date).add(duration, "days"),
             });
             newData

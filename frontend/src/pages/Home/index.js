@@ -23,10 +23,11 @@ const Home = ({navigation}) => {
   const store = useSelector(state => state.auth);
   const history = useSelector(state => state.history);
   useEffect(() => {
-    var socket = socketIOClient(ENDPOINT, {transports: ['websocket']});
-    socket.on('cron', (item, callback) => {
-      console.log(item);
+    console.log(store.user);
+    var socket = io(`http://10.0.2.2:5000?userId=${store.user.id}`, {
+      transports: ['websocket'],
     });
+
     let isMount = true;
     if (isMount) {
       dispatch(getPrice());
