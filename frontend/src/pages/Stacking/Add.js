@@ -12,11 +12,13 @@ import Header from '../../components/Header';
 import styles from './styles';
 import {FlexLayout, CommonText} from '../../components/Common';
 import {addStake} from '../../actions/stackAction';
+import {getPrice} from '../../actions/exchangeAction';
 const Stacking = ({navigation}) => {
   const dispatch = useDispatch();
   const [amount, setAmount] = useState();
   const [duration, setDuration] = useState();
   const store = useSelector(state => state.auth);
+  const price = useSelector(state => state.price);
   const onSubmit = () => {
     const data = {
       ID: store.user.id,
@@ -25,6 +27,9 @@ const Stacking = ({navigation}) => {
     };
     dispatch(addStake(data, navigation));
   };
+  useEffect(() => {
+    dispatch(getPrice());
+  }, []);
   return (
     <>
       <Header text="Add Staking" navigation={navigation} />
@@ -82,7 +87,7 @@ const Stacking = ({navigation}) => {
                         </Text>
 
                         <NumberFormat
-                          value={5000}
+                          value={price.pricedata.minium_amount}
                           displayType={'text'}
                           thousandSeparator={true}
                           suffix={'HDT'}

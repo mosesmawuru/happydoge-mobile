@@ -9,12 +9,14 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {ActivityIndicator, Colors} from 'react-native-paper';
 import ProgressCircle from 'react-native-progress-circle';
-import {getStake, getStakeByID} from '../../actions/stackAction';
+import {getStake, getStakeByID, Clear} from '../../actions/stackAction';
+
 import Carousel from 'react-native-snap-carousel';
 import NumberFormat from 'react-number-format';
 import Header from '../../components/Header';
 import {SelectCircle} from './styles';
 import io from 'socket.io-client';
+import isEmpty from '../../utils/isEmpty';
 import styles from './styles';
 const SLIDER_WIDTH = Dimensions.get('window').width + 80;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.3);
@@ -24,8 +26,8 @@ const Stacking = ({navigation}) => {
   const [selected, setSelected] = useState('');
   const store = useSelector(state => state.auth);
   const stake = useSelector(state => state.stake);
+
   const onSelect = id => {
-    console.log(id);
     dispatch(getStakeByID(id));
     setSelected(id);
   };
@@ -67,11 +69,13 @@ const Stacking = ({navigation}) => {
     let isMount = true;
     if (isMount) {
       dispatch(getStake(store.user.id));
+      dispatch(Clear());
     }
     return () => {
       isMount = false;
     };
   }, []);
+
   return (
     <>
       <Header text="STACKING" navigation={navigation} />
@@ -81,31 +85,77 @@ const Stacking = ({navigation}) => {
             <Text style={styles.headText}>Stacking Details</Text>
           </View>
           {stake.stakedata.length > 0 ? (
-            <View style={styles.earnTextView}>
-              <ProgressCircle
-                percent={30}
-                radius={80}
-                borderWidth={8}
-                size={300}
-                fill={100}
-                color="rgb(223,100,71)"
-                shadowColor="#999"
-                bgColor="#fff">
-                {/* <View style={styles.rowLayout}>
-                  <Text style={styles.earnHdtText}>325.74</Text>
+            <>
+              {stake.enloading ? (
+                <View style={styles.earnTextView}>
+                  <ProgressCircle
+                    percent={0}
+                    radius={80}
+                    borderWidth={8}
+                    size={300}
+                    fill={100}
+                    color="rgb(223,100,71)"
+                    shadowColor="#999"
+                    bgColor="#fff">
+                    <ActivityIndicator
+                      animating={true}
+                      size="large"
+                      color={Colors.red800}
+                    />
+                  </ProgressCircle>
                 </View>
-                <Text style={styles.TextStyle}>earned</Text> */}
-                <ActivityIndicator
-                  animating={true}
-                  size="large"
-                  color={Colors.red800}
-                />
-              </ProgressCircle>
-              {/* <View style={styles.progressLayer}></View> */}
-            </View>
+              ) : (
+                <>
+                  <View style={styles.earnTextView}>
+                    <ProgressCircle
+                      percent={
+                        (Math.abs(
+                          new Date(stake.earndata.currentDate) -
+                            new Date(stake.earndata.date),
+                        ) /
+                          36e5 /
+                          (Math.abs(
+                            new Date(stake.earndata.end_date) -
+                              new Date(stake.earndata.date),
+                          ) /
+                            36e5)) *
+                        100
+                      }
+                      radius={80}
+                      borderWidth={8}
+                      size={300}
+                      fill={100}
+                      color="rgb(223,100,71)"
+                      shadowColor="#999"
+                      bgColor="#fff">
+                      {isEmpty(stake.earndata) ? (
+                        <>
+                          <View style={styles.rowLayout}>
+                            <Text style={styles.earnHdtText}>
+                              Staking is not selected
+                            </Text>
+                          </View>
+                          <Text style={styles.TextStyle}></Text>
+                        </>
+                      ) : (
+                        <>
+                          <View style={styles.rowLayout}>
+                            <Text style={styles.earnHdtText}>
+                              {stake.earndata.earned_amount}
+                            </Text>
+                          </View>
+                          <Text style={styles.TextStyle}>earned</Text>
+                        </>
+                      )}
+                    </ProgressCircle>
+                  </View>
+                </>
+              )}
+            </>
           ) : (
             <></>
           )}
+
           <View style={styles.circleView}>
             {stake.loading ? (
               <ActivityIndicator

@@ -11,9 +11,8 @@ import {getHistoryById} from '../../actions/historyAction';
 import animal from '../../assets/img/animal.png';
 import {SERVER_URL} from '../../constant/server_url';
 import {mainText, subText} from '../../constant/history';
-import io from 'socket.io-client';
 import axios from 'axios';
-import socketIOClient from 'socket.io-client';
+// import socketIOClient from 'socket.io-client';
 const ENDPOINT = 'http://10.0.2.2:5000';
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -23,11 +22,6 @@ const Home = ({navigation}) => {
   const store = useSelector(state => state.auth);
   const history = useSelector(state => state.history);
   useEffect(() => {
-    console.log(store.user);
-    var socket = io(`http://10.0.2.2:5000?userId=${store.user.id}`, {
-      transports: ['websocket'],
-    });
-
     let isMount = true;
     if (isMount) {
       dispatch(getPrice());

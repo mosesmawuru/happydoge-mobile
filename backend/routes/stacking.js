@@ -119,6 +119,7 @@ router.post(
     const { errors, isValid } = validateEarn(req.body);
 
     const { ID } = req.body;
+
     if (!isValid) {
       return res.status(400).send(errors);
     }
@@ -146,8 +147,7 @@ router.put(
     }
     Stack.findOne({ _id: ID, flag: true })
       .then((item) => {
-        console.log(item);
-        // return res.status(200).json(item);
+        return res.status(200).json(item);
       })
       .catch((err) => {
         console.log(err);
@@ -155,4 +155,5 @@ router.put(
       });
   }
 );
+
 module.exports = router;

@@ -40,7 +40,7 @@ app.use("/swap", require("./routes/swap"));
 app.use("/history", require("./routes/history"));
 app.use("/deposit", require("./routes/deposit"));
 app.use("/withdraw", require("./routes/withdraw"));
-app.use("/earn", require("./routes/earn"));
+// app.use("/earn", require("./routes/earn"));
 app.use("/referral", require("./routes/referral"));
 // Serve static assets in productioncd
 // if (process.env.NODE_ENV === "production") {
@@ -51,11 +51,11 @@ app.use("/referral", require("./routes/referral"));
 //     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
 //   });
 // }
-
 const doEveryMinute = async (socket) => {
   const today = new Date();
   console.log(today);
   await cron.schedule("00 00 */1 * * * *", async () => {
+    // await cron.schedule("*/10 * * * * *", async () => {
     const currentHour = new Date(
       today.getFullYear(),
       today.getMonth(),
@@ -65,10 +65,14 @@ const doEveryMinute = async (socket) => {
     const hdtitem = await Exchange.findOne({});
     await Staking.find({ flag: true })
       .then((data) => {
-        console.log(data);
         if (data) {
           data.map(async (item, key) => {
-            if (item.end_date === currentHour) {
+            console.log(item.end_date, currentHour);
+            if (
+              new Date(item.end_date).getTime() ===
+              new Date(currentHour).getTime()
+            ) {
+              console.log("asdfasdf");
               if (isEmpty(hdtitem.stack_rate)) {
                 return res.status(400).send({
                   error: "Stake rate is not setted",
@@ -77,38 +81,53 @@ const doEveryMinute = async (socket) => {
                 const userdata = await User.findById(item.user);
                 userdata.countHDT =
                   userdata.countHDT +
-                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
-                    24 *
-                    Math.floor(
-                      (new Date(currentHour).getTime() -
-                        new Date(item.date).getTime()) /
-                        (1000 * 60 * 60 * 24)
-                    );
+                  item.stack_amount +
+                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    Math.abs(new Date(currentHour) - new Date(item.date))) /
+                    36e5;
+
                 item.flag = false;
+                console.log(currentHour);
+                console.log(item.currentDate);
+                console.log(
+                  item.stack_amount,
+                  hdtitem.stack_rate,
+                  Math.abs(new Date(currentHour) - new Date(item.currentDate)) /
+                    36e5
+                );
+                console.log(
+                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    Math.abs(
+                      new Date(currentHour) - new Date(item.currentDate)
+                    )) /
+                    36e5
+                );
                 item.earned_amount =
                   item.earned_amount +
-                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
-                    24 *
-                    Math.floor(
-                      (new Date(currentHour).getTime() -
-                        new Date(item.date).getTime()) /
-                        (1000 * 60 * 60 * 24)
-                    );
+                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    Math.abs(new Date(currentHour) - new Date(item.date))) /
+                    36e5;
                 userdata
                   .save()
                   .then((item) => {
-                    return res.status(200).json({ msg: "success" });
+                    // console.log(item);
                   })
                   .catch((err) => {
-                    return res.status(400).json({ errors: err });
+                    console.log(error);
                   });
+
                 item
                   .save()
                   .then((item) => {
-                    return res.status(200).json({ msg: "success" });
+                    const data = {
+                      id: item.user,
+                      message: "Staking is completed",
+                      amount: item.earned_amount,
+                    };
+                    socket.emit("staking", data);
                   })
                   .catch((err) => {
-                    return res.status(400).json({ errors: err });
+                    socket.emit("stake_error", err);
                   });
               }
             } else if (item.end_date > currentHour) {
@@ -120,40 +139,50 @@ const doEveryMinute = async (socket) => {
                 const userdata = await User.findById(item.user);
                 userdata.countHDT =
                   userdata.countHDT +
-                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
-                    24 *
-                    Math.floor(
-                      (new Date(currentHour).getTime() -
-                        new Date(item.currentDate).getTime()) /
-                        (1000 * 60 * 60 * 24)
-                    );
-                item.currentDate = currentHour;
+                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    Math.abs(
+                      new Date(currentHour) - new Date(item.currentDate)
+                    )) /
+                    36e5;
+
                 item.earned_amount =
                   item.earned_amount +
-                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
-                    24 *
-                    Math.floor(
-                      (new Date(currentHour).getTime() -
-                        new Date(item.currentDate).getTime()) /
-                        (1000 * 60 * 60 * 24)
-                    );
+                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    Math.abs(
+                      new Date(currentHour) - new Date(item.currentDate)
+                    )) /
+                    36e5;
+
+                item.currentDate = currentHour;
+
                 userdata
                   .save()
                   .then((item) => {
-                    return res.status(200).json({ msg: "success" });
+                    console.log("asdfasd");
+
+                    // console.log(item);
                   })
                   .catch((err) => {
                     console.log(err);
-                    return res.status(400).json({ errors: err });
                   });
                 item
                   .save()
                   .then((item) => {
-                    return res.status(200).json({ msg: "success" });
+                    console.log("1111asdfasd");
+                    const data = {
+                      id: item.user,
+                      message: "Hourly stake is completed",
+                      amount:
+                        (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                          Math.abs(
+                            new Date(currentHour) - new Date(item.currentDate)
+                          )) /
+                        36e5,
+                    };
+                    socket.emit("staking", data);
                   })
                   .catch((err) => {
                     console.log(err);
-                    return res.status(400).json({ errors: err });
                   });
               }
             } else if (item.end_date < currentHour) {
@@ -165,40 +194,37 @@ const doEveryMinute = async (socket) => {
                 const userdata = await User.findById(item.user);
                 userdata.countHDT =
                   userdata.countHDT +
-                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
-                    24 *
-                    Math.floor(
-                      (new Date(end_date).getTime() -
-                        new Date(item.date).getTime()) /
-                        (1000 * 60 * 60 * 24)
-                    );
+                  item.stack_amount +
+                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    Math.abs(new Date(item.end_date) - new Date(item.date))) /
+                    36e5;
+
                 item.flag = false;
                 item.earned_amount =
                   item.earned_amount +
-                  ((item.stack_amount * hdtitem.stack_rate) / 100) *
-                    24 *
-                    Math.floor(
-                      (new Date(end_date).getTime() -
-                        new Date(item.date).getTime()) /
-                        (1000 * 60 * 60 * 24)
-                    );
+                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                    Math.abs(new Date(item.end_date) - new Date(item.date))) /
+                    36e5;
                 userdata
                   .save()
                   .then((item) => {
-                    return res.status(200).json({ msg: "success" });
+                    // console.log(item);
                   })
                   .catch((err) => {
                     console.log(err);
-                    return res.status(400).json({ errors: err });
                   });
                 item
                   .save()
                   .then((item) => {
-                    return res.status(200).json({ msg: "success" });
+                    const data = {
+                      id: item.user,
+                      message: "Staking is completed",
+                      amount: item.earned_amount,
+                    };
+                    socket.emit("staking", data);
                   })
                   .catch((err) => {
                     console.log(err);
-                    return res.status(400).json({ errors: err });
                   });
               }
             }
@@ -237,23 +263,22 @@ try {
   io.on("connection", (socket) => {
     console.log("New client connected");
     // Get connected user id
-    // const userId = socket.handshake.query.userId;
+    const userId = socket.handshake.query.userId;
     // console.log(userId);
     // Set user as online
-    // onlineUsers[userId] = socket.id;
+    onlineUsers[userId] = socket.id;
     doEveryMinute(socket);
     socket.on("disconnect", () => {
       console.log("Client disconnected");
-      // let disconnectedUserId = null;
+      let disconnectedUserId = null;
       // Remove disconnected user from online users
-      // for (prop in onlineUsers) {
-      //   if (onlineUsers[prop] === socket.id) {
-      //     disconnectedUserId = prop;
-      //     delete onlineUsers[prop];
-      //     break;
-      //   }
-      // }
-      // clearInterval(interval);
+      for (prop in onlineUsers) {
+        if (onlineUsers[prop] === socket.id) {
+          disconnectedUserId = prop;
+          delete onlineUsers[prop];
+          break;
+        }
+      }
     });
   });
 } catch (e) {}

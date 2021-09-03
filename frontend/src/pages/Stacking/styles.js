@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     color: 'rgb(102,59,8)',
     fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   earnHdt: {color: 'rgb(102,59,8)', fontSize: 20},
   labelText: {
