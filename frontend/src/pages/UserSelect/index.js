@@ -6,11 +6,28 @@ import {Searchbar, ActivityIndicator, Colors} from 'react-native-paper';
 import {CommonText} from '../../components/Common';
 import Header from '../../components/Header';
 import {getAllUser} from '../../actions/userAction';
+import isEmpty from '../../utils/isEmpty';
 const UserSelect = ({navigation}) => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState('');
+  const [ethprice, setEthprice] = useState(0);
   const store = useSelector(state => state.user);
   const onChangeSearch = query => setSearchQuery(query);
+  const socket = useSelector(state => state.socket);
+  const price = useSelector(state => state.price);
+
+  useEffect(() => {
+    let isMount = true;
+    if (isMount) {
+      if (!isEmpty(socket.socket))
+        socket.socket.on('price', item => {
+          setEthprice(item.price);
+        });
+    }
+    return () => {
+      isMount = false;
+    };
+  }, [socket]);
   useEffect(() => {
     dispatch(getAllUser());
   }, []);
@@ -93,7 +110,8 @@ const UserSelect = ({navigation}) => {
                         <CommonText
                           color="rgb(223,100,71)"
                           fontSize="12px"
-                          fontWeight="bold">
+                          fontWeight="bold"
+                          textAlign="center">
                           {item.countHDT}
                         </CommonText>
                       </Col>
@@ -122,7 +140,8 @@ const UserSelect = ({navigation}) => {
                           color="rgb(223,100,71)"
                           fontSize="12px"
                           fontWeight="bold">
-                          0
+                          {item.countHDT * price.pricedata.price +
+                            ethprice * item.countETH}
                         </CommonText>
                       </Col>
                     </Row>

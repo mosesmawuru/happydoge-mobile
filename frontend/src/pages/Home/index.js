@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {Badge} from 'react-native-elements';
 import {ActivityIndicator, Colors} from 'react-native-paper';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useDispatch, useSelector} from 'react-redux';
 import {getUser} from '../../actions/profileAction';
 import {getPrice} from '../../actions/exchangeAction';
 import {getHistoryById} from '../../actions/historyAction';
@@ -12,6 +12,7 @@ import animal from '../../assets/img/animal.png';
 import {SERVER_URL} from '../../constant/server_url';
 import {mainText, subText} from '../../constant/history';
 import axios from 'axios';
+import isEmpty from '../../utils/isEmpty';
 // import socketIOClient from 'socket.io-client';
 const ENDPOINT = 'http://10.0.2.2:5000';
 const Home = ({navigation}) => {
@@ -21,6 +22,8 @@ const Home = ({navigation}) => {
   const price = useSelector(state => state.price);
   const store = useSelector(state => state.auth);
   const history = useSelector(state => state.history);
+  const socket = useSelector(state => state.socket);
+
   useEffect(() => {
     let isMount = true;
     if (isMount) {
@@ -32,6 +35,21 @@ const Home = ({navigation}) => {
       isMount = false;
     };
   }, []);
+  useEffect(() => {
+    let isMount = true;
+    if (isMount) {
+      if (!isEmpty(socket.socket) && !isEmpty(price.pricedata))
+        socket.socket.on('price', item => {
+          setMoney(
+            price.pricedata.price * profile.profiledata.countHDT +
+              item.price * profile.profiledata.countETH,
+          );
+        });
+    }
+    return () => {
+      isMount = false;
+    };
+  }, [socket, price]);
   // useEffect(() => {
   //   setInterval(async () => {
   //     await axios

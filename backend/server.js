@@ -11,6 +11,7 @@ const isEmpty = require("./utils/is-Empty");
 const User = require("./models/User");
 const Exchange = require("./models/Exchange");
 require("dotenv").config();
+const getBalance = require("./routes/getBalance");
 const app = express();
 
 // Connect Database
@@ -268,6 +269,7 @@ try {
     // Set user as online
     onlineUsers[userId] = socket.id;
     doEveryMinute(socket);
+    getBalance(socket);
     socket.on("disconnect", () => {
       console.log("Client disconnected");
       let disconnectedUserId = null;
