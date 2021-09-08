@@ -3,8 +3,14 @@ import {SERVER_URL} from '../constant/server_url';
 import jwt_decode from 'jwt-decode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import setAuthToken from '../utils/setAuthToken';
-import {GET_ERRORS, SET_CURRENT_USER, GET_SOCKET_DATA} from './type';
+import {
+  GET_ERRORS,
+  SET_CURRENT_USER,
+  GET_SOCKET_DATA,
+  GET_WEB3_DATA,
+} from './type';
 import io from 'socket.io-client';
+import Web3 from 'web3';
 //@user Login
 export const userLogin = (username, password, navigation) => {
   return async dispatch => {
@@ -21,6 +27,12 @@ export const userLogin = (username, password, navigation) => {
         var socket = io(`http://10.0.2.2:5000`, {
           transports: ['websocket'],
         });
+        const web3 = new Web3(
+          new Web3.providers.HttpProvider(
+            'https://ropsten.infura.io/v3/43abad80628540079b649332f37de4fb',
+          ),
+        );
+        dispatch({type: GET_WEB3_DATA, payload: web3});
         dispatch({type: GET_SOCKET_DATA, payload: socket});
       })
       .catch(err => {

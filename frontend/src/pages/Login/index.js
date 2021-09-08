@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, Image, TextInput, TouchableOpacity} from 'react-native';
 import {Input} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
@@ -14,7 +14,14 @@ const Login = ({navigation}) => {
     dispatch(userLogin(username, password, navigation));
   };
   const errors = useSelector(state => state.errors);
+  const store = useSelector(state => state.auth);
   const {color} = useTheme();
+  useEffect(() => {
+    console.log(store.isAuthenticated);
+    if (store.isAuthenticated) {
+      navigation.navigate('Main');
+    }
+  }, []);
   return (
     <View style={styles.container}>
       <View>

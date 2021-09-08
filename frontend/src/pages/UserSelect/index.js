@@ -19,15 +19,15 @@ const UserSelect = ({navigation}) => {
   useEffect(() => {
     let isMount = true;
     if (isMount) {
-      if (!isEmpty(socket.socket))
+      if (!isEmpty(socket.socket) && !isEmpty(price.pricedata))
         socket.socket.on('price', item => {
-          setEthprice(item.price);
+          setEthprice(Number(item.price));
         });
     }
     return () => {
       isMount = false;
     };
-  }, [socket]);
+  }, [socket, price]);
   useEffect(() => {
     dispatch(getAllUser());
   }, []);

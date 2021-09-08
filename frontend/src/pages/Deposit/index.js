@@ -3,17 +3,18 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, TouchableOpacity} from 'react-native';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
-
 import Header from '../../components/Header';
 import {DepositModal} from '../../components/DepositModal';
 import {message} from '../../constant/message';
-
+import {BigNumber, ethers} from 'ethers';
 import {deposit} from '../../actions/depositAction';
-
+import {hdtABI} from '../../utils/hdtABI';
 import styles from './styles';
 const Deposit = ({navigation}) => {
+  const contractAddress = '0x08895697055b82890a312dfc9f52df907d8fd001';
   const dispatch = useDispatch();
   const [amount, setAmount] = useState(0);
+  const [myBalance, setMyBalance] = useState(0);
   const [selected, setSelected] = useState('eth');
   const [visible, setVisible] = useState(false);
   const [modalData, setModalData] = useState('');
@@ -21,6 +22,8 @@ const Deposit = ({navigation}) => {
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
+  const web3 = useSelector(state => state.web3);
+
   const onSubmit = () => {
     const data = {
       id: store.user.id,
@@ -43,6 +46,23 @@ const Deposit = ({navigation}) => {
   useEffect(() => {
     setError(errors);
   }, [errors]);
+  useEffect(async () => {
+    let isMount = true;
+    if (isMount) {
+      if (profile.profiledata && web3) {
+        const price = await web3.web3.eth.getBalance(
+          profile.profiledata.address,
+        );
+        var contract = await web3.web3.eth.contract(hdtABI).at(contractAddress);
+        const hdtcount = await contract.balanceOf(profile.profiledata.address);
+        console.log(hdtcount);
+        setMyBalance(ethers.utils.formatEther(BigNumber.from(price)));
+      }
+    }
+    return () => {
+      isMount = false;
+    };
+  }, [web3, profile]);
   return (
     <>
       <DepositModal
@@ -57,7 +77,9 @@ const Deposit = ({navigation}) => {
         </View>
 
         <View style={styles.userDiv}>
-          <Text style={styles.txt}>Address</Text>
+          <Text style={styles.txt}>My Ethereum Balance of wallet</Text>
+          <Input value={myBalance.toString()} disabled />
+          <Text style={styles.txt}>My Address</Text>
           <Input
             value={
               profile.profiledata.address

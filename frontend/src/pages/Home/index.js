@@ -9,12 +9,9 @@ import {getUser} from '../../actions/profileAction';
 import {getPrice} from '../../actions/exchangeAction';
 import {getHistoryById} from '../../actions/historyAction';
 import animal from '../../assets/img/animal.png';
-import {SERVER_URL} from '../../constant/server_url';
 import {mainText, subText} from '../../constant/history';
-import axios from 'axios';
 import isEmpty from '../../utils/isEmpty';
-// import socketIOClient from 'socket.io-client';
-const ENDPOINT = 'http://10.0.2.2:5000';
+
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const [hdtprice, setHdtprice] = useState(0);
@@ -23,6 +20,7 @@ const Home = ({navigation}) => {
   const store = useSelector(state => state.auth);
   const history = useSelector(state => state.history);
   const socket = useSelector(state => state.socket);
+  const profile = useSelector(state => state.profile);
 
   useEffect(() => {
     let isMount = true;
@@ -38,32 +36,22 @@ const Home = ({navigation}) => {
   useEffect(() => {
     let isMount = true;
     if (isMount) {
-      if (!isEmpty(socket.socket) && !isEmpty(price.pricedata))
+      if (
+        !isEmpty(socket.socket) &&
+        !isEmpty(price.pricedata) &&
+        !isEmpty(profile.profiledata)
+      )
         socket.socket.on('price', item => {
           setMoney(
             price.pricedata.price * profile.profiledata.countHDT +
-              item.price * profile.profiledata.countETH,
+              Number(item.price) * profile.profiledata.countETH,
           );
         });
     }
     return () => {
       isMount = false;
     };
-  }, [socket, price]);
-  // useEffect(() => {
-  //   setInterval(async () => {
-  //     await axios
-  //       .get('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT')
-  //       .then(res => {
-  //         const ethprice = res.data.weightedAvgPrice;
-  //         setMoney(
-  //           profile.profiledata.countETH * ethprice +
-  //             profile.profiledata.countHDT * price.pricedata.price,
-  //         );
-  //       });
-  //   }, 21000);
-  // });
-  const profile = useSelector(state => state.profile);
+  }, [socket, price, profile]);
 
   return (
     <>

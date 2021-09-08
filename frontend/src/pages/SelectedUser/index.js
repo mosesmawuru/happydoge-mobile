@@ -19,12 +19,29 @@ import {
   getWithdrawData,
   getReferralData,
 } from '../../actions/userAction';
+import isEmpty from '../../utils/isEmpty';
 const SelectedUser = ({navigation, route}) => {
   const dispatch = useDispatch();
   const [countHDT, setCountHDT] = useState();
   const [countETH, setCountETH] = useState();
+  const [ethprice, setEthprice] = useState(0);
   const store = useSelector(state => state.user);
+  const socket = useSelector(state => state.socket);
+  const price = useSelector(state => state.price);
   const [activeSections, setActiveSections] = useState([]);
+  useEffect(() => {
+    let isMount = true;
+    if (isMount) {
+      if (!isEmpty(socket.socket) && !isEmpty(price.pricedata))
+        socket.socket.on('price', item => {
+          setEthprice(Number(item.price));
+        });
+    }
+    return () => {
+      isMount = false;
+    };
+  }, [socket, price]);
+
   const SECTIONS = [
     {
       title: 'STAKING DETAILS',
@@ -243,12 +260,19 @@ const SelectedUser = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    dispatch(getUserById(route.params.item._id));
-    dispatch(getStakeData(route.params.item._id));
-    dispatch(getTransferData(route.params.item.address));
-    dispatch(getWithdrawData(route.params.item.address));
-    dispatch(getReferralData(route.params.item.address));
+    let isMount = true;
+    if (isMount) {
+      dispatch(getUserById(route.params.item._id));
+      dispatch(getStakeData(route.params.item._id));
+      dispatch(getTransferData(route.params.item.address));
+      dispatch(getWithdrawData(route.params.item.address));
+      dispatch(getReferralData(route.params.item.address));
+    }
+    return () => {
+      isMount = false;
+    };
   }, [route]);
+
   return (
     <>
       <Header text="User Detail" navigation={navigation} />
@@ -319,7 +343,10 @@ const SelectedUser = ({navigation, route}) => {
                   width: '50%',
                 }}>
                 <NumberFormat
-                  value={5000}
+                  value={
+                    route.params.item.countHDT * price.pricedata.price +
+                    ethprice * route.params.item.countETH
+                  }
                   displayType={'text'}
                   thousandSeparator={true}
                   prefix={'$'}

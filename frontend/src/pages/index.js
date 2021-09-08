@@ -194,7 +194,7 @@ function Main({}) {
   );
 }
 
-function Routes({}) {
+function Routes() {
   const schema = useColorScheme();
   return (
     <AppearanceProvider>

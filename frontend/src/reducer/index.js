@@ -11,6 +11,7 @@ import swapReducer from './swapReducer';
 import authReducer from './authReducer';
 import userReducer from './userReducer';
 import socketReducer from './socketReducer';
+import web3Reducer from './web3Reducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -24,4 +25,5 @@ export default combineReducers({
   stake: stakeReducer,
   user: userReducer,
   socket: socketReducer,
+  web3: web3Reducer,
 });
