@@ -33,6 +33,8 @@ import UserSelect from './UserSelect';
 import SelectedUser from './SelectedUser';
 import AddStake from './Stacking/Add';
 import MoreHistory from './Home/MoreHistory';
+import Referral from './Referral';
+
 import {store} from '../store';
 
 import setAuthToken from '../utils/setAuthToken';
@@ -163,6 +165,11 @@ function Main({}) {
         name="Withdraw"
         options={{drawerLabel: 'Withdraw'}}
         component={Withdraw}
+      />
+      <Drawer.Screen
+        name="Referral"
+        options={{drawerLabel: 'Referral'}}
+        component={Referral}
       />
       {store.user.role === 'admin' ? (
         <>
