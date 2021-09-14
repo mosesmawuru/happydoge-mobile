@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {CheckBox, Input} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
@@ -69,57 +69,63 @@ const SwapToEth = ({navigation}) => {
   return (
     <>
       <Header text="SWAP TO ETH" navigation={navigation} />
-      <CustomModal item={modalData} visible={visible} setVisible={setVisible} />
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.headText}>SWAP TO ETH</Text>
-        </View>
-        <View style={styles.userDiv}>
-          <Text style={styles.labelText}>Current HDT Balance</Text>
-          <Input
-            value={profile.profiledata.countHDT.toString() + ' HDT'}
-            disabled
-          />
-          <Text style={styles.labelText}>Current ETH Balance</Text>
-          <Input
-            value={profile.profiledata.countETH.toString() + ' ETH'}
-            disabled
-          />
-          <Text style={styles.labelText}>HDT</Text>
-          <Input
-            value={
-              checked
-                ? profile.profiledata.countHDT.toString()
-                : countHDT.toString()
-            }
-            placeholder="Please input HDT Balance"
-            onChangeText={message => {
-              setCountHDT(message);
-            }}
-            errorStyle={{color: 'red'}}
-            keyboardType="numeric"
-            errorMessage={error.countHDT}
-            disabled={checked ? true : false}
-          />
-        </View>
-
-        <CheckBox
-          center
-          title="Max"
-          checkedIcon="dot-circle-o"
-          uncheckedIcon="circle-o"
-          checked={checked}
-          onPress={() => setChecked(!checked)}
+      <ScrollView>
+        <CustomModal
+          item={modalData}
+          visible={visible}
+          setVisible={setVisible}
         />
-        <TouchableOpacity
-          style={styles.submitButtonStyle}
-          activeOpacity={0.5}
-          onPress={() => {
-            swap();
-          }}>
-          <Text style={styles.TextStyle}>SWAP</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.container}>
+          <View>
+            <Text style={styles.headText}>SWAP TO ETH</Text>
+          </View>
+          <View style={styles.userDiv}>
+            <Text style={styles.labelText}>Current HDT Balance</Text>
+            <Input
+              value={profile.profiledata.countHDT.toString() + ' HDT'}
+              disabled
+            />
+            <Text style={styles.labelText}>Current ETH Balance</Text>
+            <Input
+              value={profile.profiledata.countETH.toString() + ' ETH'}
+              disabled
+            />
+            <Text style={styles.labelText}>HDT</Text>
+            <Input
+              value={
+                checked
+                  ? profile.profiledata.countHDT.toString()
+                  : countHDT.toString()
+              }
+              placeholder="Please input HDT Balance"
+              onChangeText={message => {
+                setCountHDT(message);
+              }}
+              errorStyle={{color: 'red'}}
+              keyboardType="numeric"
+              errorMessage={error.countHDT}
+              disabled={checked ? true : false}
+            />
+          </View>
+
+          <CheckBox
+            center
+            title="Max"
+            checkedIcon="dot-circle-o"
+            uncheckedIcon="circle-o"
+            checked={checked}
+            onPress={() => setChecked(!checked)}
+          />
+          <TouchableOpacity
+            style={styles.submitButtonStyle}
+            activeOpacity={0.5}
+            onPress={() => {
+              swap();
+            }}>
+            <Text style={styles.TextStyle}>SWAP</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </>
   );
 };

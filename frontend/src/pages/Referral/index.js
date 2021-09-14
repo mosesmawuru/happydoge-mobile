@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
 const WalletConnectExample = () => {
   const {createSession, killSession, session, signTransaction} =
     useWalletConnect();
+  console.log(session.length);
   const hasWallet = !!session.length;
   return (
     <>
