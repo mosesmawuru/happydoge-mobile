@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {TextInput, Text, View, TouchableOpacity, Alert} from 'react-native';
 import NotifService from './src/notification/NotifService';
+import Routes from './src/pages';
 
 export default class App extends Component {
   constructor(props) {
@@ -14,22 +16,24 @@ export default class App extends Component {
   }
 
   render() {
+    // const socket = useSelector(state => state.socket);
     return (
-      <View>
-        <View />
-        <TextInput
-          value={this.state.registerToken}
-          placeholder="Register token"
-        />
-        <View />
+      <Routes />
+      // <View>
+      //   <View />
+      //   <TextInput
+      //     value={this.state.registerToken}
+      //     placeholder="Register token"
+      //   />
+      //   <View />
 
-        <TouchableOpacity
-          onPress={() => {
-            this.notif.localNotif();
-          }}>
-          <Text>Local Notification (now)</Text>
-        </TouchableOpacity>
-      </View>
+      //   <TouchableOpacity
+      //     onPress={() => {
+      //       this.notif.localNotif();
+      //     }}>
+      //     <Text>Local Notification (now)</Text>
+      //   </TouchableOpacity>
+      // </View>
     );
   }
 
@@ -39,9 +43,5 @@ export default class App extends Component {
 
   onNotif(notif) {
     Alert.alert(notif.title, notif.message);
-  }
-
-  handlePerm(perms) {
-    Alert.alert('Permissions', JSON.stringify(perms));
   }
 }

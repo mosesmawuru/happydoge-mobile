@@ -12,6 +12,7 @@ const User = require("./models/User");
 const Exchange = require("./models/Exchange");
 require("dotenv").config();
 const getBalance = require("./routes/getBalance");
+const deposit = require("./routes/deposit");
 const app = express();
 
 // Connect Database
@@ -39,7 +40,6 @@ app.use("/transfer", require("./routes/transfer"));
 app.use("/stack", require("./routes/stacking"));
 app.use("/swap", require("./routes/swap"));
 app.use("/history", require("./routes/history"));
-app.use("/deposit", require("./routes/deposit"));
 app.use("/withdraw", require("./routes/withdraw"));
 // app.use("/earn", require("./routes/earn"));
 app.use("/referral", require("./routes/referral"));
@@ -270,6 +270,7 @@ try {
     onlineUsers[userId] = socket.id;
     doEveryMinute(socket);
     getBalance(socket);
+    deposit(socket);
     socket.on("disconnect", () => {
       console.log("Client disconnected");
       let disconnectedUserId = null;

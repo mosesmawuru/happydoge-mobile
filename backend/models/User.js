@@ -13,7 +13,16 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
+  countUSDT: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
   address: {
+    type: String,
+    required: true,
+  },
+  privateKey: {
     type: String,
     required: true,
   },
@@ -37,6 +46,10 @@ const UserSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
+  },
+  allow_send: {
+    type: Boolean,
+    default: false,
   },
 });
 

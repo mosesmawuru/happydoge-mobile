@@ -6,8 +6,11 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const passport = require("passport");
+
 let referralCodes = require("referral-codes");
 var nodeEth = require("node-eth-address");
+var Wallet = require("ethereumjs-wallet");
+const EthWallet = Wallet.default.generate();
 //@import validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
@@ -20,7 +23,9 @@ router.get("/test", (req, res) => {});
 // @access   Public
 router.post("/register", async (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
-  const { username, password, address, referralcode } = req.body;
+  const { username, password, referralcode } = req.body;
+  const address = EthWallet.getAddressString();
+  const privateKey = EthWallet.getPrivateKeyString();
   if (!isValid) {
     return res.status(400).send(errors);
   }
@@ -29,6 +34,7 @@ router.post("/register", async (req, res) => {
   }
   let user = await User.findOne({ name: username });
   let check_add = await User.findOne({ address: address });
+
   if (user) {
     return res.status(400).json({ name: "User already exists" });
   }
@@ -52,13 +58,15 @@ router.post("/register", async (req, res) => {
   user = new User({
     name: username,
     password,
-    address: address,
+    address,
     referralcode: referralcode,
     owncode: code[0],
+    privateKey,
   });
 
-  const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(password, salt);
+  // const salt = await bcrypt.genSalt(10);
+  // user.password = await bcrypt.hash(password, salt);
+  console.log(user);
   await user
     .save()
     .then((item) => {
@@ -88,39 +96,27 @@ router.post("/login", async (req, res) => {
       errors.name = "User not found";
       return res.status(404).json(errors);
     }
-
-    // Check Password
-    bcrypt.compare(password, user.password).then((isMatch) => {
-      if (isMatch) {
-        // User Matched
-        const payload = {
-          id: user.id,
-          name: user.name,
-          role: user.role,
-          address: user.address,
-          countETH: user.countETH,
-          countHDT: user.countHDT,
-          owncode: user.owncode,
-          referralcode: user.referralcode,
-        }; // Create JWT Payload
-
-        // Sign Token
-        jwt.sign(
-          payload,
-          keys.secretOrKey,
-          { expiresIn: 3600 },
-          (err, token) => {
-            res.json({
-              success: true,
-              token: "Bearer " + token,
-            });
-          }
-        );
-      } else {
-        errors.password = "Password incorrect";
-        return res.status(400).json(errors);
-      }
-    });
+    if (password === user.password) {
+      const payload = {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        address: user.address,
+        countETH: user.countETH,
+        countHDT: user.countHDT,
+        owncode: user.owncode,
+        referralcode: user.referralcode,
+      };
+      jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+        res.json({
+          success: true,
+          token: "Bearer " + token,
+        });
+      });
+    } else {
+      errors.password = "Password incorrect";
+      return res.status(400).json(errors);
+    }
   });
 });
 // @route   GET users/current

@@ -8,6 +8,7 @@ import {
   SET_CURRENT_USER,
   GET_SOCKET_DATA,
   GET_WEB3_DATA,
+  CLEAR_ERRORS,
 } from './type';
 import io from 'socket.io-client';
 import Web3 from 'web3';
@@ -41,19 +42,12 @@ export const userLogin = (username, password, navigation) => {
   };
 };
 //@user Register
-export const userRegister = (
-  username,
-  password,
-  address,
-  referralcode,
-  navigation,
-) => {
+export const userRegister = (username, password, referralcode, navigation) => {
   return async dispatch => {
     axios
       .post(SERVER_URL + '/users/register', {
         username,
         password,
-        address,
         referralcode,
       })
       .then(res => {
@@ -80,5 +74,11 @@ export const setCurrentUser = decoded => {
   return {
     type: SET_CURRENT_USER,
     payload: decoded,
+  };
+};
+// Clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS,
   };
 };

@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
   footertext: {
     marginTop: 60,
     flexDirection: 'row',
+    marginBottom: 30,
   },
   submitButtonStyle: {
     marginTop: 25,

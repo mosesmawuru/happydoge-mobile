@@ -2,40 +2,12 @@ import React, {useEffect} from 'react';
 import {Text, View, ScrollView} from 'react-native';
 import {ActivityIndicator, Colors} from 'react-native-paper';
 import styles from './styles';
-import {useDispatch, useSelector} from 'react-redux';
-import {getUser} from '../../actions/profileAction';
-import {getPrice} from '../../actions/exchangeAction';
-import {getHistoryById} from '../../actions/historyAction';
+import {useSelector} from 'react-redux';
 import {mainText, subText} from '../../constant/history';
 import Header from '../../components/Header';
 const MoreHistory = ({navigation}) => {
-  const dispatch = useDispatch();
   const store = useSelector(state => state.auth);
   const history = useSelector(state => state.history);
-  useEffect(() => {
-    let isMount = true;
-    if (isMount) {
-      dispatch(getPrice());
-      dispatch(getUser(store.user.id));
-      dispatch(getHistoryById(store.user.address));
-    }
-    return () => {
-      isMount = false;
-    };
-  }, []);
-  // useEffect(() => {
-  //   setInterval(async () => {
-  //     await axios
-  //       .get('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT')
-  //       .then(res => {
-  //         const ethprice = res.data.weightedAvgPrice;
-  //         setMoney(
-  //           profile.profiledata.countETH * ethprice +
-  //             profile.profiledata.countHDT * price.pricedata.price,
-  //         );
-  //       });
-  //   }, 21000);
-  // });
 
   return (
     <>

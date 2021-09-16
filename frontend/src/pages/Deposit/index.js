@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import Header from '../../components/Header';
@@ -9,6 +9,7 @@ import {message} from '../../constant/message';
 import {BigNumber, ethers} from 'ethers';
 import {deposit} from '../../actions/depositAction';
 import {hdtABI} from '../../utils/hdtABI';
+const Tx = require('ethereumjs-tx').Transaction;
 import styles from './styles';
 const Deposit = ({navigation}) => {
   const contractAddress = '0x08895697055b82890a312dfc9f52df907d8fd001';
@@ -23,16 +24,62 @@ const Deposit = ({navigation}) => {
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
   const web3 = useSelector(state => state.web3);
+  const socket = useSelector(state => state.socket);
 
-  const onSubmit = () => {
-    const data = {
-      id: store.user.id,
-      address: profile.profiledata.address,
-      flag: selected,
-      amount: Number(amount),
-    };
-    dispatch(deposit(data, showModal));
+  const onSubmit = async () => {
+    if (Number(amount) === 0) {
+      setError({amount: 'Please input correct balance'});
+    } else if (Number(amount) > myBalance) {
+      setError({amount: 'Not Sufficiant Balance'});
+    } else if (isNaN(amount)) {
+      setError({amount: 'Please only input number'});
+    } else {
+      if (selected === 'eth') {
+        const adminaddress = '0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E';
+        var count = await web3.web3.eth.getTransactionCount(
+          profile.profiledata.address,
+        );
+        var gasPrice = await web3.web3.eth.getGasPrice();
+        var gasLimit = 1000000;
+        // console.log(gasLimit, gasPrice, amount, count);
+        var rawTransaction = {
+          from: profile.profiledata.address,
+          nonce: web3.web3.utils.toHex(count),
+          gasPrice: web3.web3.utils.toHex(gasPrice),
+          gasLimit: web3.web3.utils.toHex(gasLimit),
+          to: adminaddress,
+          value: parseInt(amount * 1000000000000000000),
+        };
+        var tx = new Tx(rawTransaction, {chain: 'ropsten'});
+        const privatekey = profile.profiledata.privateKey.substring(
+          2,
+          profile.profiledata.privateKey.length,
+        );
+        var privKey = Buffer.from(privatekey, 'hex');
+        tx.sign(privKey);
+
+        const serializedTx = `0x${tx.serialize().toString('hex')}`;
+
+        web3.web3.eth.sendSignedTransaction(serializedTx, function (err, hash) {
+          if (!err) {
+            setBalance(profile, web3);
+            const data = {
+              id: store.user.id,
+              address: profile.profiledata.address,
+              flag: selected,
+              amount: Number(amount),
+            };
+            socket.socket.emit('deposit', data);
+          } else {
+            console.log(err);
+          }
+        });
+      } else if ((selected = 'hdt')) {
+      }
+    }
   };
+
+  const sendRealTransaction = async () => {};
   const showModal = async (flag, amount) => {
     const modalData = {
       message: message[2].message,
@@ -43,28 +90,34 @@ const Deposit = ({navigation}) => {
     await setModalData(modalData);
     await setVisible(!visible);
   };
+
   useEffect(() => {
     setError(errors);
   }, [errors]);
+  const setBalance = async (profile, web3) => {
+    const price = await web3.web3.eth.getBalance(profile.profiledata.address);
+    setMyBalance(ethers.utils.formatEther(BigNumber.from(price)));
+  };
   useEffect(async () => {
     let isMount = true;
     if (isMount) {
       if (profile.profiledata && web3) {
-        const price = await web3.web3.eth.getBalance(
-          profile.profiledata.address,
-        );
-        var contract = await web3.web3.eth.contract(hdtABI).at(contractAddress);
-        const hdtcount = await contract.balanceOf(profile.profiledata.address);
-        console.log(hdtcount);
-        setMyBalance(ethers.utils.formatEther(BigNumber.from(price)));
+        setBalance(profile, web3);
       }
     }
     return () => {
       isMount = false;
     };
   }, [web3, profile]);
+  useEffect(() => {
+    socket.socket.on('success_deposit', item => {
+      if (item.address === profile.profiledata.address) {
+        showModal(selected, item.amount);
+      }
+    });
+  }, [socket]);
   return (
-    <>
+    <ScrollView>
       <DepositModal
         item={modalData}
         visible={visible}
@@ -128,7 +181,7 @@ const Deposit = ({navigation}) => {
           <Text style={styles.TextStyle}>Deposit</Text>
         </TouchableOpacity>
       </View>
-    </>
+    </ScrollView>
   );
 };
 export default Deposit;
