@@ -13,6 +13,7 @@ const Exchange = require("./models/Exchange");
 require("dotenv").config();
 const getBalance = require("./routes/getBalance");
 const deposit = require("./routes/deposit");
+const { approve, reject } = require("./routes/admin");
 const app = express();
 
 // Connect Database
@@ -44,14 +45,14 @@ app.use("/withdraw", require("./routes/withdraw"));
 // app.use("/earn", require("./routes/earn"));
 app.use("/referral", require("./routes/referral"));
 // Serve static assets in productioncd
-// if (process.env.NODE_ENV === "production") {
-//   // Set static folder
-//   app.use(express.static("client/build"));
+if (process.env.NODE_ENV === "production") {
+  // Set static folder
+  app.use(express.static("client/build"));
 
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-//   });
-// }
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
 const doEveryMinute = async (socket) => {
   const today = new Date();
   console.log(today);
@@ -271,6 +272,8 @@ try {
     doEveryMinute(socket);
     getBalance(socket);
     deposit(socket);
+    approve(socket);
+    reject(socket);
     socket.on("disconnect", () => {
       console.log("Client disconnected");
       let disconnectedUserId = null;

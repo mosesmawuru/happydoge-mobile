@@ -1,11 +1,6 @@
 const express = require("express");
-const passport = require("passport");
-const router = express.Router();
-const { hdtABI, ethABI } = require("../constant/tokenABI");
 //@import models
 const User = require("../models/User");
-const Deposit = require("../models/Deposit");
-const Price = require("../models/Exchange");
 const axios = require("axios");
 
 const getBalance = async (socket) => {

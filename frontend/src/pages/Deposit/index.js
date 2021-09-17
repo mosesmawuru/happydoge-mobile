@@ -44,7 +44,6 @@ const Deposit = ({navigation}) => {
         );
         var gasPrice = await web3.web3.eth.getGasPrice();
         var gasLimit = 1000000;
-        // console.log(gasLimit, gasPrice, amount, count);
         var rawTransaction = {
           from: profile.profiledata.address,
           nonce: web3.web3.utils.toHex(count),

@@ -2,6 +2,7 @@ import axios from 'axios';
 import {SERVER_URL} from '../constant/server_url';
 import {GET_ERRORS, CLEAR_ERRORS} from './type';
 import {getUser} from '../actions/profileAction';
+import {getWithdraw} from '../actions/adminAction';
 export const withdraw = (data, setVisible) => {
   return async dispatch => {
     dispatch({type: CLEAR_ERRORS});
@@ -11,6 +12,7 @@ export const withdraw = (data, setVisible) => {
         if (res.data.msg === 'success') {
           setVisible(data.amount, data.flag);
           dispatch(getUser(data.id));
+          dispatch(getWithdraw());
         }
       })
       .catch(err => {
