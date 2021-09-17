@@ -17,7 +17,9 @@ const validateLoginInput = require("../validation/login");
 // @route   GET users/test
 // @desc    Return current user
 // @access  Public
-router.get("/test", (req, res) => {});
+router.get("/test", (req, res) => {
+  return res.json({ err: "message" });
+});
 // @route    POST users/resigter
 // @desc     Register user
 // @access   Public
@@ -107,12 +109,17 @@ router.post("/login", async (req, res) => {
         owncode: user.owncode,
         referralcode: user.referralcode,
       };
-      jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600*24*15 }, (err, token) => {
-        res.json({
-          success: true,
-          token: "Bearer " + token,
-        });
-      });
+      jwt.sign(
+        payload,
+        keys.secretOrKey,
+        { expiresIn: 3600 * 24 * 15 },
+        (err, token) => {
+          res.json({
+            success: true,
+            token: "Bearer " + token,
+          });
+        }
+      );
     } else {
       errors.password = "Password incorrect";
       return res.status(400).json(errors);
