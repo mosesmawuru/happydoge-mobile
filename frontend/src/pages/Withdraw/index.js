@@ -88,13 +88,14 @@ const Withdraw = ({navigation}) => {
             errorMessage={error.amount}
             rightIcon={
               <Picker
-                style={{width: 100}}
+                style={{width: 110}}
                 selectedValue={selected}
                 onValueChange={(itemValue, itemIndex) => {
                   setSelected(itemValue);
                 }}>
                 <Picker.Item label="ETH" value="eth" />
                 <Picker.Item label="HDT" value="hdt" />
+                <Picker.Item label="USDT" value="usdt" />
               </Picker>
             }
           />

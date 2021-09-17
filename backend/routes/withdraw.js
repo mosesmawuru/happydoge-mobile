@@ -38,8 +38,7 @@ router.post(
             });
         } else {
           return res.status(400).send({
-            amount:
-              "The amount to be swapped is greater than the amount of ETH you currently have.",
+            amount: "Not Sufficiant Balance",
           });
         }
       } else if (flag === "hdt") {
@@ -58,8 +57,26 @@ router.post(
             });
         } else {
           return res.status(400).send({
-            amount:
-              "The amount to be swapped is greater than the amount of HDT you currently have.",
+            amount: "Not Sufficiant Balance",
+          });
+        }
+      } else if (flag === "usdt") {
+        if (data.countUSDT >= amount) {
+          data.countUSDT = data.countUSDT - amount;
+          data.save();
+          drawData
+            .save()
+            .then((item) => {
+              console.log(item);
+              return res.status(200).json({ msg: "success" });
+            })
+            .catch((err) => {
+              console.log(err);
+              return res.status(400).json({ errors: err });
+            });
+        } else {
+          return res.status(400).send({
+            amount: "Not Sufficiant Balance",
           });
         }
       }
