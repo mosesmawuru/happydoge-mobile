@@ -37,7 +37,7 @@ const getBalance = async (socket) => {
               address: selectedUser.address,
               balance,
             };
-            socket.emit("success_deposit", data);
+            socket.emit("referral_deposit", sendUser);
           }
         })
         .catch((err) => {

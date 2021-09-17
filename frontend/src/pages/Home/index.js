@@ -9,6 +9,9 @@ import {getUser} from '../../actions/profileAction';
 import {getPrice} from '../../actions/exchangeAction';
 import {getHistoryById} from '../../actions/historyAction';
 import animal from '../../assets/img/animal.png';
+
+import ethImg from '../../assets/img/eth.png';
+import usdtImg from '../../assets/img/usdt.png';
 import {mainText, subText} from '../../constant/history';
 import isEmpty from '../../utils/isEmpty';
 
@@ -44,7 +47,7 @@ const Home = ({navigation}) => {
         socket.socket.on('price', item => {
           setMoney(
             price.pricedata.price * profile.profiledata.countHDT +
-              Number(item.price) * profile.profiledata.countETH,
+              Number(item.price) * profile.profiledata.countETH+profile.profiledata.countUSDT,
           );
         });
     }
@@ -67,7 +70,7 @@ const Home = ({navigation}) => {
             }}
           />
           <View style={styles.iconDiv}>
-            <Icon
+            {/* <Icon
               style={{paddingLeft: 10}}
               name="bell"
               size={30}
@@ -76,7 +79,7 @@ const Home = ({navigation}) => {
                 navigation.toggleDrawer();
               }}>
               <Badge value="2" status="error" />
-            </Icon>
+            </Icon> */}
             <Icon
               style={{paddingRight: 10}}
               name="cog"
@@ -100,13 +103,12 @@ const Home = ({navigation}) => {
           <Text style={styles.tokenCount}>{profile.profiledata.countHDT}</Text>
         </View>
         <View style={styles.rowDiv}>
-          <Icon
-            style={{paddingLeft: 10}}
-            name="bars"
-            size={20}
-            color={'rgb(119,118,120)'}
-          />
+          <Image style={styles.imgUnit} source={ethImg} />
           <Text style={styles.curMoney}>{profile.profiledata.countETH}</Text>
+        </View>
+        <View style={styles.rowDiv}>
+          <Image style={styles.imgUnit} source={usdtImg} />
+          <Text style={styles.curMoney}>{profile.profiledata.countUSDT}</Text>
         </View>
         <View>
           <View style={styles.btnGroup}>
