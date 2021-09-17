@@ -345,7 +345,8 @@ const SelectedUser = ({navigation, route}) => {
                 <NumberFormat
                   value={
                     route.params.item.countHDT * price.pricedata.price +
-                    ethprice * route.params.item.countETH
+                    ethprice * route.params.item.countETH +
+                    route.params.item.countUSDT
                   }
                   displayType={'text'}
                   thousandSeparator={true}

@@ -252,4 +252,38 @@ router.post(
       });
   }
 );
+
+router.post(
+  "/reject",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const { item } = req.body;
+
+    const data = await Withdraw.findById(item._id);
+    if (data) {
+      Withdraw.findByIdAndRemove(item._id)
+        .then(async () => {
+          const user = await User.findOne({ address: item.address });
+          if (item.method === "eth") {
+            user.countETH = user.countETH + item.amount;
+          } else if (item.method === "hdt") {
+            user.countHDT = user.countHDT + item.amount;
+          } else if (item.method === "usdt") {
+            user.countUSDT = user.countUSDT + item.amount;
+          }
+          user
+            .save()
+            .then(() => {
+              return res.status(200).json({ msg: "success" });
+            })
+            .catch((err) => {
+              return res.status(404).json(err);
+            });
+        })
+        .catch((err) => {
+          return res.status(404).json(err);
+        });
+    }
+  }
+);
 module.exports = router;

@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    width:width
+    width: width,
   },
   headText: {
     color: 'rgb(102,59,8)',
@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontSize: 15,
   },
-  userDiv: {marginTop: 20, width:width-20},
+  userDiv: {marginTop: 20, width: width - 20},
+  crypto: {width: width - 20},
   input: {
     borderColor: 'rgb(108,116,128)',
     color: 'rgb(108,116,128)',
@@ -29,12 +30,14 @@ const styles = StyleSheet.create({
   labelText: {
     fontSize: 20,
   },
+  imgUnit: {
+    width: 20,
+    height: 20,
+  },
   submitButtonStyle: {
-    marginTop: 25,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 45,
-    paddingRight: 45,
+    marginVertical: 25,
+    paddingVertical: 8,
+    paddingHorizontal: 45,
     backgroundColor: 'rgb(223,100,71)',
     borderRadius: 10,
     borderWidth: 1,

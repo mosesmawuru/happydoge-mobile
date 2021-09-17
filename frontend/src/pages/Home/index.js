@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
-import {Badge} from 'react-native-elements';
 import {ActivityIndicator, Colors} from 'react-native-paper';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,7 +8,6 @@ import {getUser} from '../../actions/profileAction';
 import {getPrice} from '../../actions/exchangeAction';
 import {getHistoryById} from '../../actions/historyAction';
 import animal from '../../assets/img/animal.png';
-
 import ethImg from '../../assets/img/eth.png';
 import usdtImg from '../../assets/img/usdt.png';
 import {mainText, subText} from '../../constant/history';
@@ -47,7 +45,8 @@ const Home = ({navigation}) => {
         socket.socket.on('price', item => {
           setMoney(
             price.pricedata.price * profile.profiledata.countHDT +
-              Number(item.price) * profile.profiledata.countETH+profile.profiledata.countUSDT,
+              Number(item.price) * profile.profiledata.countETH +
+              profile.profiledata.countUSDT,
           );
         });
     }

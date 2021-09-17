@@ -39,10 +39,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff',
+    flexDirection: 'row',
   },
   TextStyle: {
     color: 'white',
+    marginRight: 10,
   },
+
   txt: {
     fontSize: 20,
     marginLeft: 10,

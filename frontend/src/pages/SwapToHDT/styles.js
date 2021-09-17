@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   submitButtonStyle: {
-    marginTop: 25,
+    marginVertical: 25,
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 45,

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
+import {ActivityIndicator, Colors} from 'react-native-paper';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import Header from '../../components/Header';
@@ -15,6 +16,7 @@ const Deposit = ({navigation}) => {
   const contractAddress = '0x08895697055b82890a312dfc9f52df907d8fd001';
   const dispatch = useDispatch();
   const [amount, setAmount] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [myBalance, setMyBalance] = useState(0);
   const [selected, setSelected] = useState('eth');
   const [visible, setVisible] = useState(false);
@@ -34,6 +36,7 @@ const Deposit = ({navigation}) => {
     } else if (isNaN(amount)) {
       setError({amount: 'Please only input number'});
     } else {
+      setLoading(true);
       if (selected === 'eth') {
         const adminaddress = '0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E';
         var count = await web3.web3.eth.getTransactionCount(
@@ -96,7 +99,8 @@ const Deposit = ({navigation}) => {
   }, [errors]);
   const setBalance = async (profile, web3) => {
     const price = await web3.web3.eth.getBalance(profile.profiledata.address);
-    setMyBalance(ethers.utils.formatEther(BigNumber.from(price)));
+    await setMyBalance(ethers.utils.formatEther(BigNumber.from(price)));
+    await setLoading(false);
   };
   useEffect(async () => {
     let isMount = true;
@@ -174,11 +178,17 @@ const Deposit = ({navigation}) => {
         </View>
         <TouchableOpacity
           style={styles.submitButtonStyle}
+          disabled={loading ? true : false}
           activeOpacity={0.5}
           onPress={() => {
             onSubmit();
           }}>
           <Text style={styles.TextStyle}>Deposit</Text>
+          {loading ? (
+            <ActivityIndicator animating={true} size={13} color={'red'} />
+          ) : (
+            <></>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>

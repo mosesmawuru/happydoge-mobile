@@ -1,12 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, Image, ScrollView} from 'react-native';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import Header from '../../components/Header';
 import {withdraw} from '../../actions/withdrawAction';
 import {DepositModal} from '../../components/DepositModal';
 import {message} from '../../constant/message';
+import animal from '../../assets/img/animal.png';
+import ethImg from '../../assets/img/eth.png';
+import usdtImg from '../../assets/img/usdt.png';
 import styles from './styles';
 const Withdraw = ({navigation}) => {
   const dispatch = useDispatch();
@@ -53,62 +56,77 @@ const Withdraw = ({navigation}) => {
         setVisible={setVisible}
       />
       <Header text="Withdraw" navigation={navigation} />
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.headText}>Withdraw</Text>
-        </View>
+      <ScrollView>
+        <View style={styles.container}>
+          <View>
+            <Text style={styles.headText}>Withdraw</Text>
+          </View>
+          <View style={styles.userDiv}>
+            <Text style={styles.txt}>Address</Text>
+            <Input
+              value={
+                profile.profiledata.address
+                  ? profile.profiledata.address.substring(0, 6) +
+                    '....' +
+                    profile.profiledata.address.substring(
+                      profile.profiledata.address.length - 6,
+                      profile.profiledata.address.length,
+                    )
+                  : ''
+              }
+              disabled
+            />
+          </View>
+          <View style={styles.crypto}>
+            <Input
+              value={profile.profiledata.countHDT.toString()}
+              disabled
+              leftIcon={<Image style={styles.imgUnit} source={animal} />}
+            />
+            <Input
+              value={profile.profiledata.countETH.toString()}
+              disabled
+              leftIcon={<Image style={styles.imgUnit} source={ethImg} />}
+            />
+            <Input
+              value={profile.profiledata.countUSDT.toString()}
+              disabled
+              leftIcon={<Image style={styles.imgUnit} source={usdtImg} />}
+            />
 
-        <View style={styles.userDiv}>
-          <Text style={styles.txt}>Address</Text>
-          <Input
-            value={
-              profile.profiledata.address
-                ? profile.profiledata.address.substring(0, 6) +
-                  '....' +
-                  profile.profiledata.address.substring(
-                    profile.profiledata.address.length - 6,
-                    profile.profiledata.address.length,
-                  )
-                : ''
-            }
-            disabled
-            onChangeText={message => {
-              setAddress(message);
-            }}
-          />
-
-          <Input
-            value={amount.toString()}
-            placeholder="Please input ETH Balance"
-            onChangeText={message => {
-              setAmount(message);
-            }}
-            errorStyle={{color: 'red'}}
-            keyboardType="numeric"
-            errorMessage={error.amount}
-            rightIcon={
-              <Picker
-                style={{width: 110}}
-                selectedValue={selected}
-                onValueChange={(itemValue, itemIndex) => {
-                  setSelected(itemValue);
-                }}>
-                <Picker.Item label="ETH" value="eth" />
-                <Picker.Item label="HDT" value="hdt" />
-                <Picker.Item label="USDT" value="usdt" />
-              </Picker>
-            }
-          />
+            <Input
+              value={amount.toString()}
+              placeholder="Please input ETH Balance"
+              onChangeText={message => {
+                setAmount(message);
+              }}
+              errorStyle={{color: 'red'}}
+              keyboardType="numeric"
+              errorMessage={error.amount}
+              rightIcon={
+                <Picker
+                  style={{width: 110}}
+                  selectedValue={selected}
+                  onValueChange={(itemValue, itemIndex) => {
+                    setSelected(itemValue);
+                  }}>
+                  <Picker.Item label="ETH" value="eth" />
+                  <Picker.Item label="HDT" value="hdt" />
+                  <Picker.Item label="USDT" value="usdt" />
+                </Picker>
+              }
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.submitButtonStyle}
+            activeOpacity={0.5}
+            onPress={() => {
+              onSubmit();
+            }}>
+            <Text style={styles.TextStyle}>Withdraw</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.submitButtonStyle}
-          activeOpacity={0.5}
-          onPress={() => {
-            onSubmit();
-          }}>
-          <Text style={styles.TextStyle}>Withdraw</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </>
   );
 };

@@ -15,3 +15,17 @@ export const getWithdraw = () => {
       });
   };
 };
+export const rejectWithdraw = item => {
+  return async dispatch => {
+    dispatch({type: TRANSACTION_LOADING});
+    await axios
+      .post(SERVER_URL + '/withdraw/reject', {item})
+      .then(res => {
+        dispatch(getWithdraw());
+        // dispatch(getUser(item.))
+      })
+      .catch(err => {
+        dispatch({type: GET_ERRORS, payload: err.response.data});
+      });
+  };
+};
