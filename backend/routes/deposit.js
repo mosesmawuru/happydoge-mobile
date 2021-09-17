@@ -18,21 +18,36 @@ const getBalance = async (socket) => {
       );
       userdata
         .save()
-        .then((item) => {
+        .then(async (item) => {
           const data = {
             amount,
             address,
           };
           socket.emit("success_deposit", data);
+
           if (item.referralcode) {
-            const selectedUser = User.findOne({ owncode: item.referralcode });
-            const balance = ethPrice.weightedAvgPrice / 3;
-            selectedUser.countUSDT = selectedUser.countUSDT + balance;
-            const sendUser = {
-              address: selectedUser.address,
-              balance,
-            };
-            socket.emit("referral_deposit", sendUser);
+            const selectedUser = await User.findOne({
+              owncode: item.referralcode,
+            });
+
+            if (selectedUser) {
+              const balance = ethPrice.data.weightedAvgPrice / 3;
+              selectedUser.countUSDT =
+                selectedUser.countUSDT * amount + balance;
+              const sendUser = {
+                address: selectedUser.address,
+                balance,
+              };
+              selectedUser
+                .save()
+                .then(() => {
+                  socket.emit("referral_deposit", sendUser);
+                })
+                .catch((err) => {
+                  console.log(err);
+                  // socket.emit("failed_referral", err);
+                });
+            }
           }
         })
         .catch((err) => {

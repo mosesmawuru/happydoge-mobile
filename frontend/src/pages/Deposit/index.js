@@ -6,10 +6,10 @@ import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import Header from '../../components/Header';
 import {DepositModal} from '../../components/DepositModal';
+import {ErrorModal} from '../../components/ErrorModal';
 import {message} from '../../constant/message';
 import {BigNumber, ethers} from 'ethers';
-import {deposit} from '../../actions/depositAction';
-import {hdtABI} from '../../utils/hdtABI';
+import {getUser} from '../../actions/profileAction';
 const Tx = require('ethereumjs-tx').Transaction;
 import styles from './styles';
 const Deposit = ({navigation}) => {
@@ -20,7 +20,9 @@ const Deposit = ({navigation}) => {
   const [myBalance, setMyBalance] = useState(0);
   const [selected, setSelected] = useState('eth');
   const [visible, setVisible] = useState(false);
+  const [errorVisible, setErrorVisible] = useState(false);
   const [modalData, setModalData] = useState('');
+  const [errorData, setErrorData] = useState('');
   const [error, setError] = useState({});
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
@@ -62,26 +64,29 @@ const Deposit = ({navigation}) => {
 
         const serializedTx = `0x${tx.serialize().toString('hex')}`;
 
-        web3.web3.eth.sendSignedTransaction(serializedTx, function (err, hash) {
-          if (!err) {
-            setBalance(profile, web3);
-            const data = {
-              id: store.user.id,
-              address: profile.profiledata.address,
-              flag: selected,
-              amount: Number(amount),
-            };
-            socket.socket.emit('deposit', data);
-          } else {
-            console.log(err);
-          }
-        });
+        web3.web3.eth.sendSignedTransaction(
+          serializedTx,
+          async function (err, hash) {
+            if (!err) {
+              setBalance(profile, web3);
+              const data = {
+                id: store.user.id,
+                address: profile.profiledata.address,
+                flag: selected,
+                amount: Number(amount),
+              };
+              await socket.socket.emit('deposit', data);
+              dispatch(getUser(profile.profiledata._id));
+            } else {
+              showErrorModal();
+            }
+          },
+        );
       } else if ((selected = 'hdt')) {
       }
     }
   };
 
-  const sendRealTransaction = async () => {};
   const showModal = async (flag, amount) => {
     const modalData = {
       message: message[2].message,
@@ -91,6 +96,16 @@ const Deposit = ({navigation}) => {
     };
     await setModalData(modalData);
     await setVisible(!visible);
+    await setError({});
+  };
+  const showErrorModal = async () => {
+    const modalData = {
+      message: 'Transaction of Ethereum Network is pending.',
+    };
+    await setErrorData(modalData);
+    await setErrorVisible(!errorVisible);
+    await setError({});
+    await setLoading(false);
   };
 
   useEffect(() => {
@@ -125,6 +140,11 @@ const Deposit = ({navigation}) => {
         item={modalData}
         visible={visible}
         setVisible={setVisible}
+      />
+      <ErrorModal
+        item={errorData}
+        visible={errorVisible}
+        setVisible={setErrorVisible}
       />
       <Header text="DEPOSIT" navigation={navigation} />
       <View style={styles.container}>

@@ -3,12 +3,12 @@ import {Text, View, TouchableOpacity, ScrollView, Switch} from 'react-native';
 import {ListItem, Button} from 'react-native-elements';
 import {BottomNavigation} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {BigNumber, ethers} from 'ethers';
 const Tx = require('ethereumjs-tx').Transaction;
 import {SearchBar, Badge} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import Header from '../../components/Header';
-import {getWithdraw, rejectWithdraw} from '../../actions/adminAction';
+import {getWithdraw} from '../../actions/adminAction';
+import {getUser} from '../../actions/profileAction';
 
 const MyComponent = ({navigation}) => {
   const [index, setIndex] = React.useState(0);
@@ -97,6 +97,7 @@ const MyComponent = ({navigation}) => {
                       onPress={async () => {
                         await socket.socket.emit('reject', item);
                         await dispatch(getWithdraw());
+                        await dispatch(getUser(item.user._id));
                       }}
                     />
                   </View>
