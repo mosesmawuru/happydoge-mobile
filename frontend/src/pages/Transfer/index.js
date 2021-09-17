@@ -82,7 +82,7 @@ const Transfer = ({navigation}) => {
               disabled
             />
           </View>
-          <View style={styles.userDiv}>
+          <View>
             <Text style={styles.labelText}>To</Text>
             <Input
               value={address}

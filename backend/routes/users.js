@@ -107,7 +107,7 @@ router.post("/login", async (req, res) => {
         owncode: user.owncode,
         referralcode: user.referralcode,
       };
-      jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 }, (err, token) => {
+      jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600*24*15 }, (err, token) => {
         res.json({
           success: true,
           token: "Bearer " + token,
