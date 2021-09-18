@@ -288,6 +288,6 @@ try {
     });
   });
 } catch (e) {}
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 443;
 
 server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
