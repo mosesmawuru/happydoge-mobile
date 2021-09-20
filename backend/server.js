@@ -74,7 +74,6 @@ const doEveryMinute = async (socket) => {
               new Date(item.end_date).getTime() ===
               new Date(currentHour).getTime()
             ) {
-              console.log("asdfasdf");
               if (isEmpty(hdtitem.stack_rate)) {
                 return res.status(400).send({
                   error: "Stake rate is not setted",
@@ -95,13 +94,6 @@ const doEveryMinute = async (socket) => {
                   item.stack_amount,
                   hdtitem.stack_rate,
                   Math.abs(new Date(currentHour) - new Date(item.currentDate)) /
-                    36e5
-                );
-                console.log(
-                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
-                    Math.abs(
-                      new Date(currentHour) - new Date(item.currentDate)
-                    )) /
                     36e5
                 );
                 item.earned_amount =
@@ -160,8 +152,6 @@ const doEveryMinute = async (socket) => {
                 userdata
                   .save()
                   .then((item) => {
-                    console.log("asdfasd");
-
                     // console.log(item);
                   })
                   .catch((err) => {
@@ -170,7 +160,6 @@ const doEveryMinute = async (socket) => {
                 item
                   .save()
                   .then((item) => {
-                    console.log("1111asdfasd");
                     const data = {
                       id: item.user,
                       message: "Hourly stake is completed",
@@ -181,7 +170,7 @@ const doEveryMinute = async (socket) => {
                           )) /
                         36e5,
                     };
-                    socket.emit("staking", data);
+                    socket.emit("hourly_stake", data);
                   })
                   .catch((err) => {
                     console.log(err);
@@ -223,7 +212,7 @@ const doEveryMinute = async (socket) => {
                       message: "Staking is completed",
                       amount: item.earned_amount,
                     };
-                    socket.emit("staking", data);
+                    socket.emit("complete_stake", data);
                   })
                   .catch((err) => {
                     console.log(err);

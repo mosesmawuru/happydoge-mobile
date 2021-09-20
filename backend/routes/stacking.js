@@ -150,7 +150,6 @@ router.put(
         return res.status(200).json(item);
       })
       .catch((err) => {
-        console.log(err);
         return res.status(400).json({ errors: err });
       });
   }

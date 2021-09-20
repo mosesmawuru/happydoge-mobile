@@ -81,7 +81,6 @@ const MyComponent = ({navigation}) => {
                           '0x' + serializedTx.toString('hex'),
                           function (err, hash) {
                             if (!err) {
-                              console.log('success');
                               socket.socket.emit('approve', item._id);
                               dispatch(getWithdraw());
                             } else {

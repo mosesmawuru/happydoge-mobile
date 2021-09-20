@@ -127,13 +127,6 @@ const Deposit = ({navigation}) => {
       isMount = false;
     };
   }, [web3, profile]);
-  useEffect(() => {
-    socket.socket.on('success_deposit', item => {
-      if (item.address === profile.profiledata.address) {
-        showModal(selected, item.amount);
-      }
-    });
-  }, [socket]);
   return (
     <ScrollView>
       <DepositModal

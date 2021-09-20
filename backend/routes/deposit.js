@@ -22,6 +22,7 @@ const getBalance = async (socket) => {
           const data = {
             amount,
             address,
+            flag,
           };
           socket.emit("success_deposit", data);
 
