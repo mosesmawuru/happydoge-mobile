@@ -15,7 +15,6 @@ import isEmpty from '../../utils/isEmpty';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
-  const [hdtprice, setHdtprice] = useState(0);
   const [money, setMoney] = useState(0);
   const price = useSelector(state => state.price);
   const store = useSelector(state => state.auth);
@@ -69,16 +68,6 @@ const Home = ({navigation}) => {
             }}
           />
           <View style={styles.iconDiv}>
-            {/* <Icon
-              style={{paddingLeft: 10}}
-              name="bell"
-              size={30}
-              color={'rgb(223,100,71)'}
-              onPress={() => {
-                navigation.toggleDrawer();
-              }}>
-              <Badge value="2" status="error" />
-            </Icon> */}
             <Icon
               style={{paddingRight: 10}}
               name="cog"

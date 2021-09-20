@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   submitButtonStyle: {
+    flexDirection: 'row',
     marginVertical: 25,
     paddingTop: 8,
     paddingBottom: 8,
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
   },
   TextStyle: {
     color: 'white',
+    marginRight: 5,
   },
 });
 export default styles;

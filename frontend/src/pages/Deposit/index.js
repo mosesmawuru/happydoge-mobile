@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
-import {ActivityIndicator, Colors} from 'react-native-paper';
+import {ActivityIndicator} from 'react-native-paper';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import Header from '../../components/Header';
@@ -75,8 +75,8 @@ const Deposit = ({navigation}) => {
                 flag: selected,
                 amount: Number(amount),
               };
+              await dispatch(getUser(profile.profiledata._id));
               await socket.socket.emit('deposit', data);
-              dispatch(getUser(profile.profiledata._id));
             } else {
               showErrorModal();
             }
@@ -204,7 +204,7 @@ const Deposit = ({navigation}) => {
           }}>
           <Text style={styles.TextStyle}>Deposit</Text>
           {loading ? (
-            <ActivityIndicator animating={true} size={13} color={'red'} />
+            <ActivityIndicator animating={true} size={13} color={'white'} />
           ) : (
             <></>
           )}

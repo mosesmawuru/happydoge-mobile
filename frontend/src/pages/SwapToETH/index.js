@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {CheckBox, Input} from 'react-native-elements';
+import {ActivityIndicator} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {swaptoeth} from '../../actions/swapAction';
@@ -13,6 +14,7 @@ const SwapToEth = ({navigation}) => {
   const dispatch = useDispatch();
   const [countHDT, setCountHDT] = useState(0);
   const [error, setError] = useState({});
+  const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(true);
   const [modalData, setModalData] = useState('');
   const [visible, setVisible] = useState(false);
@@ -29,6 +31,7 @@ const SwapToEth = ({navigation}) => {
           if (isNaN(countHDT)) {
             setError({countHDT: 'only input number'});
           } else {
+            setLoading(true);
             if (checked) {
               dispatch(
                 swaptoeth(
@@ -37,6 +40,7 @@ const SwapToEth = ({navigation}) => {
                   price,
                   store.user.address,
                   onShowModal,
+                  setLoading,
                 ),
               );
             } else {
@@ -47,6 +51,7 @@ const SwapToEth = ({navigation}) => {
                   price,
                   store.user.address,
                   onShowModal,
+                  setLoading,
                 ),
               );
             }
@@ -59,6 +64,9 @@ const SwapToEth = ({navigation}) => {
       message: message[1].message,
       flag: flag,
     };
+    await setLoading(false);
+    await setError({});
+    await setCountHDT(0);
     await setModalData(data);
     await setVisible(!visible);
   };
@@ -123,6 +131,11 @@ const SwapToEth = ({navigation}) => {
               swap();
             }}>
             <Text style={styles.TextStyle}>SWAP</Text>
+            {loading ? (
+              <ActivityIndicator animating={true} size={13} color={'white'} />
+            ) : (
+              <></>
+            )}
           </TouchableOpacity>
         </View>
       </ScrollView>

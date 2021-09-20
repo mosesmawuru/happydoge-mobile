@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {swaptohdt} from '../../actions/swapAction';
 import Header from '../../components/Header';
+import {ActivityIndicator} from 'react-native-paper';
 import {Input} from 'react-native-elements';
 import {CustomModal} from '../../components/CustomModal';
 import {message} from '../../constant/message';
@@ -12,13 +13,12 @@ import {message} from '../../constant/message';
 import styles from './styles';
 const SwapToHdt = ({navigation}) => {
   const dispatch = useDispatch();
-  // const [countHDT, setCountHDT] = useState(0);
   const [countETH, setCountETH] = useState(0);
   const [error, setError] = useState({});
+  const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(true);
   const [modalData, setModalData] = useState('');
   const [visible, setVisible] = useState(false);
-
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
@@ -32,6 +32,7 @@ const SwapToHdt = ({navigation}) => {
           if (isNaN(countETH)) {
             setError({countETH: 'only input number'});
           } else {
+            setLoading(true);
             if (checked) {
               dispatch(
                 swaptohdt(
@@ -40,6 +41,7 @@ const SwapToHdt = ({navigation}) => {
                   price,
                   store.user.address,
                   onShowModal,
+                  setLoading,
                 ),
               );
             } else {
@@ -50,6 +52,7 @@ const SwapToHdt = ({navigation}) => {
                   price,
                   store.user.address,
                   onShowModal,
+                  setLoading,
                 ),
               );
             }
@@ -62,6 +65,9 @@ const SwapToHdt = ({navigation}) => {
       message: message[1].message,
       flag: flag,
     };
+    await setLoading(false);
+    await setError({});
+    await setCountETH(0);
     await setModalData(data);
     await setVisible(!visible);
   };
@@ -126,6 +132,11 @@ const SwapToHdt = ({navigation}) => {
               swap();
             }}>
             <Text style={styles.TextStyle}>SWAP</Text>
+            {loading ? (
+              <ActivityIndicator animating={true} size={13} color={'white'} />
+            ) : (
+              <></>
+            )}
           </TouchableOpacity>
         </View>
       </ScrollView>

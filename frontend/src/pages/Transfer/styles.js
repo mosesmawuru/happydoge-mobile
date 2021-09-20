@@ -5,14 +5,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    width:width
+    width: width,
   },
   headText: {
     color: 'rgb(102,59,8)',
     marginTop: 30,
     fontSize: 30,
   },
-  userDiv: {marginTop: 20,width:width-20},
+  userDiv: {marginTop: 20, width: width - 20},
   input: {
     borderColor: 'rgb(108,116,128)',
     color: 'rgb(108,116,128)',
@@ -23,11 +23,12 @@ const styles = StyleSheet.create({
   },
   labelText: {
     fontSize: 20,
-    marginLeft:10
+    marginLeft: 10,
   },
   submitButtonStyle: {
     marginTop: 25,
     paddingTop: 8,
+    flexDirection: 'row',
     paddingBottom: 8,
     paddingLeft: 45,
     paddingRight: 45,
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
   },
   TextStyle: {
     color: 'white',
+    marginRight: 5,
   },
 });
 export default styles;

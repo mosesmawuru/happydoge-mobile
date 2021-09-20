@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, TextInput, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity} from 'react-native';
 import {Input} from 'react-native-elements';
 import {useSelector, useDispatch} from 'react-redux';
+import {ActivityIndicator} from 'react-native-paper';
 import {Picker} from '@react-native-community/picker';
 import {transfer} from '../../actions/transferAction';
 import {TransferModal} from '../../components/TransferModal';
@@ -14,6 +15,7 @@ const Transfer = ({navigation}) => {
   const [error, setError] = useState({});
   const [amount, setAmount] = useState(0);
   const [modalData, setModalData] = useState('');
+  const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [address, setAddress] = useState('');
   const store = useSelector(state => state.auth);
@@ -21,10 +23,10 @@ const Transfer = ({navigation}) => {
   const send = () => {
     if (amount === 0) {
       setError({amount: 'Please input correct balance'});
-    }
-    if (isNaN(amount)) {
+    } else if (isNaN(amount)) {
       setError({amount: 'Please only input number'});
     } else {
+      setLoading(true);
       dispath(
         transfer(
           store.user.address,
@@ -33,6 +35,7 @@ const Transfer = ({navigation}) => {
           Number(amount),
           store.user.id,
           onShowModal,
+          setLoading,
         ),
       );
     }
@@ -44,10 +47,13 @@ const Transfer = ({navigation}) => {
       flag: flag,
       amount: amount,
     };
+
     await setModalData(modalData);
     await setVisible(!visible);
     await setAddress('');
     await setAmount(0);
+    await setError({});
+    await setLoading(false);
   };
   useEffect(() => {
     setError(errors);
@@ -122,11 +128,17 @@ const Transfer = ({navigation}) => {
         </View>
         <TouchableOpacity
           style={styles.submitButtonStyle}
+          disabled={loading ? true : false}
           activeOpacity={0.5}
           onPress={() => {
             send();
           }}>
           <Text style={styles.TextStyle}>Send</Text>
+          {loading ? (
+            <ActivityIndicator animating={true} size={13} color={'white'} />
+          ) : (
+            <></>
+          )}
         </TouchableOpacity>
       </View>
     </>

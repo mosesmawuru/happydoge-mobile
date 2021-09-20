@@ -11,6 +11,7 @@ export const transfer = (
   amount,
   id,
   onShowModal,
+  setLoading,
 ) => {
   return async dispatch => {
     await axios
@@ -24,6 +25,7 @@ export const transfer = (
         }
       })
       .catch(err => {
+        setLoading(false);
         dispatch({type: GET_ERRORS, payload: err.response.data});
       });
   };
