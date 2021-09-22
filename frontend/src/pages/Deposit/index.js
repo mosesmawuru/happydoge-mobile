@@ -9,12 +9,11 @@ import {DepositModal} from '../../components/DepositModal';
 import {ErrorModal} from '../../components/ErrorModal';
 import {message} from '../../constant/message';
 import {BigNumber, ethers} from 'ethers';
-import {getUser} from '../../actions/profileAction';
+import {hdtABI} from '../../constant/ABI';
 const Tx = require('ethereumjs-tx').Transaction;
 import styles from './styles';
 const Deposit = ({navigation}) => {
-  const contractAddress = '0x08895697055b82890a312dfc9f52df907d8fd001';
-  const dispatch = useDispatch();
+  const hdtContractAddress = '0x08895697055b82890a312dfc9f52df907d8fd001';
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [myBalance, setMyBalance] = useState(0);
@@ -63,26 +62,101 @@ const Deposit = ({navigation}) => {
         tx.sign(privKey);
 
         const serializedTx = `0x${tx.serialize().toString('hex')}`;
+        const tran = web3.web3.eth.sendSignedTransaction(serializedTx);
+
+        tran.on('transactionHash', async hash => {});
+
+        tran.on('receipt', async receipt => {
+          const data = {
+            id: store.user.id,
+            address: profile.profiledata.address,
+            flag: selected,
+            amount: Number(amount),
+          };
+
+          await socket.socket.emit('deposit', data);
+          await showModal(selected, Number(amount));
+          await setBalance(profile, web3, selected);
+        });
+
+        tran.on('error', console.error);
+
+        // web3.web3.eth.sendSignedTransaction(
+        // serializedTx,
+        //   async function (err, hash) {
+        //     if (!err) {
+        //       await setBalance(profile, web3, selected);
+        //       const data = {
+        //         id: store.user.id,
+        //         address: profile.profiledata.address,
+        //         flag: selected,
+        //         amount: Number(amount),
+        //       };
+
+        //       await socket.socket.emit('deposit', data);
+
+        //     } else {
+        //       showErrorModal();
+        //     }
+        //   },
+        // );
+      } else if (selected === 'hdt') {
+        const contract = new web3.web3.eth.Contract(hdtABI, hdtContractAddress);
+        var transfer = contract.methods.transfer(
+          '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6',
+          10,
+        );
+        var encodedABI = transfer.encodeABI();
+
+        var rawTransaction = {
+          from: '0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E',
+          to: hdtContractAddress,
+          gas: 2000000,
+          data: encodedABI,
+        };
+        var tx = new Tx(rawTransaction, {chain: 'mainnet'});
+        const privatekey =
+          '09629aa26282f4f6bb7d9792a18e77cc2bcd0fbbb2113ccfeaf7933d45080738';
+        var privKey = Buffer.from(privatekey, 'hex');
+        tx.sign(privKey);
+
+        const serializedTx = `0x${tx.serialize().toString('hex')}`;
 
         web3.web3.eth.sendSignedTransaction(
           serializedTx,
           async function (err, hash) {
             if (!err) {
-              setBalance(profile, web3);
-              const data = {
-                id: store.user.id,
-                address: profile.profiledata.address,
-                flag: selected,
-                amount: Number(amount),
-              };
-              await dispatch(getUser(profile.profiledata._id));
-              await socket.socket.emit('deposit', data);
+              console.log(hash);
             } else {
-              showErrorModal();
+              console.log(err);
             }
           },
         );
-      } else if ((selected = 'hdt')) {
+        // const privatekey =
+        //   '09629aa26282f4f6bb7d9792a18e77cc2bcd0fbbb2113ccfeaf7933d45080738';
+        // var privKey = Buffer.from(privatekey, 'hex');
+
+        // web3.web3.eth.accounts
+        //   .signTransaction(tx, serializedTx)
+        //   .then(signed => {
+        //     var tran = web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+        //     tran.on('confirmation', (confirmationNumber, receipt) => {
+        //       console.log('confirmation: ' + confirmationNumber);
+        //     });
+
+        //     tran.on('transactionHash', hash => {
+        //       console.log('hash');
+        //       console.log(hash);
+        //     });
+
+        //     tran.on('receipt', receipt => {
+        //       console.log('reciept');
+        //       console.log(receipt);
+        //     });
+
+        //     tran.on('error', console.error);
+        //   });
       }
     }
   };
@@ -111,16 +185,26 @@ const Deposit = ({navigation}) => {
   useEffect(() => {
     setError(errors);
   }, [errors]);
-  const setBalance = async (profile, web3) => {
-    const price = await web3.web3.eth.getBalance(profile.profiledata.address);
-    await setMyBalance(ethers.utils.formatEther(BigNumber.from(price)));
-    await setLoading(false);
+  const setBalance = async (profile, web3, selected) => {
+    if (selected === 'eth') {
+      const price = await web3.web3.eth.getBalance(profile.profiledata.address);
+      await setMyBalance(ethers.utils.formatEther(BigNumber.from(price)));
+      await setLoading(false);
+    } else if (selected === 'hdt') {
+      const contract = new web3.web3.eth.Contract(hdtABI, hdtContractAddress);
+      const result = await contract.methods
+        .balanceOf('0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E')
+        .call(); // 29803630997051883414242659
+      const format = web3.web3.utils.fromWei(result); // 29803630.997051883414242659
+      await setMyBalance(format);
+      await setLoading(false);
+    }
   };
   useEffect(async () => {
     let isMount = true;
     if (isMount) {
       if (profile.profiledata && web3) {
-        setBalance(profile, web3);
+        setBalance(profile, web3, selected);
       }
     }
     return () => {
@@ -179,8 +263,10 @@ const Deposit = ({navigation}) => {
               <Picker
                 style={{width: 100}}
                 selectedValue={selected}
-                onValueChange={(itemValue, itemIndex) => {
-                  setSelected(itemValue);
+                onValueChange={async itemValue => {
+                  await setLoading(true);
+                  await setSelected(itemValue);
+                  await setBalance(profile, web3, itemValue);
                 }}>
                 <Picker.Item label="ETH" value="eth" />
                 <Picker.Item label="HDT" value="hdt" />

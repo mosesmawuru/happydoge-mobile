@@ -39,6 +39,7 @@ const Profile = ({navigation}) => {
   };
 
   const {color} = useTheme();
+  console.log(profile.profiledata);
   return (
     <>
       <Header text="MY PROFILE" navigation={navigation} />
@@ -54,17 +55,21 @@ const Profile = ({navigation}) => {
           <View style={styles.wrapper}>
             <View>
               <Text style={styles.txt}>Name</Text>
-              <Input placeholder="Name" value={store.user.name} disabled />
+              <Input
+                placeholder="Name"
+                value={profile.profiledata.name}
+                disabled
+              />
               <Text style={styles.txt}>Address</Text>
               <Input
                 placeholder="Address"
                 value={
-                  store.user.address
-                    ? store.user.address.substring(0, 6) +
+                  profile.profiledata.address
+                    ? profile.profiledata.address.substring(0, 6) +
                       '....' +
-                      store.user.address.substring(
-                        store.user.address.length - 6,
-                        store.user.address.length,
+                      profile.profiledata.address.substring(
+                        profile.profiledata.address.length - 6,
+                        profile.profiledata.address.length,
                       )
                     : ''
                 }
@@ -75,7 +80,7 @@ const Profile = ({navigation}) => {
                     size={24}
                     color="gray"
                     onPress={() => {
-                      copyToClipboard(store.user.address, 'address');
+                      copyToClipboard(profile.profiledata.address, 'address');
                     }}
                   />
                 }
@@ -84,17 +89,22 @@ const Profile = ({navigation}) => {
               <Text style={styles.txt}>Balance ETH</Text>
               <Input
                 placeholder="INPUT WITH ERROR MESSAGE"
-                value={store.user.countETH + ' ' + 'ETH'}
+                value={profile.profiledata.countETH + ' ' + 'ETH'}
                 disabled
               />
 
               <Text style={styles.txt}>Balance HDT</Text>
               <Input
                 placeholder="HDT"
-                value={store.user.countHDT + ' ' + 'HDT'}
+                value={profile.profiledata.countHDT + ' ' + 'HDT'}
                 disabled
               />
-
+              <Text style={styles.txt}>Balance USDT</Text>
+              <Input
+                placeholder="USDT"
+                value={profile.profiledata.countUSDT + ' ' + 'HDT'}
+                disabled
+              />
               <Text style={styles.txt}>My ReferralCode</Text>
 
               <Input

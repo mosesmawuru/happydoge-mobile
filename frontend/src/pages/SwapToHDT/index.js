@@ -24,6 +24,7 @@ const SwapToHdt = ({navigation}) => {
   const errors = useSelector(state => state.errors);
 
   const swap = async () => {
+    await setLoading(true);
     await axios
       .get('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT')
       .then(res => {
@@ -32,7 +33,6 @@ const SwapToHdt = ({navigation}) => {
           if (isNaN(countETH)) {
             setError({countETH: 'only input number'});
           } else {
-            setLoading(true);
             if (checked) {
               dispatch(
                 swaptohdt(
