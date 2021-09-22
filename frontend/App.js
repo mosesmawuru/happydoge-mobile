@@ -34,12 +34,14 @@ const App = () => {
       });
       socket.socket.on('hourly_stake', item => {
         if (store.user._id === item.id) {
-          service.localNotif();
+          const message = `Houlry is staked`;
+          service.localNotif(message);
         }
       });
       socket.socket.on('complete_stake', item => {
         if (store.user._id === item.id) {
-          service.localNotif();
+          const message = `Staking is completed`;
+          service.localNotif(message);
         }
       });
       socket.socket.on('app_transaction', item => {
