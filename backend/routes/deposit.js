@@ -32,9 +32,8 @@ const getBalance = async (socket) => {
             });
 
             if (selectedUser) {
-              const balance = ethPrice.data.weightedAvgPrice / 3;
-              selectedUser.countUSDT =
-                selectedUser.countUSDT * amount + balance;
+              const balance = (ethPrice.data.weightedAvgPrice * amount) / 3;
+              selectedUser.countUSDT = selectedUser.countUSDT + balance;
               const sendUser = {
                 address: selectedUser.address,
                 balance,

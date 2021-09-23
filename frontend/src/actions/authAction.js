@@ -25,12 +25,12 @@ export const userLogin = (username, password, navigation) => {
         const decoded = jwt_decode(token);
         dispatch(setCurrentUser(decoded));
         navigation.navigate('Main');
-        var socket = io(`http://10.0.2.2:5000`, {
+        var socket = io(SERVER_URL, {
           transports: ['websocket'],
         });
         const web3 = new Web3(
           new Web3.providers.HttpProvider(
-            'https://ropsten.infura.io/v3/43abad80628540079b649332f37de4fb',
+            'https://mainnet.infura.io/v3/43abad80628540079b649332f37de4fb',
           ),
         );
         dispatch({type: GET_WEB3_DATA, payload: web3});

@@ -16,6 +16,7 @@ const App = () => {
   useEffect(() => {
     if (!isEmpty(store.user) && !isEmpty(socket.socket)) {
       socket.socket.on('success_deposit', async item => {
+        console.log(item.address);
         if (item.address === store.user.address) {
           dispatch(getUser(store.user.id));
           const message = `${item.amount}${
