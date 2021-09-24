@@ -88,14 +88,7 @@ const doEveryMinute = async (socket) => {
                     36e5;
 
                 item.flag = false;
-                console.log(currentHour);
-                console.log(item.currentDate);
-                console.log(
-                  item.stack_amount,
-                  hdtitem.stack_rate,
-                  Math.abs(new Date(currentHour) - new Date(item.currentDate)) /
-                    36e5
-                );
+
                 item.earned_amount =
                   item.earned_amount +
                   (((item.stack_amount * hdtitem.stack_rate) / 100) *

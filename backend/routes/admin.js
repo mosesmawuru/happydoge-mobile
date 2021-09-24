@@ -11,7 +11,7 @@ const approve = async (socket) => {
       { new: true }
     )
       .then((item) => {
-        socket.emit("app_transaction", item.user);
+        socket.emit("app_transaction", item);
       })
       .catch((err) => {
         console.log(err);

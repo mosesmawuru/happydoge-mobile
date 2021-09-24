@@ -20,7 +20,6 @@ const MyComponent = ({navigation}) => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState('');
   const store = useSelector(state => state.transaction);
-  const profile = useSelector(state => state.profile);
   const socket = useSelector(state => state.socket);
   const web3 = useSelector(state => state.web3);
   useEffect(() => {

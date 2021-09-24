@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 
 import * as React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {View, TouchableOpacity, Image} from 'react-native';
+import {View, TouchableOpacity, Image, Button} from 'react-native';
 
 import {
   DarkTheme,
@@ -11,7 +11,12 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
 import {AppearanceProvider, useColorScheme} from 'react-native-appearance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from 'jwt-decode';
@@ -32,32 +37,8 @@ import SetValue from './SetValue';
 import UserSelect from './UserSelect';
 import SelectedUser from './SelectedUser';
 import AddStake from './Stacking/Add';
+// import Logout from './Logout';
 import MoreHistory from './Home/MoreHistory';
-
-import {store} from '../store';
-
-import setAuthToken from '../utils/setAuthToken';
-import {setCurrentUser, logoutUser} from '../actions/authAction';
-// if (AsyncStorage.getItem('jwtToken')) {
-//   setAuthToken(AsyncStorage.getItem('jwtToken'));
-
-// AsyncStorage.getItem('jwtToken', (err, result) => {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     return jwt_decode(result);
-//   }
-// });
-// const data = new Promise((resolve, reject))
-// store.dispatch(setCurrentUser(decoded));
-// console.log(decoded);
-// const currentTime = Date.now() / 1000;
-// if (decoded.exp < currentTime) {
-//   store.dispatch(logoutUser());
-
-//   navigation.navigate('Login');
-// }
-// }
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -124,6 +105,7 @@ function Main({}) {
   const store = useSelector(state => state.auth);
   return (
     <Drawer.Navigator
+      drawerContent={props => <AppDrawerContent {...props} />}
       drawerContentOptions={{
         activeTintColor: '#e91e63',
         itemStyle: {marginVertical: 5},
@@ -144,17 +126,17 @@ function Main({}) {
         options={{drawerLabel: 'Transfer'}}
         component={Transfer}
       />
-
-      <Drawer.Screen
-        name="SwapToEth"
-        options={{drawerLabel: 'Swap To ETH'}}
-        component={SwapToEth}
-      />
       <Drawer.Screen
         name="SwapToHDT"
         options={{drawerLabel: 'Swap To HDT'}}
         component={SwapToHDT}
       />
+      <Drawer.Screen
+        name="SwapToEth"
+        options={{drawerLabel: 'Swap To ETH'}}
+        component={SwapToEth}
+      />
+
       <Drawer.Screen
         name="Deposit"
         options={{drawerLabel: 'Deposit'}}
@@ -186,16 +168,35 @@ function Main({}) {
       ) : (
         <></>
       )}
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Log Out"
         options={{drawerLabel: 'Log Out'}}
-        component={Login}
-      />
+        component={Logout}
+      /> */}
     </Drawer.Navigator>
   );
 }
+function AppDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      {/*all of the drawer items*/}
+      <DrawerItemList {...props} style={{borderWidth: 1}} />
+      <View style={{flex: 1, color: 'red'}}>
+        {/* here's where you put your logout drawer item*/}
 
-function Routes() {
+        <DrawerItem
+          label="Log out"
+          onPress={() => {
+            AsyncStorage.clear();
+            props.navigation.navigate('Login');
+          }}
+          style={{flex: 1, justifyContent: 'flex-start'}}
+        />
+      </View>
+    </DrawerContentScrollView>
+  );
+}
+function Routes(navigation) {
   const schema = useColorScheme();
   return (
     <AppearanceProvider>

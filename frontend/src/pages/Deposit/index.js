@@ -80,83 +80,68 @@ const Deposit = ({navigation}) => {
         });
 
         tran.on('error', console.error);
+      } else if (selected === 'hdt') {
+        ////////////////////////////
+        const myAddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
+        const destAddress = '0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E';
+        const contract = new web3.web3.eth.Contract(
+          hdtABI,
+          hdtContractAddress,
+          {
+            from: myAddress,
+          },
+        );
+        var count = await web3.web3.eth.getTransactionCount(myAddress);
+        var transfer = contract.methods.transfer(destAddress, 100);
+        var encodedABI = transfer.encodeABI();
+        var rawTransaction = {
+          // from: myAddress,
+          to: hdtContractAddress,
+          // value: '0x0',
+          gas: 2000000,
+          data: encodedABI,
+          // nonce: '0x' + count.toString(16),
+          gasPrice: 0x2cb417800,
+          gasLimit: 0x30d40,
+          // chainId: 1,
+        };
+        var tx = new Tx(rawTransaction);
 
+        const privatekey =
+          '9b066f6d1864f4d8420e9b99e1041fa29cf748f708c2afb0ea66c55175858705';
+        // var privKey = Buffer.from(privatekey, 'hex');
+        // tx.sign(privKey);
+        // const serializedTx = `0x${tx.serialize().toString('hex')}`;
         // web3.web3.eth.sendSignedTransaction(
-        // serializedTx,
+        //   serializedTx,
         //   async function (err, hash) {
         //     if (!err) {
-        //       await setBalance(profile, web3, selected);
-        //       const data = {
-        //         id: store.user.id,
-        //         address: profile.profiledata.address,
-        //         flag: selected,
-        //         amount: Number(amount),
-        //       };
-
-        //       await socket.socket.emit('deposit', data);
-
+        //       console.log(hash);
         //     } else {
-        //       showErrorModal();
+        //       console.log(err);
         //     }
         //   },
         // );
-      } else if (selected === 'hdt') {
-        const contract = new web3.web3.eth.Contract(hdtABI, hdtContractAddress);
-        var transfer = contract.methods.transfer(
-          '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6',
-          10,
-        );
-        var encodedABI = transfer.encodeABI();
 
-        var rawTransaction = {
-          from: '0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E',
-          to: hdtContractAddress,
-          gas: 2000000,
-          data: encodedABI,
-        };
-        var tx = new Tx(rawTransaction, {chain: 'mainnet'});
-        const privatekey =
-          '09629aa26282f4f6bb7d9792a18e77cc2bcd0fbbb2113ccfeaf7933d45080738';
-        var privKey = Buffer.from(privatekey, 'hex');
-        tx.sign(privKey);
+        web3.web3.eth.accounts
+          .signTransaction(rawTransaction, privatekey)
+          .then(async signedTx => {
+            console.log(signedTx);
+            await web3.web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+          })
+          .then(function (receipt) {
+            console.log('Transaction receipt: ', receipt);
+          })
+          .then(async req => {
+            /* The trx was done. Write your acctions here. For example getBalance */
+            const balance = await contract.methods
+              .balanceOf(destAddress)
+              .call();
+            console.log(balance);
+            return true;
+          });
 
-        const serializedTx = `0x${tx.serialize().toString('hex')}`;
-
-        web3.web3.eth.sendSignedTransaction(
-          serializedTx,
-          async function (err, hash) {
-            if (!err) {
-              console.log(hash);
-            } else {
-              console.log(err);
-            }
-          },
-        );
-        // const privatekey =
-        //   '09629aa26282f4f6bb7d9792a18e77cc2bcd0fbbb2113ccfeaf7933d45080738';
-        // var privKey = Buffer.from(privatekey, 'hex');
-
-        // web3.web3.eth.accounts
-        //   .signTransaction(tx, serializedTx)
-        //   .then(signed => {
-        //     var tran = web3.eth.sendSignedTransaction(signed.rawTransaction);
-
-        //     tran.on('confirmation', (confirmationNumber, receipt) => {
-        //       console.log('confirmation: ' + confirmationNumber);
-        //     });
-
-        //     tran.on('transactionHash', hash => {
-        //       console.log('hash');
-        //       console.log(hash);
-        //     });
-
-        //     tran.on('receipt', receipt => {
-        //       console.log('reciept');
-        //       console.log(receipt);
-        //     });
-
-        //     tran.on('error', console.error);
-        //   });
+        ////////////////////////
       }
     }
   };
@@ -174,7 +159,7 @@ const Deposit = ({navigation}) => {
   };
   const showErrorModal = async () => {
     const modalData = {
-      message: 'Transaction of Ethereum Network is pending.',
+      message: 'Please check transaction status or blance.',
     };
     await setErrorData(modalData);
     await setErrorVisible(!errorVisible);
@@ -212,7 +197,7 @@ const Deposit = ({navigation}) => {
     };
   }, [web3, profile]);
   return (
-    <ScrollView>
+    <>
       <DepositModal
         item={modalData}
         visible={visible}
@@ -224,6 +209,7 @@ const Deposit = ({navigation}) => {
         setVisible={setErrorVisible}
       />
       <Header text="DEPOSIT" navigation={navigation} />
+
       <View style={styles.container}>
         <View>
           <Text style={styles.headText}>Deposit</Text>
@@ -289,7 +275,7 @@ const Deposit = ({navigation}) => {
           )}
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </>
   );
 };
 export default Deposit;

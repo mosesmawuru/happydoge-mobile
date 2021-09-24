@@ -46,8 +46,15 @@ const App = () => {
         }
       });
       socket.socket.on('app_transaction', item => {
-        if (store.user._id === item.id) {
-          service.localNotif();
+        if (store.user._id === item.user) {
+          const message = `${item.amount} ${item.method} withdraw is success.`;
+          service.localNotif(message);
+        }
+      });
+      socket.socket.on('complete_transfer', item => {
+        if (store.user._id === item.user) {
+          const message = `${item.amount} ${item.method} withdraw is success.`;
+          service.localNotif(message);
         }
       });
     }
