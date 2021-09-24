@@ -12,7 +12,7 @@ const User = require("./models/User");
 const Exchange = require("./models/Exchange");
 require("dotenv").config();
 const getBalance = require("./routes/getBalance");
-const deposit = require("./routes/deposit");
+const { deposit, tranferCrypto } = require("./routes/deposit");
 const { approve, reject } = require("./routes/admin");
 const app = express();
 
@@ -247,6 +247,7 @@ try {
   io.on("connection", (socket) => {
     console.log("New client connected");
     // Get connected user id
+
     const userId = socket.handshake.query.userId;
     // console.log(userId);
     // Set user as online
@@ -256,8 +257,21 @@ try {
     deposit(socket);
     approve(socket);
     reject(socket);
+    tranferCrypto(socket);
+    socket.on("user_logout", () => {
+      console.log("client disconnect");
+      let disconnectedUserId = null;
+      // Remove disconnected user from online users
+      for (prop in onlineUsers) {
+        if (onlineUsers[prop] === socket.id) {
+          disconnectedUserId = prop;
+          delete onlineUsers[prop];
+          break;
+        }
+      }
+    });
     socket.on("disconnect", () => {
-      console.log("Client disconnected");
+      console.log("client disconnect");
       let disconnectedUserId = null;
       // Remove disconnected user from online users
       for (prop in onlineUsers) {

@@ -23,11 +23,12 @@ export const userLogin = (username, password, navigation) => {
         setAuthToken(token);
 
         const decoded = jwt_decode(token);
-        dispatch(setCurrentUser(decoded));
-        navigation.navigate('Main');
-        var socket = io(SERVER_URL, {
+        var socket = io(`${SERVER_URL}?userId=${decoded.id}`, {
           transports: ['websocket'],
         });
+        dispatch(setCurrentUser(decoded));
+        navigation.navigate('Main');
+
         const web3 = new Web3(
           new Web3.providers.HttpProvider(
             'https://ropsten.infura.io/v3/43abad80628540079b649332f37de4fb',

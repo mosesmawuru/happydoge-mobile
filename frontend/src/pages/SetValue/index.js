@@ -60,8 +60,10 @@ const SetValue = ({navigation}) => {
                 }}>
                 <CommonText maxWidth="50%">HDT PRICE</CommonText>
                 <CommonText color="black">
-                  {state.pricedata.price
-                    ? `$${state.pricedata.price}`
+                  {state.pricedata
+                    ? state.pricedata.price
+                      ? `$${state.pricedata.price}`
+                      : 'not setted'
                     : 'not setted'}
                 </CommonText>
               </View>
@@ -131,8 +133,10 @@ const SetValue = ({navigation}) => {
                 }}>
                 <CommonText maxWidth="50%">STAKING RATE</CommonText>
                 <CommonText color="black">
-                  {state.pricedata.stack_rate
-                    ? `${state.pricedata.stack_rate}%`
+                  {state.pricedata
+                    ? state.pricedata.stack_rate
+                      ? `${state.pricedata.stack_rate}%`
+                      : 'not setted'
                     : 'not setted'}
                 </CommonText>
               </View>
@@ -201,8 +205,10 @@ const SetValue = ({navigation}) => {
                 }}>
                 <CommonText maxWidth="60%">REFERRAL COMMISION RATE</CommonText>
                 <CommonText color="black">
-                  {state.pricedata.referral_rate
-                    ? `${state.pricedata.referral_rate}%`
+                  {state.pricedata
+                    ? state.pricedata.referral_rate
+                      ? `${state.pricedata.referral_rate}%`
+                      : 'not setted'
                     : 'not setted'}
                 </CommonText>
               </View>
@@ -271,8 +277,10 @@ const SetValue = ({navigation}) => {
                 }}>
                 <CommonText maxWidth="40%">HDT TO ETH SWAP RATE</CommonText>
                 <CommonText color="black">
-                  {state.pricedata.swap_rate
-                    ? `${state.pricedata.swap_rate}%`
+                  {state.pricedata
+                    ? state.pricedata.swap_rate
+                      ? `${state.pricedata.swap_rate}%`
+                      : 'not setted'
                     : 'not setted'}
                 </CommonText>
               </View>
@@ -341,8 +349,10 @@ const SetValue = ({navigation}) => {
                 }}>
                 <CommonText maxWidth="50%">ETH WITHDRAW FEE RATE</CommonText>
                 <CommonText color="black">
-                  {state.pricedata.withdraw_rate
-                    ? `${state.pricedata.withdraw_rate}%`
+                  {state.pricedata
+                    ? state.pricedata.withdraw_rate
+                      ? `${state.pricedata.withdraw_rate}%`
+                      : 'not setted'
                     : 'not setted'}
                 </CommonText>
               </View>
@@ -410,17 +420,22 @@ const SetValue = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <CommonText maxWidth="40%">MINIMUM AMOUNT</CommonText>
-                {state.pricedata.minium_amount ? (
-                  <NumberFormat
-                    value={state.pricedata.minium_amount}
-                    displayType={'text'}
-                    thousandSeparator={true}
-                    renderText={formattedValue => (
-                      <CommonText color="black">{formattedValue} </CommonText>
-                    )} // <--- Don't forget this!
-                  />
+
+                {state.pricedata ? (
+                  state.pricedata.minium_amount ? (
+                    <NumberFormat
+                      value={state.pricedata.minium_amount}
+                      displayType={'text'}
+                      thousandSeparator={true}
+                      renderText={formattedValue => (
+                        <CommonText color="black">{formattedValue} </CommonText>
+                      )} // <--- Don't forget this!
+                    />
+                  ) : (
+                    <CommonText color="black">not setted</CommonText>
+                  )
                 ) : (
-                  'not setted'
+                  <CommonText color="black">not setted</CommonText>
                 )}
               </View>
               <View

@@ -5,12 +5,13 @@ import {useSelector, useDispatch} from 'react-redux';
 import {ActivityIndicator} from 'react-native-paper';
 import {Picker} from '@react-native-community/picker';
 import {transfer} from '../../actions/transferAction';
+import {getUser} from '../../actions/profileAction';
 import {TransferModal} from '../../components/TransferModal';
 import Header from '../../components/Header';
 import styles from './styles';
 import {message} from '../../constant/message';
 const Transfer = ({navigation}) => {
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState('eth');
   const [error, setError] = useState({});
   const [amount, setAmount] = useState(0);
@@ -19,25 +20,35 @@ const Transfer = ({navigation}) => {
   const [visible, setVisible] = useState(false);
   const [address, setAddress] = useState('');
   const store = useSelector(state => state.auth);
+  const socket = useSelector(state => state.socket);
   const errors = useSelector(state => state.errors);
-  const send = () => {
+  const send = async () => {
+    // setLoading(true);
     if (amount === 0) {
       setError({amount: 'Please input correct balance'});
     } else if (isNaN(amount)) {
       setError({amount: 'Please only input number'});
     } else {
-      setLoading(true);
-      dispath(
-        transfer(
-          store.user.address,
-          address,
-          selected,
-          Number(amount),
-          store.user.id,
-          onShowModal,
-          setLoading,
-        ),
-      );
+      const data = {
+        owneraddress: store.user.address,
+        toaddress: address,
+        flag: selected,
+        amount: Number(amount),
+        id: store.user.id,
+      };
+      await socket.socket.emit('transfer', data);
+      // await onShowModal();
+      // dispath(
+      //   transfer(
+      //     store.user.address,
+      //     address,
+      //     selected,
+      //     Number(amount),
+      //     store.user.id,
+      //     onShowModal,
+      //     setLoading,
+      //   ),
+      // );
     }
   };
   const onShowModal = async (toaddress, flag, amount) => {
@@ -58,6 +69,12 @@ const Transfer = ({navigation}) => {
   useEffect(() => {
     setError(errors);
   }, [errors]);
+  useEffect(() => {
+    socket.socket.on('sent_money', async item => {
+      await dispatch(getUser(item.id));
+      await onShowModal(item.owner, item.method, item.amount);
+    });
+  }, [socket]);
   return (
     <>
       <TransferModal

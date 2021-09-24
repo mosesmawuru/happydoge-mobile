@@ -101,7 +101,6 @@ function User({navigation}) {
 }
 
 function Main({}) {
-  const dispatch = useDispatch();
   const store = useSelector(state => state.auth);
   return (
     <Drawer.Navigator
@@ -168,15 +167,12 @@ function Main({}) {
       ) : (
         <></>
       )}
-      {/* <Drawer.Screen
-        name="Log Out"
-        options={{drawerLabel: 'Log Out'}}
-        component={Logout}
-      /> */}
     </Drawer.Navigator>
   );
 }
 function AppDrawerContent(props) {
+  const socket = useSelector(state => state.socket);
+  const store = useSelector(state => state.auth);
   return (
     <DrawerContentScrollView {...props}>
       {/*all of the drawer items*/}
@@ -189,6 +185,7 @@ function AppDrawerContent(props) {
           onPress={() => {
             AsyncStorage.clear();
             props.navigation.navigate('Login');
+            socket.socket.emit('user_logout', store.user.id);
           }}
           style={{flex: 1, justifyContent: 'flex-start'}}
         />
