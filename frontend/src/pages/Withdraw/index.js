@@ -18,6 +18,8 @@ const Withdraw = ({navigation}) => {
   const [visible, setVisible] = useState(false);
   const [modalData, setModalData] = useState('');
   const [selected, setSelected] = useState('eth');
+  const [address, setAddress] = useState('');
+
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
   const onSubmit = async () => {
@@ -93,7 +95,13 @@ const Withdraw = ({navigation}) => {
               disabled
               leftIcon={<Image style={styles.imgUnit} source={usdtImg} />}
             />
-
+            <Input
+              value={address}
+              placeholder="Please input address."
+              onChange={text => {
+                setAddress(text);
+              }}
+            />
             <Input
               value={amount.toString()}
               placeholder="Please input balance"

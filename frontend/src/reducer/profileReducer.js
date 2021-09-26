@@ -1,4 +1,8 @@
-import {GET_PROFILE_DATA, PROFILE_LOADING} from '../actions/type';
+import {
+  GET_PROFILE_DATA,
+  PROFILE_LOADING,
+  CLEAR_PROFILE,
+} from '../actions/type';
 
 const initialState = {
   profiledata: [],
@@ -16,6 +20,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         profiledata: action.payload,
+        loading: false,
+      };
+    case CLEAR_PROFILE:
+      return {
+        ...state,
+        profiledata: [],
         loading: false,
       };
     default:

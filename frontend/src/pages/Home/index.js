@@ -21,7 +21,6 @@ const Home = ({navigation}) => {
   const history = useSelector(state => state.history);
   const socket = useSelector(state => state.socket);
   const profile = useSelector(state => state.profile);
-
   useEffect(() => {
     let isMount = true;
     if (isMount) {

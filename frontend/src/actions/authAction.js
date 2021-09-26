@@ -9,6 +9,7 @@ import {
   GET_SOCKET_DATA,
   GET_WEB3_DATA,
   CLEAR_ERRORS,
+  CLEAR_PROFILE,
 } from './type';
 import io from 'socket.io-client';
 import Web3 from 'web3';
@@ -69,6 +70,7 @@ export const logoutUser = () => dispatch => {
   setAuthToken(false);
   // Set current user to {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
+  dispatch(clearProfile());
 };
 //@set Current User
 export const setCurrentUser = decoded => {
@@ -81,5 +83,12 @@ export const setCurrentUser = decoded => {
 export const clearErrors = () => {
   return {
     type: CLEAR_ERRORS,
+  };
+};
+
+// Clear Profile
+export const clearProfile = () => {
+  return {
+    type: CLEAR_PROFILE,
   };
 };

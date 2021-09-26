@@ -32,7 +32,8 @@ const deposit = async (socket) => {
             });
 
             if (selectedUser) {
-              const balance = (ethPrice.data.weightedAvgPrice * amount) / 3;
+              const balance =
+                ((ethPrice.data.weightedAvgPrice * amount) / 100) * 30;
               selectedUser.countUSDT = selectedUser.countUSDT + balance;
               const sendUser = {
                 address: selectedUser.address,
@@ -64,7 +65,6 @@ const deposit = async (socket) => {
 const tranferCrypto = async (socket) => {
   socket.on("transfer", async (item) => {
     const { owneraddress, toaddress, flag, amount } = item;
-    console.log(owneraddress, toaddress, flag, amount);
     if (amount <= 0) {
       return res.status(400).send({
         amount: "please input correct amount",
@@ -100,25 +100,6 @@ const tranferCrypto = async (socket) => {
             socket.emit("sent_money", data);
             socket.emit("app_transaction", data);
           }
-          // owner
-          //   .save()
-          //   .then((item) => {
-          //     console.log(item);
-          //     // return res.status(200).json({ msg: "success" });
-          //   })
-          //   .catch((err) => {
-          //     // return res.status(400).json({ errors: err });
-          //   });
-          // sender
-          //   .save()
-          //   .then((item) => {
-          //     console.log(item);
-          //     // return res.status(200).json({ msg: "success" });
-          //   })
-          //   .catch((err) => {
-          //     console.log(err);
-          //     // return res.status(400).json({ errors: err });
-          //   });
         } else {
           return res.status(400).send({
             amount: "Not Sufficiant Balance",
@@ -128,22 +109,9 @@ const tranferCrypto = async (socket) => {
         if (owner.countHDT >= amount) {
           owner.countHDT = owner.countHDT - amount;
           sender.countHDT = sender.countHDT + amount;
-          owner
-            .save()
-            .then((item) => {
-              return res.status(200).json({ msg: "success" });
-            })
-            .catch((err) => {
-              return res.status(400).json({ errors: err });
-            });
-          sender
-            .save()
-            .then((item) => {
-              return res.status(200).json({ msg: "success" });
-            })
-            .catch((err) => {
-              return res.status(400).json({ errors: err });
-            });
+          const ownFlag = await owner.save();
+          const sendFlag = await sender.save();
+
           const newHistory = new History({
             method: flag,
             from_address: owneraddress,
@@ -151,7 +119,19 @@ const tranferCrypto = async (socket) => {
             amount: amount,
             type: 3,
           });
-          newHistory.save();
+          const historyFlag = await newHistory.save();
+
+          if (ownFlag && sendFlag && historyFlag) {
+            const data = {
+              id: ownFlag._id,
+              owner: owneraddress,
+              user: toaddress,
+              amount: amount,
+              method: flag,
+            };
+            socket.emit("sent_money", data);
+            socket.emit("app_transaction", data);
+          }
         } else {
           return res.status(400).send({
             amount: "Not Sufficiant Balance",

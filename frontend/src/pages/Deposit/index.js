@@ -84,25 +84,19 @@ const Deposit = ({navigation}) => {
         ////////////////////////////
         const myAddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
         const destAddress = '0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E';
-        const contract = new web3.web3.eth.Contract(
-          hdtABI,
-          hdtContractAddress,
-          {
-            from: myAddress,
-          },
-        );
+        const contract = new web3.web3.eth.Contract(hdtABI, hdtContractAddress);
         var count = await web3.web3.eth.getTransactionCount(myAddress);
         var transfer = contract.methods.transfer(destAddress, 100);
         var encodedABI = transfer.encodeABI();
         var rawTransaction = {
-          // from: myAddress,
-          to: hdtContractAddress,
+          from: myAddress,
+          // to: hdtContractAddress,
           // value: '0x0',
-          gas: 2000000,
+          // gas: 2000000,
           data: encodedABI,
           // nonce: '0x' + count.toString(16),
-          gasPrice: 0x2cb417800,
-          gasLimit: 0x30d40,
+          // gasPrice: 0x2cb417800,
+          // gasLimit: 0x30d40,
           // chainId: 1,
         };
         var tx = new Tx(rawTransaction);
