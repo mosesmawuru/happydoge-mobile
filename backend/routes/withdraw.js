@@ -7,18 +7,21 @@ const User = require("../models/User");
 const async = require("async");
 const Web3 = require("web3");
 const Tx = require("ethereumjs-tx").Transaction;
-
+var nodeEth = require("node-eth-address");
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    const { address, amount, flag, id } = req.body;
+    const { address, amount, flag, senderAddress } = req.body;
     const data = await User.findOne({ address });
     if (amount <= 0) {
       return res.status(400).send({ amount: "please input correct" });
     }
+    if (!nodeEth.validateAddress(senderAddress)) {
+      return res.status(400).json({ address: "Address in not valid" });
+    }
     const drawData = new Withdraw({
-      user: id,
+      address: senderAddress,
       amount,
       method: flag,
       status: 3,
@@ -27,15 +30,11 @@ router.post(
       if (flag === "eth") {
         if (data.countETH >= amount) {
           data.countETH = data.countETH - amount;
-          data.save();
-          drawData
-            .save()
-            .then((item) => {
-              return res.status(200).json({ msg: "success" });
-            })
-            .catch((err) => {
-              return res.status(400).json({ errors: err });
-            });
+          const userdata = await data.save();
+          const withdrawData = await drawData.save();
+          if (userdata && withdrawData) {
+            return res.status(200).json({ msg: "success" });
+          }
         } else {
           return res.status(400).send({
             amount: "Not Sufficiant Balance",
@@ -44,17 +43,11 @@ router.post(
       } else if (flag === "hdt") {
         if (data.countHDT >= amount) {
           data.countHDT = data.countHDT - amount;
-          data.save();
-          drawData
-            .save()
-            .then((item) => {
-              console.log(item);
-              return res.status(200).json({ msg: "success" });
-            })
-            .catch((err) => {
-              console.log(err);
-              return res.status(400).json({ errors: err });
-            });
+          const userdata = await data.save();
+          const withdrawData = await drawData.save();
+          if (userdata && withdrawData) {
+            return res.status(200).json({ msg: "success" });
+          }
         } else {
           return res.status(400).send({
             amount: "Not Sufficiant Balance",
@@ -63,17 +56,11 @@ router.post(
       } else if (flag === "usdt") {
         if (data.countUSDT >= amount) {
           data.countUSDT = data.countUSDT - amount;
-          data.save();
-          drawData
-            .save()
-            .then((item) => {
-              console.log(item);
-              return res.status(200).json({ msg: "success" });
-            })
-            .catch((err) => {
-              console.log(err);
-              return res.status(400).json({ errors: err });
-            });
+          const userdata = await data.save();
+          const withdrawData = await drawData.save();
+          if (userdata && withdrawData) {
+            return res.status(200).json({ msg: "success" });
+          }
         } else {
           return res.status(400).send({
             amount: "Not Sufficiant Balance",
@@ -87,7 +74,6 @@ router.post(
 router.get("/", async (req, res) => {
   Withdraw.find()
     .sort({ date: -1 })
-    .populate("user")
     .then((item) => {
       if (!item) {
         res.status(404).json({ nowithdraw: "There is no WithDraw!" });

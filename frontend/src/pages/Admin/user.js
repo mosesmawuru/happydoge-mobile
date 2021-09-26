@@ -3,12 +3,13 @@ import {Text, View, TouchableOpacity, ScrollView, Switch} from 'react-native';
 import {ListItem, Button} from 'react-native-elements';
 import {BottomNavigation} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-const Tx = require('ethereumjs-tx').Transaction;
 import {SearchBar, Badge} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import Header from '../../components/Header';
 import {getWithdraw} from '../../actions/adminAction';
 import {getUser} from '../../actions/profileAction';
+import {getPrice} from '../../actions/exchangeAction';
+const Tx = require('ethereumjs-tx').Transaction;
 
 const MyComponent = ({navigation}) => {
   const [index, setIndex] = React.useState(0);
@@ -22,21 +23,24 @@ const MyComponent = ({navigation}) => {
   const store = useSelector(state => state.transaction);
   const socket = useSelector(state => state.socket);
   const web3 = useSelector(state => state.web3);
+  const price = useSelector(state => state.price);
+
   useEffect(() => {
     let isMount = true;
     if (isMount) {
       dispatch(getWithdraw());
+      dispatch(getPrice());
     }
     return () => {
       isMount = false;
     };
   }, []);
-
+  console.log(price);
   const MusicRoute = () => (
     <ScrollView>
       {store.transdata
         .filter(item => {
-          return item.user.address.indexOf(search) > -1 && item.status === 3;
+          return item.address.indexOf(search) > -1 && item.status === 3;
         })
         .map((item, key) => {
           return (
@@ -54,39 +58,46 @@ const MyComponent = ({navigation}) => {
                       icon={{name: 'check', color: 'white'}}
                       buttonStyle={{backgroundColor: 'green'}}
                       onPress={async () => {
-                        const adminaddress =
-                          '0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E';
-                        const privateKey =
-                          '09629aa26282f4f6bb7d9792a18e77cc2bcd0fbbb2113ccfeaf7933d45080738';
-                        var count = await web3.web3.eth.getTransactionCount(
-                          adminaddress,
-                        );
-                        var gasPrice = await web3.web3.eth.getGasPrice();
-                        var gasLimit = 1000000;
-                        var rawTransaction = {
-                          from: adminaddress,
-                          nonce: web3.web3.utils.toHex(count),
-                          gasPrice: web3.web3.utils.toHex(gasPrice),
-                          gasLimit: web3.web3.utils.toHex(gasLimit),
-                          to: item.user.address,
-                          value: parseInt(item.amount * 1000000000000000000),
-                        };
+                        if (item.method === 'eth') {
+                          const adminaddress =
+                            '0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E';
+                          const privateKey =
+                            '09629aa26282f4f6bb7d9792a18e77cc2bcd0fbbb2113ccfeaf7933d45080738';
+                          var count = await web3.web3.eth.getTransactionCount(
+                            adminaddress,
+                          );
+                          var gasPrice = await web3.web3.eth.getGasPrice();
+                          var gasLimit = 1000000;
+                          var rawTransaction = {
+                            from: adminaddress,
+                            nonce: web3.web3.utils.toHex(count),
+                            gasPrice: web3.web3.utils.toHex(gasPrice),
+                            gasLimit: web3.web3.utils.toHex(gasLimit),
+                            to: item.address,
+                            value: parseInt(
+                              ((item.amount * 100) /
+                                price.pricedata.withdraw_rate) *
+                                1000000000000000000,
+                            ),
+                          };
 
-                        var tx = new Tx(rawTransaction, {chain: 'ropsten'});
-                        var privKey = Buffer.from(privateKey, 'hex');
-                        tx.sign(privKey);
-                        var serializedTx = tx.serialize();
-                        web3.web3.eth.sendSignedTransaction(
-                          '0x' + serializedTx.toString('hex'),
-                          function (err, hash) {
-                            if (!err) {
-                              socket.socket.emit('approve', item._id);
-                              dispatch(getWithdraw());
-                            } else {
-                              console.log(err);
-                            }
-                          },
-                        );
+                          var tx = new Tx(rawTransaction, {chain: 'ropsten'});
+                          var privKey = Buffer.from(privateKey, 'hex');
+                          tx.sign(privKey);
+                          var serializedTx = tx.serialize();
+                          web3.web3.eth.sendSignedTransaction(
+                            '0x' + serializedTx.toString('hex'),
+                            function (err, hash) {
+                              if (!err) {
+                                socket.socket.emit('approve', item._id);
+                                dispatch(getWithdraw());
+                              } else {
+                                console.log(err);
+                              }
+                            },
+                          );
+                        } else if (item.method === 'hdt') {
+                        }
                       }}
                     />
                     <Button
@@ -95,7 +106,7 @@ const MyComponent = ({navigation}) => {
                       onPress={async () => {
                         await socket.socket.emit('reject', item);
                         await dispatch(getWithdraw());
-                        await dispatch(getUser(item.user._id));
+                        await dispatch(getUser(item._id));
                       }}
                     />
                   </View>
@@ -111,12 +122,12 @@ const MyComponent = ({navigation}) => {
                 />
                 <ListItem.Content bottomDivider>
                   <ListItem.Title>
-                    {item.user.address
-                      ? item.user.address.substring(0, 10) +
+                    {item.address
+                      ? item.address.substring(0, 10) +
                         '....' +
-                        item.user.address.substring(
-                          item.user.address.length - 10,
-                          item.user.address.length,
+                        item.address.substring(
+                          item.address.length - 10,
+                          item.address.length,
                         )
                       : ''}
                   </ListItem.Title>
@@ -161,7 +172,7 @@ const MyComponent = ({navigation}) => {
     <ScrollView>
       {store.transdata
         .filter(item => {
-          return item.user.address.indexOf(search) > -1 && item.status === 1;
+          return item.address.indexOf(search) > -1 && item.status === 1;
         })
         .map((item, key) => {
           return (
@@ -178,12 +189,12 @@ const MyComponent = ({navigation}) => {
                 />
                 <ListItem.Content bottomDivider>
                   <ListItem.Title>
-                    {item.user.address
-                      ? item.user.address.substring(0, 10) +
+                    {item.address
+                      ? item.address.substring(0, 10) +
                         '....' +
-                        item.user.address.substring(
-                          item.user.address.length - 10,
-                          item.user.address.length,
+                        item.address.substring(
+                          item.address.length - 10,
+                          item.address.length,
                         )
                       : ''}
                   </ListItem.Title>

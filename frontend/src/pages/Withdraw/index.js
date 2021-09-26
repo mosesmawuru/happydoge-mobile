@@ -6,7 +6,9 @@ import {Picker} from '@react-native-community/picker';
 import Header from '../../components/Header';
 import {withdraw} from '../../actions/withdrawAction';
 import {DepositModal} from '../../components/DepositModal';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {message} from '../../constant/message';
+import Clipboard from '@react-native-clipboard/clipboard';
 import animal from '../../assets/img/animal.png';
 import ethImg from '../../assets/img/eth.png';
 import usdtImg from '../../assets/img/usdt.png';
@@ -19,9 +21,20 @@ const Withdraw = ({navigation}) => {
   const [modalData, setModalData] = useState('');
   const [selected, setSelected] = useState('eth');
   const [address, setAddress] = useState('');
-
+  const [isCopied, setIsCopied] = useState(false);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
+  const onCopyText = flag => {
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
+  };
+  const copyToClipboard = (value, flag) => {
+    onCopyText(flag);
+    Clipboard.setString(value);
+  };
+
   const onSubmit = async () => {
     if (isNaN(amount)) {
       setError({amount: 'Only input number'});
@@ -31,6 +44,7 @@ const Withdraw = ({navigation}) => {
         amount: amount,
         flag: selected,
         id: profile.profiledata._id,
+        senderAddress: address,
       };
       await dispatch(withdraw(data, showModal));
     }
@@ -77,6 +91,16 @@ const Withdraw = ({navigation}) => {
                   : ''
               }
               disabled
+              rightIcon={
+                <Icon
+                  name={isCopied ? 'check' : 'copy'}
+                  onPress={() => {
+                    copyToClipboard(profile.profiledata.address, 'address');
+                  }}
+                  size={24}
+                  color="gray"
+                />
+              }
             />
           </View>
           <View style={styles.crypto}>
@@ -98,9 +122,10 @@ const Withdraw = ({navigation}) => {
             <Input
               value={address}
               placeholder="Please input address."
-              onChange={text => {
+              onChangeText={text => {
                 setAddress(text);
               }}
+              errorMessage={error.address}
             />
             <Input
               value={amount.toString()}
