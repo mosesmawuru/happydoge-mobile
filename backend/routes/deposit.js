@@ -75,9 +75,7 @@ const tranferCrypto = async (socket) => {
   socket.on("transfer", async (item) => {
     const { owneraddress, toaddress, flag, amount } = item;
     if (amount <= 0) {
-      return res.status(400).send({
-        amount: "please input correct amount",
-      });
+      socket.emit("failed_transfer", { amount: "please input correct amount" });
     }
 
     const owner = await User.findOne({ address: owneraddress });
@@ -110,9 +108,7 @@ const tranferCrypto = async (socket) => {
             socket.emit("app_transaction", data);
           }
         } else {
-          return res.status(400).send({
-            amount: "Not Sufficiant Balance",
-          });
+          socket.emit("failed_transfer", { amount: "Not Sufficiant Balance" });
         }
       } else if (flag === "hdt") {
         if (owner.countHDT >= amount) {
@@ -142,13 +138,13 @@ const tranferCrypto = async (socket) => {
             socket.emit("app_transaction", data);
           }
         } else {
-          return res.status(400).send({
-            amount: "Not Sufficiant Balance",
-          });
+          socket.emit("failed_transfer", { amount: "Not Sufficiant Balance" });
         }
       }
     } else {
-      return res.status(400).send({ address: "please input correct address" });
+      socket.emit("failed_transfer", {
+        address: "please input correct address",
+      });
     }
   });
 };

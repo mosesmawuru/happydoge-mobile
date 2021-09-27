@@ -10,6 +10,7 @@ import {TransferModal} from '../../components/TransferModal';
 import Header from '../../components/Header';
 import styles from './styles';
 import {message} from '../../constant/message';
+import isEmpty from '../../utils/isEmpty';
 const Transfer = ({navigation}) => {
   const dispatch = useDispatch();
   const [selected, setSelected] = useState('eth');
@@ -24,7 +25,9 @@ const Transfer = ({navigation}) => {
   const errors = useSelector(state => state.errors);
   const send = async () => {
     // setLoading(true);
-    if (amount === 0) {
+    if (isEmpty(address)) {
+      setError({address: 'Please input address'});
+    } else if (amount === 0) {
       setError({amount: 'Please input correct balance'});
     } else if (isNaN(amount)) {
       setError({amount: 'Please only input number'});
@@ -37,18 +40,6 @@ const Transfer = ({navigation}) => {
         id: store.user.id,
       };
       await socket.socket.emit('transfer', data);
-      // await onShowModal();
-      // dispath(
-      //   transfer(
-      //     store.user.address,
-      //     address,
-      //     selected,
-      //     Number(amount),
-      //     store.user.id,
-      //     onShowModal,
-      //     setLoading,
-      //   ),
-      // );
     }
   };
   const onShowModal = async (toaddress, flag, amount) => {
@@ -73,6 +64,9 @@ const Transfer = ({navigation}) => {
     socket.socket.on('sent_money', async item => {
       await dispatch(getUser(item.id));
       await onShowModal(item.owner, item.method, item.amount);
+    });
+    socket.socket.on('failed_transfer', item => {
+      setError(item);
     });
   }, [socket]);
   return (
