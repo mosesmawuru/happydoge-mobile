@@ -1,19 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  View,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
-const {height} = Dimensions.get('window');
+import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import {Searchbar, ActivityIndicator, Colors} from 'react-native-paper';
 import {CommonText} from '../../components/Common';
 import Header from '../../components/Header';
 import {getAllUser} from '../../actions/userAction';
-
 const UserSelect = ({navigation}) => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,7 +19,7 @@ const UserSelect = ({navigation}) => {
   return (
     <>
       <Header text="User Detail" navigation={navigation} />
-      <View style={{minHeight: height}}>
+      <View>
         <View>
           <Searchbar
             placeholder="Search"
@@ -95,9 +87,7 @@ const UserSelect = ({navigation}) => {
                       <Col
                         size={1.2}
                         style={{
-                          justifyContent: 'flex-end',
-                          marginBottom: 5,
-                          alignItems: 'flex-end',
+                          paddingVertical: 5,
                         }}>
                         <CommonText
                           color="rgb(223,100,71)"
@@ -110,9 +100,7 @@ const UserSelect = ({navigation}) => {
                       <Col
                         size={1.2}
                         style={{
-                          justifyContent: 'flex-end',
-                          marginBottom: 5,
-                          alignItems: 'flex-end',
+                          paddingVertical: 5,
                         }}>
                         <CommonText
                           color="rgb(223,100,71)"
@@ -124,9 +112,7 @@ const UserSelect = ({navigation}) => {
                       <Col
                         size={1.2}
                         style={{
-                          justifyContent: 'flex-end',
-                          marginBottom: 5,
-                          alignItems: 'flex-end',
+                          paddingVertical: 5,
                         }}>
                         <CommonText
                           color="rgb(223,100,71)"

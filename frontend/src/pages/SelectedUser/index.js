@@ -398,8 +398,7 @@ const SelectedUser = ({navigation, route}) => {
             </View>
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                flexDirection: 'column',
                 marginTop: 60,
               }}>
               <View>
@@ -422,7 +421,6 @@ const SelectedUser = ({navigation, route}) => {
                         style={{
                           padding: 4,
                           fontWeight: 'bold',
-                          maxWidth: 110,
                         }}
                         onChangeText={msg => {
                           setCountHDT(msg);
@@ -476,7 +474,7 @@ const SelectedUser = ({navigation, route}) => {
                   </View>
                 </View>
               </View>
-              <View>
+              <View style={{marginTop: 10}}>
                 <View
                   style={{backgroundColor: 'rgb(223, 100, 71)', padding: 10}}>
                   <CommonText>ETH BALANCE</CommonText>
@@ -493,7 +491,7 @@ const SelectedUser = ({navigation, route}) => {
                       }}>
                       <TextInput
                         keyboardType="numeric"
-                        style={{padding: 4, fontWeight: 'bold', maxWidth: 110}}
+                        style={{padding: 4, fontWeight: 'bold'}}
                         onChangeText={msg => {
                           setCountETH(msg);
                         }}>
