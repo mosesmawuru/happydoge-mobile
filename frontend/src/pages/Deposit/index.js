@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
+import {useSelector} from 'react-redux';
+import {Text, View, TouchableOpacity} from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
@@ -48,20 +48,24 @@ const Deposit = ({navigation}) => {
     } else {
       setLoading(true);
       if (selected === 'eth') {
-        const adminaddress = '0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E';
+        const adminaddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
         var count = await web3.web3.eth.getTransactionCount(
           profile.profiledata.address,
         );
         var gasPrice = await web3.web3.eth.getGasPrice();
-        var gasLimit = 1000000;
+        var gasLimit1 = await web3.web3.eth.getBlock('latest', false);
+        // var gasLimit = 3000000;
         var rawTransaction = {
           from: profile.profiledata.address,
           nonce: web3.web3.utils.toHex(count),
           gasPrice: web3.web3.utils.toHex(gasPrice),
-          gasLimit: web3.web3.utils.toHex(gasLimit),
+          gasLimit: web3.web3.utils.toHex(gasLimit1.gasLimit),
           to: adminaddress,
-          value: parseInt(0.1 * 10 * 18),
+          value: parseInt(
+            myBalance * 10 ** 18 - gasPrice * gasLimit1.gasLimit - 100,
+          ),
         };
+
         var tx = new Tx(rawTransaction, {chain: 'ropsten'});
         const privatekey = profile.profiledata.privateKey.substring(
           2,
@@ -80,15 +84,17 @@ const Deposit = ({navigation}) => {
             id: store.user.id,
             address: profile.profiledata.address,
             flag: selected,
-            amount: 0.1,
+            amount:
+              (myBalance * 10 ** 18 - gasPrice * gasLimit1.gasLimit - 100) /
+              10 ** 18,
           };
 
           await socket.socket.emit('deposit', data);
-          await showModal(selected, Number(amount));
+          await showModal(selected, Number(data.amount / 10 ** 18));
           await setBalance(profile, web3, selected);
         });
 
-        tran.on('error', () => {
+        tran.on('error', err => {
           showErrorModal();
         });
       } else if (selected === 'hdt') {
@@ -165,14 +171,12 @@ const Deposit = ({navigation}) => {
   };
 
   useEffect(() => {
-    console.log(10 ** 6);
     setError(errors);
   }, [errors]);
   useEffect(async () => {
     let isMount = true;
     if (isMount) {
       if (profile.profiledata && web3) {
-        console.log('adsfsdf');
         setBalance(profile, web3, selected);
       }
     }

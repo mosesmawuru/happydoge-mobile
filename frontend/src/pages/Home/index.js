@@ -167,7 +167,9 @@ const Home = ({navigation}) => {
                               : ''}
                           </Text>
                           <Text>
-                            {item.type === 6
+                            {item.type === 1
+                              ? 'Deposit Money'
+                              : item.type === 6
                               ? 'Referral Money'
                               : item.type === 3
                               ? 'Transfer Money'

@@ -69,7 +69,6 @@ const doEveryMinute = async (socket) => {
       .then((data) => {
         if (data) {
           data.map(async (item, key) => {
-            console.log(item.end_date, currentHour);
             if (
               new Date(item.end_date).getTime() ===
               new Date(currentHour).getTime()

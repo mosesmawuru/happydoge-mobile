@@ -10,7 +10,6 @@ const App = () => {
   const store = useSelector(state => state.auth);
   const socket = useSelector(state => state.socket);
   const service = new NotifService();
-
   useEffect(() => {
     if (!isEmpty(store.user) && !isEmpty(socket.socket)) {
       socket.socket.on('success_deposit', async item => {
@@ -33,7 +32,7 @@ const App = () => {
         }
       });
       socket.socket.on('hourly_stake', item => {
-        if (store.user._id === item.id) {
+        if (store.user.id === item.id) {
           dispatch(getUser(store.user.id));
           const message = `Houlry is staked`;
           const title = 'Complete Hourly Staking';
@@ -41,7 +40,7 @@ const App = () => {
         }
       });
       socket.socket.on('complete_stake', item => {
-        if (store.user._id === item.id) {
+        if (store.user.id === item.id) {
           dispatch(getUser(store.user.id));
           const message = `Staking is completed`;
           const title = 'Complete Staking';
