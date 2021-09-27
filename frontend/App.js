@@ -49,7 +49,7 @@ const App = () => {
         }
       });
       socket.socket.on('app_transaction', item => {
-        if (store.user._id === item.user) {
+        if (store.user.address === item.address) {
           dispatch(getUser(store.user.id));
           const message = `${item.amount} ${item.method} withdraw is success.`;
           const title = 'Success withdraw';
@@ -57,9 +57,9 @@ const App = () => {
         }
       });
       socket.socket.on('complete_transfer', item => {
-        if (store.user._id === item.user) {
+        if (store.user.address === item.user) {
           dispatch(getUser(store.user.id));
-          const message = `${item.amount} ${item.method} withdraw is success.`;
+          const message = `${item.amount} ${item.method} transfer is success.`;
           const title = 'Success transfer';
           service.localNotif(message, title);
         }

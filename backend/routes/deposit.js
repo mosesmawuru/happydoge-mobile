@@ -71,7 +71,7 @@ const deposit = async (socket) => {
   });
 };
 
-const tranferCrypto = async (socket) => {
+const tranferCrypto = async (socket, onlineUsers) => {
   socket.on("transfer", async (item) => {
     const { owneraddress, toaddress, flag, amount } = item;
     if (amount <= 0) {
@@ -105,7 +105,7 @@ const tranferCrypto = async (socket) => {
               method: flag,
             };
             socket.emit("sent_money", data);
-            socket.emit("app_transaction", data);
+            socket.emit("complete_transfer", data);
           }
         } else {
           socket.emit("failed_transfer", { amount: "Not Sufficiant Balance" });

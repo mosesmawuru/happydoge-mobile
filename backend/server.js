@@ -251,7 +251,7 @@ try {
     onlineUsers[userId] = socket.id;
     doEveryMinute(socket);
     getBalance(socket);
-    deposit(socket);
+    deposit(socket, onlineUsers);
     approve(socket);
     reject(socket);
     tranferCrypto(socket);

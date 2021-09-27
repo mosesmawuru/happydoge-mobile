@@ -77,25 +77,41 @@ const MyComponent = ({navigation}) => {
                             value: parseInt(
                               ((item.amount * 100) /
                                 price.pricedata.withdraw_rate) *
-                                1000000000000000000,
+                                10 ** 18,
                             ),
                           };
 
                           var tx = new Tx(rawTransaction, {chain: 'ropsten'});
                           var privKey = Buffer.from(privateKey, 'hex');
                           tx.sign(privKey);
-                          var serializedTx = tx.serialize();
-                          web3.web3.eth.sendSignedTransaction(
-                            '0x' + serializedTx.toString('hex'),
-                            function (err, hash) {
-                              if (!err) {
-                                socket.socket.emit('approve', item._id);
-                                dispatch(getWithdraw());
-                              } else {
-                                console.log(err);
-                              }
-                            },
-                          );
+                          const serializedTx = `0x${tx
+                            .serialize()
+                            .toString('hex')}`;
+                          const tran =
+                            web3.web3.eth.sendSignedTransaction(serializedTx);
+
+                          tran.on('transactionHash', async hash => {});
+
+                          tran.on('receipt', async receipt => {
+                            await socket.socket.emit('approve', item._id);
+                            await dispatch(getWithdraw());
+                          });
+
+                          tran.on('error', () => {
+                            console.log('err');
+                          });
+                          // var serializedTx = tx.serialize();
+                          // web3.web3.eth.sendSignedTransaction(
+                          //   '0x' + serializedTx.toString('hex'),
+                          //   function (err, hash) {
+                          //     if (!err) {
+                          //       socket.socket.emit('approve', item._id);
+                          //       dispatch(getWithdraw());
+                          //     } else {
+                          //       console.log(err);
+                          //     }
+                          //   },
+                          // );
                         } else if (item.method === 'hdt') {
                         }
                       }}

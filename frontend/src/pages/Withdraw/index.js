@@ -59,6 +59,7 @@ const Withdraw = ({navigation}) => {
     await setModalData(modalData);
     await setVisible(!visible);
     await setAmount(0);
+    await setAddress('');
     await setSelected('eth');
   };
   useEffect(() => {

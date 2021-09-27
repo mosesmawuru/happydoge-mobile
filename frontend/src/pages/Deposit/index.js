@@ -60,7 +60,7 @@ const Deposit = ({navigation}) => {
           gasPrice: web3.web3.utils.toHex(gasPrice),
           gasLimit: web3.web3.utils.toHex(gasLimit),
           to: adminaddress,
-          value: parseInt(0.1 * 1000000000000000000),
+          value: parseInt(0.1 * 10 * 18),
         };
         var tx = new Tx(rawTransaction, {chain: 'ropsten'});
         const privatekey = profile.profiledata.privateKey.substring(
@@ -95,42 +95,30 @@ const Deposit = ({navigation}) => {
         ////////////////////////////
         const myAddress = '0xE34440801560549F7d575Aa449562536346c0777';
         const destAddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
-        const contract = new web3.web3.eth.Contract(
-          usdtABI,
-          usdtContractAddress,
-        );
+        const contract = new web3.web3.eth.Contract(hdtABI, hdtContractAddress);
         var count = await web3.web3.eth.getTransactionCount(myAddress);
-        var transfer = contract.methods.transfer(destAddress, 10);
+        var transfer = contract.methods.transfer(
+          destAddress,
+          10 ** 6 * myBalance,
+        );
         var encodedABI = transfer.encodeABI();
+        var gasPrice = await web3.web3.eth.getGasPrice();
+        var gasValue = await web3.web3.eth.getBlock('latest', false);
+        const realLimit = gasValue.gasLimit;
+
         var rawTransaction = {
           from: myAddress,
-          // to: hdtContractAddress,
-          // value: '0x0',
-          gas: 2000000,
+          to: hdtContractAddress,
           data: encodedABI,
-          // nonce: '0x' + count.toString(16),
-          // gasPrice: 0x2cb417800,
-          // gasLimit: 0x30d40,
+          nonce: '0x' + count.toString(16),
+          gasPrice: gasPrice,
+          gasLimit: web3.web3.utils.toHex(realLimit),
           // chainId: 1,
         };
         var tx = new Tx(rawTransaction);
 
         const privatekey =
           'e1aa9022d303c6bedd2503b24d92be7bd28d1f84a48bd3f56608ff9264926354';
-        // var privKey = Buffer.from(privatekey, 'hex');
-        // tx.sign(privKey);
-        // const serializedTx = `0x${tx.serialize().toString('hex')}`;
-        // web3.web3.eth.sendSignedTransaction(
-        //   serializedTx,
-        //   async function (err, hash) {
-        //     if (!err) {
-        //       console.log(hash);
-        //     } else {
-        //       console.log(err);
-        //     }
-        //   },
-        // );
-
         web3.web3.eth.accounts
           .signTransaction(rawTransaction, privatekey)
           .then(async signedTx => {
@@ -145,11 +133,12 @@ const Deposit = ({navigation}) => {
             const balance = await contract.methods
               .balanceOf(destAddress)
               .call();
-            console.log(balance);
+            await setBalance(profile, web3, selected);
             return true;
           });
 
         ////////////////////////
+      } else if (selected === 'usdt') {
       }
     }
   };
@@ -176,6 +165,7 @@ const Deposit = ({navigation}) => {
   };
 
   useEffect(() => {
+    console.log(10 ** 6);
     setError(errors);
   }, [errors]);
   useEffect(async () => {
@@ -191,7 +181,6 @@ const Deposit = ({navigation}) => {
     };
   }, [web3, profile]);
   const setBalance = async (profile, web3, selected) => {
-    console.log('asdfaf');
     if (selected === 'eth') {
       const price = await web3.web3.eth.getBalance(profile.profiledata.address);
       await setMyBalance(ethers.utils.formatEther(BigNumber.from(price)));
