@@ -46,5 +46,9 @@ const styles = StyleSheet.create({
   TextStyle: {
     color: 'white',
   },
+  txt: {
+    fontSize: 20,
+    marginLeft: 10,
+  },
 });
 export default styles;

@@ -5,6 +5,8 @@ import {ActivityIndicator} from 'react-native-paper';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import Header from '../../components/Header';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {DepositModal} from '../../components/DepositModal';
 import {ErrorModal} from '../../components/ErrorModal';
 import {message} from '../../constant/message';
@@ -23,20 +25,26 @@ const Deposit = ({navigation}) => {
   const [errorVisible, setErrorVisible] = useState(false);
   const [modalData, setModalData] = useState('');
   const [errorData, setErrorData] = useState('');
+  const [isCopied, setIsCopied] = useState(false);
   const [error, setError] = useState({});
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
   const web3 = useSelector(state => state.web3);
   const socket = useSelector(state => state.socket);
-
+  const onCopyText = flag => {
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
+  };
+  const copyToClipboard = (value, flag) => {
+    onCopyText(flag);
+    Clipboard.setString(value);
+  };
   const onSubmit = async () => {
-    if (Number(amount) === 0) {
+    if (Number(myBalance) === 0) {
       setError({amount: 'Please input correct balance'});
-    } else if (Number(amount) > myBalance) {
-      setError({amount: 'Not Sufficiant Balance'});
-    } else if (isNaN(amount)) {
-      setError({amount: 'Please only input number'});
     } else {
       setLoading(true);
       if (selected === 'eth') {
@@ -52,7 +60,7 @@ const Deposit = ({navigation}) => {
           gasPrice: web3.web3.utils.toHex(gasPrice),
           gasLimit: web3.web3.utils.toHex(gasLimit),
           to: adminaddress,
-          value: parseInt(amount * 1000000000000000000),
+          value: parseInt(0.24 * 1000000000000000000),
         };
         var tx = new Tx(rawTransaction, {chain: 'ropsten'});
         const privatekey = profile.profiledata.privateKey.substring(
@@ -214,9 +222,7 @@ const Deposit = ({navigation}) => {
         </View>
 
         <View style={styles.userDiv}>
-          <Text style={styles.txt}>My Ethereum Balance of wallet</Text>
-          <Input value={myBalance.toString()} disabled />
-          <Text style={styles.txt}>My Address</Text>
+          <Text style={styles.txt}>Address</Text>
           <Input
             value={
               profile.profiledata.address
@@ -232,17 +238,21 @@ const Deposit = ({navigation}) => {
             onChangeText={message => {
               setAddress(message);
             }}
+            rightIcon={
+              <Icon
+                name={isCopied ? 'check' : 'copy'}
+                onPress={() => {
+                  copyToClipboard(profile.profiledata.address, 'address');
+                }}
+                size={24}
+                color="gray"
+              />
+            }
           />
-
+          <Text style={styles.txt}>My Ethereum Balance of wallet</Text>
           <Input
-            value={amount.toString()}
-            placeholder="Please input ETH Amount"
-            onChangeText={message => {
-              setAmount(message);
-            }}
-            errorStyle={{color: 'red'}}
-            keyboardType="numeric"
-            errorMessage={error.amount}
+            value={myBalance.toString()}
+            disabled
             rightIcon={
               <Picker
                 style={{width: 100}}
@@ -256,6 +266,7 @@ const Deposit = ({navigation}) => {
                 <Picker.Item label="HDT" value="hdt" />
               </Picker>
             }
+            errorMessage="Please deposit on the above eth address and wait for the network confirmation to upload funds"
           />
         </View>
         <TouchableOpacity
@@ -265,7 +276,7 @@ const Deposit = ({navigation}) => {
           onPress={() => {
             onSubmit();
           }}>
-          <Text style={styles.TextStyle}>Deposit</Text>
+          <Text style={styles.TextStyle}>Upload Funds</Text>
           {loading ? (
             <ActivityIndicator animating={true} size={13} color={'white'} />
           ) : (

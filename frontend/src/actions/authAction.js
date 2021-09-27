@@ -32,7 +32,7 @@ export const userLogin = (username, password, navigation) => {
 
         const web3 = new Web3(
           new Web3.providers.HttpProvider(
-            'https://mainnet.infura.io/v3/43abad80628540079b649332f37de4fb',
+            'https://ropsten.infura.io/v3/43abad80628540079b649332f37de4fb',
           ),
         );
         dispatch({type: GET_WEB3_DATA, payload: web3});
