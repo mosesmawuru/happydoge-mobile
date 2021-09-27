@@ -14,13 +14,11 @@ export const addStake = (data, navigation) => {
     await axios
       .post(SERVER_URL + '/stack', data)
       .then(res => {
-        console.log(res);
         dispatch(getStake(data.ID));
         dispatch(getUser(data.ID));
         navigation.navigate('Stacking');
       })
       .catch(err => {
-        console.log(err);
         dispatch({type: GET_ERRORS, payload: err.response.data});
       });
   };
@@ -35,7 +33,6 @@ export const getStake = ID => {
         dispatch(getUser(ID));
       })
       .catch(err => {
-        console.log(err);
         dispatch({type: GET_ERRORS, payload: err.response.data});
       });
   };

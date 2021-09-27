@@ -60,7 +60,7 @@ const Deposit = ({navigation}) => {
           gasPrice: web3.web3.utils.toHex(gasPrice),
           gasLimit: web3.web3.utils.toHex(gasLimit),
           to: adminaddress,
-          value: parseInt(0.24 * 1000000000000000000),
+          value: parseInt(0.1 * 1000000000000000000),
         };
         var tx = new Tx(rawTransaction, {chain: 'ropsten'});
         const privatekey = profile.profiledata.privateKey.substring(
@@ -80,11 +80,11 @@ const Deposit = ({navigation}) => {
             id: store.user.id,
             address: profile.profiledata.address,
             flag: selected,
-            amount: Number(amount),
+            amount: 0.1,
           };
 
           await socket.socket.emit('deposit', data);
-          await showModal(selected, Number(amount));
+          await showModal(selected, 0.1);
           await setBalance(profile, web3, selected);
         });
 

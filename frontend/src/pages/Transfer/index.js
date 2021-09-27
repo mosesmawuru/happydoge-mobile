@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {Input} from 'react-native-elements';
 import {useSelector, useDispatch} from 'react-redux';
 import {ActivityIndicator} from 'react-native-paper';
@@ -83,81 +83,83 @@ const Transfer = ({navigation}) => {
         setVisible={setVisible}
       />
       <Header text="TRANSFER" navigation={navigation} />
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.headText}>TRANSFER</Text>
-        </View>
-        <View>
-          <View style={styles.userDiv}>
-            <Text style={styles.labelText}>From</Text>
-            <Input
-              placeholder="Please input address"
-              value={
-                store.user.address
-                  ? store.user.address.substring(0, 6) +
-                    '....' +
-                    store.user.address.substring(
-                      store.user.address.length - 6,
-                      store.user.address.length,
-                    )
-                  : ''
-              }
-              disabled
-            />
+      <ScrollView>
+        <View style={styles.container}>
+          <View>
+            <Text style={styles.headText}>TRANSFER</Text>
           </View>
           <View>
-            <Text style={styles.labelText}>To</Text>
-            <Input
-              value={address}
-              placeholder="Please input address"
-              onChangeText={message => {
-                setAddress(message);
-              }}
-              errorStyle={{color: 'red'}}
-              errorMessage={error.address}
-            />
-          </View>
+            <View style={styles.userDiv}>
+              <Text style={styles.labelText}>From</Text>
+              <Input
+                placeholder="Please input address"
+                value={
+                  store.user.address
+                    ? store.user.address.substring(0, 6) +
+                      '....' +
+                      store.user.address.substring(
+                        store.user.address.length - 6,
+                        store.user.address.length,
+                      )
+                    : ''
+                }
+                disabled
+              />
+            </View>
+            <View>
+              <Text style={styles.labelText}>To</Text>
+              <Input
+                value={address}
+                placeholder="Please input address"
+                onChangeText={message => {
+                  setAddress(message);
+                }}
+                errorStyle={{color: 'red'}}
+                errorMessage={error.address}
+              />
+            </View>
 
-          <View>
-            <Text style={styles.labelText}>Balance</Text>
-            <Input
-              value={amount.toString()}
-              placeholder="Please input blance"
-              onChangeText={message => {
-                setAmount(message);
-              }}
-              errorStyle={{color: 'red'}}
-              keyboardType="numeric"
-              errorMessage={error.amount}
-              rightIcon={
-                <Picker
-                  style={{width: 100}}
-                  selectedValue={selected}
-                  onValueChange={(itemValue, itemIndex) => {
-                    setSelected(itemValue);
-                  }}>
-                  <Picker.Item label="ETH" value="eth" />
-                  <Picker.Item label="HDT" value="hdt" />
-                </Picker>
-              }
-            />
+            <View>
+              <Text style={styles.labelText}>Balance</Text>
+              <Input
+                value={amount.toString()}
+                placeholder="Please input blance"
+                onChangeText={message => {
+                  setAmount(message);
+                }}
+                errorStyle={{color: 'red'}}
+                keyboardType="numeric"
+                errorMessage={error.amount}
+                rightIcon={
+                  <Picker
+                    style={{width: 100}}
+                    selectedValue={selected}
+                    onValueChange={(itemValue, itemIndex) => {
+                      setSelected(itemValue);
+                    }}>
+                    <Picker.Item label="ETH" value="eth" />
+                    <Picker.Item label="HDT" value="hdt" />
+                  </Picker>
+                }
+              />
+            </View>
           </View>
+          <TouchableOpacity
+            style={styles.submitButtonStyle}
+            disabled={loading ? true : false}
+            activeOpacity={0.5}
+            onPress={() => {
+              send();
+            }}>
+            <Text style={styles.TextStyle}>Send</Text>
+            {loading ? (
+              <ActivityIndicator animating={true} size={13} color={'white'} />
+            ) : (
+              <></>
+            )}
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.submitButtonStyle}
-          disabled={loading ? true : false}
-          activeOpacity={0.5}
-          onPress={() => {
-            send();
-          }}>
-          <Text style={styles.TextStyle}>Send</Text>
-          {loading ? (
-            <ActivityIndicator animating={true} size={13} color={'white'} />
-          ) : (
-            <></>
-          )}
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </>
   );
 };

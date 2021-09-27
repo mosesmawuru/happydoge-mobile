@@ -98,8 +98,7 @@ const SwapToHdt = ({navigation}) => {
               value={profile.profiledata.countHDT.toString() + ' HDT'}
               disabled
             />
-          </View>
-          <View style={styles.userDiv}>
+
             <Text style={styles.labelText}>ETH</Text>
             <Input
               value={
@@ -117,6 +116,7 @@ const SwapToHdt = ({navigation}) => {
               disabled={checked ? true : false}
             />
           </View>
+
           <CheckBox
             center
             title="Max"

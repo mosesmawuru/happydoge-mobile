@@ -245,11 +245,8 @@ const io = socketio(server);
 const onlineUsers = {};
 try {
   io.on("connection", (socket) => {
-    console.log("New client connected");
     // Get connected user id
-
     const userId = socket.handshake.query.userId;
-    // console.log(userId);
     // Set user as online
     onlineUsers[userId] = socket.id;
     doEveryMinute(socket);
@@ -258,17 +255,8 @@ try {
     approve(socket);
     reject(socket);
     tranferCrypto(socket);
-    socket.on("user_logout", () => {
-      console.log("client disconnect");
-      let disconnectedUserId = null;
-      // Remove disconnected user from online users
-      for (prop in onlineUsers) {
-        if (onlineUsers[prop] === socket.id) {
-          disconnectedUserId = prop;
-          delete onlineUsers[prop];
-          break;
-        }
-      }
+    socket.on("user_logout", (item) => {
+      socket.disconnect();
     });
     socket.on("disconnect", () => {
       console.log("client disconnect");
