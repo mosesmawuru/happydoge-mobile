@@ -25,10 +25,10 @@ const SelectedUser = ({navigation, route}) => {
   const [countHDT, setCountHDT] = useState();
   const [countETH, setCountETH] = useState();
   const [ethprice, setEthprice] = useState(0);
+  const [activeSections, setActiveSections] = useState([]);
   const store = useSelector(state => state.user);
   const socket = useSelector(state => state.socket);
   const price = useSelector(state => state.price);
-  const [activeSections, setActiveSections] = useState([]);
   useEffect(() => {
     let isMount = true;
     if (isMount) {
@@ -110,7 +110,44 @@ const SelectedUser = ({navigation, route}) => {
     },
     {
       title: 'REFERRAL DETAILS',
-      content: 'Lorem ipsum...',
+      content: (
+        <View>
+          {store.referraldata.length > 0 ? (
+            store.referraldata.map((item, key) => {
+              return (
+                <View
+                  key={key + 1}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text
+                    style={{
+                      color: 'rgb(223, 100, 71)',
+                      fontSize: 20,
+                      fontWeight: 'bold',
+                      padding: 10,
+                      textAlign: 'center',
+                    }}>
+                    {item.referral_amount} USDT
+                  </Text>
+                </View>
+              );
+            })
+          ) : (
+            <Text
+              style={{
+                color: 'rgb(223, 100, 71)',
+                fontSize: 23,
+                fontWeight: 'bold',
+                padding: 10,
+                textAlign: 'center',
+              }}>
+              No Referral History
+            </Text>
+          )}
+        </View>
+      ),
     },
     {
       title: 'WITHDRAWAL DETAILS',

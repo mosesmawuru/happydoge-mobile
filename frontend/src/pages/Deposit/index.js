@@ -84,11 +84,13 @@ const Deposit = ({navigation}) => {
           };
 
           await socket.socket.emit('deposit', data);
-          await showModal(selected, 0.1);
+          await showModal(selected, Number(amount));
           await setBalance(profile, web3, selected);
         });
 
-        tran.on('error', console.error);
+        tran.on('error', () => {
+          showErrorModal();
+        });
       } else if (selected === 'hdt') {
         ////////////////////////////
         const myAddress = '0xE34440801560549F7d575Aa449562536346c0777';
@@ -165,7 +167,7 @@ const Deposit = ({navigation}) => {
   };
   const showErrorModal = async () => {
     const modalData = {
-      message: 'Please check transaction status or blance.',
+      message: 'Please check transaction status or balance.',
     };
     await setErrorData(modalData);
     await setErrorVisible(!errorVisible);
@@ -176,7 +178,20 @@ const Deposit = ({navigation}) => {
   useEffect(() => {
     setError(errors);
   }, [errors]);
+  useEffect(async () => {
+    let isMount = true;
+    if (isMount) {
+      if (profile.profiledata && web3) {
+        console.log('adsfsdf');
+        setBalance(profile, web3, selected);
+      }
+    }
+    return () => {
+      isMount = false;
+    };
+  }, [web3, profile]);
   const setBalance = async (profile, web3, selected) => {
+    console.log('asdfaf');
     if (selected === 'eth') {
       const price = await web3.web3.eth.getBalance(profile.profiledata.address);
       await setMyBalance(ethers.utils.formatEther(BigNumber.from(price)));
@@ -191,17 +206,7 @@ const Deposit = ({navigation}) => {
       await setLoading(false);
     }
   };
-  useEffect(async () => {
-    let isMount = true;
-    if (isMount) {
-      if (profile.profiledata && web3) {
-        setBalance(profile, web3, selected);
-      }
-    }
-    return () => {
-      isMount = false;
-    };
-  }, [web3, profile]);
+
   return (
     <>
       <DepositModal

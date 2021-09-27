@@ -1,6 +1,7 @@
 //@import models
 const User = require("../models/User");
 const History = require("../models/History");
+const Referral = require("../models/Referral");
 const axios = require("axios");
 
 const deposit = async (socket) => {
@@ -39,15 +40,23 @@ const deposit = async (socket) => {
                 address: selectedUser.address,
                 balance,
               };
-              selectedUser
-                .save()
-                .then(() => {
-                  socket.emit("referral_deposit", sendUser);
-                })
-                .catch((err) => {
-                  console.log(err);
-                  // socket.emit("failed_referral", err);
-                });
+              const depoHistory = new History({
+                method: flag,
+                to_address: address,
+                amount,
+                type: 1,
+              });
+              const newReferral = new Referral({
+                address: selectedUser.address,
+                referral_amount: balance,
+              });
+
+              const selUser = await selectedUser.save();
+              const refUser = await newReferral.save();
+              const depoFlag = await depoHistory.save();
+              if (selUser && refUser && depoFlag) {
+                socket.emit("referral_deposit", sendUser);
+              }
             }
           }
         })

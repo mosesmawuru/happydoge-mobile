@@ -148,7 +148,9 @@ const Home = ({navigation}) => {
                         <View style={styles.circle} />
                         <View>
                           <Text>
-                            {item.type === 1
+                            {item.type === 6
+                              ? subText[0].description
+                              : item.type === 1
                               ? item.method === 'eth'
                                 ? mainText[1].text
                                 : mainText[5].text
@@ -165,7 +167,9 @@ const Home = ({navigation}) => {
                               : ''}
                           </Text>
                           <Text>
-                            {item.type === 3
+                            {item.type === 6
+                              ? 'Referral Money'
+                              : item.type === 3
                               ? 'Transfer Money'
                               : item.type === 5
                               ? 'Swapped Money'
@@ -184,7 +188,14 @@ const Home = ({navigation}) => {
                             : ''
                           : ''}
                         {item.type === 4 ? '-' : ''}
-                        {item.amount} {item.method === 'eth' ? 'ETH' : 'HDT'}
+                        {item.amount}{' '}
+                        {item.method === 'eth'
+                          ? 'ETH'
+                          : item.method === 'hdt'
+                          ? 'HDT'
+                          : item.method === 'usdt'
+                          ? 'USDT'
+                          : ''}
                       </Text>
                     </View>
                   );
