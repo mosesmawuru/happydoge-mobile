@@ -39,7 +39,7 @@ const MyComponent = ({navigation}) => {
   }, []);
   console.log(price);
   const MusicRoute = () => (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: '#fff'}}>
       {loading ? (
         <ActivityIndicator
           style={{marginTop: 5}}
@@ -198,7 +198,7 @@ const MyComponent = ({navigation}) => {
   );
 
   const AlbumsRoute = () => (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: '#fff'}}>
       {store.transdata
         .filter(item => {
           return item.address.indexOf(search) > -1 && item.status === 1;

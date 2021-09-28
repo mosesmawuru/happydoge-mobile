@@ -321,7 +321,7 @@ const SelectedUser = ({navigation, route}) => {
           style={{marginTop: 20}}
         />
       ) : (
-        <ScrollView>
+        <ScrollView style={{backgroundColor: '#fff'}}>
           <View
             style={{width: '100%', paddingHorizontal: 20, paddingVertical: 30}}>
             <View

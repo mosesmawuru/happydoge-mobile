@@ -180,7 +180,7 @@ const Stacking = ({navigation}) => {
             ) : (
               <></>
             )}
-            {stake.loading === 'false' && !stake.stakedata.length > 0 ? (
+            {stake.loading === false && !stake.stakedata.length > 0 ? (
               <View>
                 <Text style={styles.description}>
                   You Have No Staking Contract. Click On Stake More To Add A New

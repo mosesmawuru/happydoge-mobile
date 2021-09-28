@@ -1,12 +1,14 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import styled from 'styled-components/native';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: '#fff',
     width: width,
+    minHeight: height,
   },
   headText: {
     marginTop: 30,
