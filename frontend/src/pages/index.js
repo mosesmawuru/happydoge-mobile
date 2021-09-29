@@ -116,7 +116,7 @@ function Main({}) {
       />
       <Drawer.Screen
         name="profile"
-        options={{drawerLabel: 'My Profile'}}
+        options={{drawerLabel: 'Profile'}}
         component={Profile}
       />
 

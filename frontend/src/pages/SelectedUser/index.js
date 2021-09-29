@@ -41,7 +41,9 @@ const SelectedUser = ({navigation, route}) => {
       isMount = false;
     };
   }, [socket, price]);
-
+  const changeBlance = data => {
+    console.log(data);
+  };
   const SECTIONS = [
     {
       title: 'STAKING DETAILS',
@@ -464,8 +466,9 @@ const SelectedUser = ({navigation, route}) => {
                         const data = {
                           ID: route.params.item._id,
                           amount: countHDT,
+                          flag: 'hdt',
                         };
-                        console.log(data);
+                        changeBlance(data);
                       }}>
                       <CommonText color="white" fontSize="12px">
                         APPLY
@@ -534,8 +537,9 @@ const SelectedUser = ({navigation, route}) => {
                         const data = {
                           ID: route.params.item._id,
                           amount: countETH,
+                          flag: 'eth',
                         };
-                        console.log(data);
+                        changeBlance(data);
                       }}>
                       <CommonText color="white" fontSize="12px">
                         APPLY

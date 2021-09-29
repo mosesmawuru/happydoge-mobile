@@ -39,10 +39,9 @@ const Profile = ({navigation}) => {
   };
 
   const {color} = useTheme();
-  console.log(profile.profiledata);
   return (
     <>
-      <Header text="MY PROFILE" navigation={navigation} />
+      <Header text="PROFILE" navigation={navigation} />
       <ScrollView>
         <View style={styles.container}>
           <View>
@@ -54,13 +53,13 @@ const Profile = ({navigation}) => {
           </View>
           <View style={styles.wrapper}>
             <View>
-              <Text style={styles.txt}>Name</Text>
+              <Text style={styles.txt}>Username</Text>
               <Input
                 placeholder="Name"
                 value={profile.profiledata.name}
                 disabled
               />
-              <Text style={styles.txt}>Address</Text>
+              <Text style={styles.txt}>Eth Wallet Address</Text>
               <Input
                 placeholder="Address"
                 value={
@@ -86,26 +85,26 @@ const Profile = ({navigation}) => {
                 }
               />
 
-              <Text style={styles.txt}>Balance ETH</Text>
+              <Text style={styles.txt}>ETH Balance</Text>
               <Input
                 placeholder="INPUT WITH ERROR MESSAGE"
                 value={profile.profiledata.countETH + ' ' + 'ETH'}
                 disabled
               />
 
-              <Text style={styles.txt}>Balance HDT</Text>
+              <Text style={styles.txt}>HDT Balance</Text>
               <Input
                 placeholder="HDT"
                 value={profile.profiledata.countHDT + ' ' + 'HDT'}
                 disabled
               />
-              <Text style={styles.txt}>Balance USDT</Text>
+              <Text style={styles.txt}>USDT Balance</Text>
               <Input
                 placeholder="USDT"
                 value={profile.profiledata.countUSDT + ' ' + 'HDT'}
                 disabled
               />
-              <Text style={styles.txt}>My ReferralCode</Text>
+              <Text style={styles.txt}>My Referral Code</Text>
 
               <Input
                 placeholder="Referral Code"
@@ -124,7 +123,7 @@ const Profile = ({navigation}) => {
               />
               {store.user.referralcode ? (
                 <>
-                  <Text style={styles.txt}>Friend ReferralCode</Text>
+                  <Text style={styles.txt}>Sponsor’s Referral Code</Text>
 
                   <Input
                     placeholder="Referral Code"

@@ -4,7 +4,6 @@ import {Input} from 'react-native-elements';
 import {useSelector, useDispatch} from 'react-redux';
 import {ActivityIndicator} from 'react-native-paper';
 import {Picker} from '@react-native-community/picker';
-import {transfer} from '../../actions/transferAction';
 import {getUser} from '../../actions/profileAction';
 import {TransferModal} from '../../components/TransferModal';
 import Header from '../../components/Header';

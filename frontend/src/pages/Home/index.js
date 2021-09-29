@@ -66,36 +66,31 @@ const Home = ({navigation}) => {
               navigation.toggleDrawer();
             }}
           />
-          <View style={styles.iconDiv}>
-            <Icon
-              style={{paddingRight: 10}}
-              name="cog"
-              size={30}
-              color={'rgb(223,100,71)'}
-              onPress={() => {
-                navigation.goBack();
-              }}
-            />
-          </View>
         </View>
 
         <View style={styles.imgDiv}>
           <Image style={styles.img} source={animal} />
         </View>
         <View style={styles.curDiv}>
-          <Text style={styles.curMoney}>${money}</Text>
+          <Text style={styles.curMoney}>${money.toFixed(2)}</Text>
         </View>
         <View style={styles.rowDiv}>
           <Image style={styles.imgUnit} source={animal} />
-          <Text style={styles.tokenCount}>{profile.profiledata.countHDT}</Text>
+          <Text style={styles.tokenCount}>
+            {profile.profiledata.countHDT.toFixed(2)}
+          </Text>
         </View>
         <View style={styles.rowDiv}>
           <Image style={styles.imgUnit} source={ethImg} />
-          <Text style={styles.curMoney}>{profile.profiledata.countETH}</Text>
+          <Text style={styles.curMoney}>
+            {profile.profiledata.countETH.toFixed(2)}
+          </Text>
         </View>
         <View style={styles.rowDiv}>
           <Image style={styles.imgUnit} source={usdtImg} />
-          <Text style={styles.curMoney}>{profile.profiledata.countUSDT}</Text>
+          <Text style={styles.curMoney}>
+            {profile.profiledata.countUSDT.toFixed(2)}
+          </Text>
         </View>
         <View>
           <View style={styles.btnGroup}>
@@ -190,7 +185,7 @@ const Home = ({navigation}) => {
                             : ''
                           : ''}
                         {item.type === 4 ? '-' : ''}
-                        {item.amount}{' '}
+                        {item.amount.toFixed(2)}{' '}
                         {item.method === 'eth'
                           ? 'ETH'
                           : item.method === 'hdt'

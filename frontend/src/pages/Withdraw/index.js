@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, TouchableOpacity, Image, ScrollView} from 'react-native';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Header from '../../components/Header';
 import {withdraw} from '../../actions/withdrawAction';
 import {DepositModal} from '../../components/DepositModal';
@@ -78,32 +77,7 @@ const Withdraw = ({navigation}) => {
           <View>
             <Text style={styles.headText}>Withdraw</Text>
           </View>
-          <View style={styles.userDiv}>
-            <Text style={styles.txt}>Address</Text>
-            <Input
-              value={
-                profile.profiledata.address
-                  ? profile.profiledata.address.substring(0, 6) +
-                    '....' +
-                    profile.profiledata.address.substring(
-                      profile.profiledata.address.length - 6,
-                      profile.profiledata.address.length,
-                    )
-                  : ''
-              }
-              disabled
-              rightIcon={
-                <Icon
-                  name={isCopied ? 'check' : 'copy'}
-                  onPress={() => {
-                    copyToClipboard(profile.profiledata.address, 'address');
-                  }}
-                  size={24}
-                  color="gray"
-                />
-              }
-            />
-          </View>
+
           <View style={styles.crypto}>
             <Input
               value={profile.profiledata.countHDT.toString()}

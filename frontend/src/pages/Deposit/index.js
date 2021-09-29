@@ -220,7 +220,7 @@ const Deposit = ({navigation}) => {
         </View>
 
         <View style={styles.userDiv}>
-          <Text style={styles.txt}>Address</Text>
+          <Text style={styles.txt}>Wallet Address</Text>
           <Input
             value={
               profile.profiledata.address
@@ -247,7 +247,7 @@ const Deposit = ({navigation}) => {
               />
             }
           />
-          <Text style={styles.txt}>My Ethereum Balance of wallet</Text>
+          <Text style={styles.txt}>Wallet Balance</Text>
           <Input
             value={myBalance.toString()}
             disabled

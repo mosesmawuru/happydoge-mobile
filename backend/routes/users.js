@@ -168,4 +168,22 @@ router.get(
       });
   }
 );
+
+// @route   POST users/setbalance
+// @desc    SET balance
+// @access  Private
+router.post(
+  "/setbalance",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { id, amount } = req.body;
+    User.findByIdAndUpdate(id, { $set: { countETH: amount } }, { new: true })
+      .then((item) => {
+        return res.status(200).json({ msg: "success" });
+      })
+      .catch((err) => {
+        return res.status(400).json({ errors: err });
+      });
+  }
+);
 module.exports = router;
