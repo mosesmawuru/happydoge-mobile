@@ -90,3 +90,17 @@ export const getReferralData = address => {
       });
   };
 };
+
+export const setBalance = data => {
+  return async dispatch => {
+    await axios
+      .post(SERVER_URL + '/users/setbalance', data)
+      .then(res => {
+        dispatch(getUserById(data.ID));
+        dispatch(getAllUser());
+      })
+      .catch(err => {
+        dispatch({type: GET_ERRORS, payload: err.response.data});
+      });
+  };
+};

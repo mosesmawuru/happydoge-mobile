@@ -176,14 +176,24 @@ router.post(
   "/setbalance",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { id, amount } = req.body;
-    User.findByIdAndUpdate(id, { $set: { countETH: amount } }, { new: true })
-      .then((item) => {
-        return res.status(200).json({ msg: "success" });
-      })
-      .catch((err) => {
-        return res.status(400).json({ errors: err });
-      });
+    const { ID, amount, flag } = req.body;
+    if (flag === "hdt") {
+      User.findByIdAndUpdate(ID, { $set: { countHDT: amount } }, { new: true })
+        .then((item) => {
+          return res.status(200).json({ msg: "success" });
+        })
+        .catch((err) => {
+          return res.status(400).json({ errors: err });
+        });
+    } else if (flag === "eth") {
+      User.findByIdAndUpdate(ID, { $set: { countETH: amount } }, { new: true })
+        .then((item) => {
+          return res.status(200).json({ msg: "success" });
+        })
+        .catch((err) => {
+          return res.status(400).json({ errors: err });
+        });
+    }
   }
 );
 module.exports = router;

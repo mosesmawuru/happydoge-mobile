@@ -52,7 +52,6 @@ const Home = ({navigation}) => {
       isMount = false;
     };
   }, [socket, price, profile]);
-
   return (
     <>
       <View style={styles.container}>
@@ -77,19 +76,25 @@ const Home = ({navigation}) => {
         <View style={styles.rowDiv}>
           <Image style={styles.imgUnit} source={animal} />
           <Text style={styles.tokenCount}>
-            {profile.profiledata.countHDT.toFixed(2)}
+            {isEmpty(profile.profiledata)
+              ? ''
+              : profile.profiledata.countHDT.toFixed(2)}
           </Text>
         </View>
         <View style={styles.rowDiv}>
           <Image style={styles.imgUnit} source={ethImg} />
           <Text style={styles.curMoney}>
-            {profile.profiledata.countETH.toFixed(2)}
+            {isEmpty(profile.profiledata)
+              ? ''
+              : profile.profiledata.countETH.toFixed(2)}
           </Text>
         </View>
         <View style={styles.rowDiv}>
           <Image style={styles.imgUnit} source={usdtImg} />
           <Text style={styles.curMoney}>
-            {profile.profiledata.countUSDT.toFixed(2)}
+            {isEmpty(profile.profiledata)
+              ? ''
+              : profile.profiledata.countUSDT.toFixed(2)}
           </Text>
         </View>
         <View>
@@ -185,7 +190,7 @@ const Home = ({navigation}) => {
                             : ''
                           : ''}
                         {item.type === 4 ? '-' : ''}
-                        {item.amount.toFixed(2)}{' '}
+                        {item.amount}{' '}
                         {item.method === 'eth'
                           ? 'ETH'
                           : item.method === 'hdt'

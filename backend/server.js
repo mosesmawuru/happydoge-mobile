@@ -55,14 +55,15 @@ if (process.env.NODE_ENV === "production") {
 }
 const doEveryMinute = async (socket) => {
   const today = new Date();
-  console.log(today);
-  await cron.schedule("00 00 */1 * * * *", async () => {
-    // await cron.schedule("*/10 * * * * *", async () => {
+
+  // await cron.schedule("00 00 */1 * * * *", async () => {
+  await cron.schedule("* * * * *", async () => {
     const currentHour = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate(),
-      today.getHours()
+      today.getHours(),
+      today.getMinutes()
     );
     const hdtitem = await Exchange.findOne({});
     await Staking.find({ flag: true })
@@ -93,80 +94,65 @@ const doEveryMinute = async (socket) => {
                   (((item.stack_amount * hdtitem.stack_rate) / 100) *
                     Math.abs(new Date(currentHour) - new Date(item.date))) /
                     36e5;
-                userdata
-                  .save()
-                  .then((item) => {
-                    // console.log(item);
-                  })
-                  .catch((err) => {
-                    console.log(error);
-                  });
 
-                item
-                  .save()
-                  .then((item) => {
-                    const data = {
-                      id: item.user,
-                      message: "Staking is completed",
-                      amount: item.earned_amount,
-                    };
-                    socket.emit("staking", data);
-                  })
-                  .catch((err) => {
-                    socket.emit("stake_error", err);
-                  });
+                const saveUser = await userdata.save();
+                const itemUser = await item.save();
+                if (saveUser && itemUser) {
+                  const data = {
+                    id: itemUser.user,
+                    message: "Staking is completed",
+                    amount: itemUser.earned_amount,
+                  };
+                  socket.emit("staking", data);
+                }
               }
             } else if (item.end_date > currentHour) {
-              if (isEmpty(hdtitem.stack_rate)) {
-                return res.status(400).send({
-                  error: "Stake rate is not setted",
-                });
-              } else {
-                const userdata = await User.findById(item.user);
-                userdata.countHDT =
-                  userdata.countHDT +
-                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
-                    Math.abs(
-                      new Date(currentHour) - new Date(item.currentDate)
-                    )) /
-                    36e5;
-
-                item.earned_amount =
-                  item.earned_amount +
-                  (((item.stack_amount * hdtitem.stack_rate) / 100) *
-                    Math.abs(
-                      new Date(currentHour) - new Date(item.currentDate)
-                    )) /
-                    36e5;
-
-                item.currentDate = currentHour;
-
-                userdata
-                  .save()
-                  .then((item) => {
-                    // console.log(item);
-                  })
-                  .catch((err) => {
-                    console.log(err);
+              var seconds =
+                Math.floor(new Date(currentHour) - new Date(item.currentDate)) /
+                1000;
+              var minutes = Math.floor(seconds / 60);
+              var hours = Math.floor(minutes / 60);
+              if (hours === 1) {
+                if (isEmpty(hdtitem.stack_rate)) {
+                  return res.status(400).send({
+                    error: "Stake rate is not setted",
                   });
-                item
-                  .save()
-                  .then((item) => {
+                } else {
+                  const userdata = await User.findById(item.user);
+                  userdata.countHDT =
+                    userdata.countHDT +
+                    (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                      Math.abs(
+                        new Date(currentHour) - new Date(item.currentDate)
+                      )) /
+                      36e5;
+
+                  item.earned_amount =
+                    item.earned_amount +
+                    (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                      Math.abs(
+                        new Date(currentHour) - new Date(item.currentDate)
+                      )) /
+                      36e5;
+
+                  item.currentDate = currentHour;
+                  const saveUser = await userdata.save();
+                  const itemUser = await item.save();
+                  if (saveUser && itemUser) {
                     const data = {
-                      id: item.user,
+                      id: itemUser.user,
                       message: "Hourly stake is completed",
                       amount:
-                        (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                        (((itemUser.stack_amount * hdtitem.stack_rate) / 100) *
                           Math.abs(
-                            new Date(currentHour) - new Date(item.currentDate)
+                            new Date(currentHour) -
+                              new Date(itemUser.currentDate)
                           )) /
                         36e5,
                     };
                     socket.emit("hourly_stake", data);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+                  }
+                }
               }
             } else if (item.end_date < currentHour) {
               if (isEmpty(hdtitem.stack_rate)) {
@@ -181,60 +167,33 @@ const doEveryMinute = async (socket) => {
                   (((item.stack_amount * hdtitem.stack_rate) / 100) *
                     Math.abs(new Date(item.end_date) - new Date(item.date))) /
                     36e5;
-
                 item.flag = false;
                 item.earned_amount =
                   item.earned_amount +
                   (((item.stack_amount * hdtitem.stack_rate) / 100) *
                     Math.abs(new Date(item.end_date) - new Date(item.date))) /
                     36e5;
-                userdata
-                  .save()
-                  .then((item) => {
-                    // console.log(item);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
-                item
-                  .save()
-                  .then((item) => {
-                    const data = {
-                      id: item.user,
-                      message: "Staking is completed",
-                      amount: item.earned_amount,
-                    };
-                    socket.emit("complete_stake", data);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+
+                const saveUser = await userdata.save();
+                const itemUser = await item.save();
+                if (saveUser && itemUser) {
+                  const data = {
+                    id: itemUser.user,
+                    message: "Staking is completed",
+                    amount: itemUser.earned_amount,
+                  };
+                  socket.emit("complete_stake", data);
+                }
               }
             }
           });
         } else {
         }
-        // const item = { data: "adadsfdsf" };
-        // socket.emit("cron", item);
       })
       .cache((err) => {
         console.log(err);
       });
   });
-  // cron.schedule("00 00 */1 * * * *", async () => {
-  // cron.schedule("*/10 * * * * *", async () => {
-
-  //   const today = new Date();
-  //   console.log("adsfsadf");
-  //   Staking.find({ endTime: currntHour })
-  //     .then((item) => {
-  //       console.log(item);
-  //       socket.emit("cron", item);
-  //     })
-  //     .cache((err) => {
-  //       console.log(err);
-  //     });
-  // });
 };
 // SOCKET
 const http = require("http");

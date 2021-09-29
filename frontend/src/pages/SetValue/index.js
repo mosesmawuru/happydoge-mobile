@@ -407,7 +407,7 @@ const SetValue = ({navigation}) => {
                 </FlexLayout>
               </View>
             </View>
-            <View style={{paddingBottom: 30}}>
+            <View style={{paddingTop: 30}}>
               <View
                 style={{
                   flexDirection: 'row',

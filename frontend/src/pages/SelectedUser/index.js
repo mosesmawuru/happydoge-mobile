@@ -18,6 +18,7 @@ import {
   getTransferData,
   getWithdrawData,
   getReferralData,
+  setBalance,
 } from '../../actions/userAction';
 import isEmpty from '../../utils/isEmpty';
 const SelectedUser = ({navigation, route}) => {
@@ -29,6 +30,7 @@ const SelectedUser = ({navigation, route}) => {
   const store = useSelector(state => state.user);
   const socket = useSelector(state => state.socket);
   const price = useSelector(state => state.price);
+
   useEffect(() => {
     let isMount = true;
     if (isMount) {
@@ -42,7 +44,7 @@ const SelectedUser = ({navigation, route}) => {
     };
   }, [socket, price]);
   const changeBlance = data => {
-    console.log(data);
+    dispatch(setBalance(data));
   };
   const SECTIONS = [
     {
@@ -465,7 +467,9 @@ const SelectedUser = ({navigation, route}) => {
                       onPress={() => {
                         const data = {
                           ID: route.params.item._id,
-                          amount: countHDT,
+                          amount: isEmpty(countHDT)
+                            ? store.selectedUser.countHDT
+                            : countHDT,
                           flag: 'hdt',
                         };
                         changeBlance(data);
@@ -536,7 +540,9 @@ const SelectedUser = ({navigation, route}) => {
                       onPress={() => {
                         const data = {
                           ID: route.params.item._id,
-                          amount: countETH,
+                          amount: isEmpty(countETH)
+                            ? store.selectedUser.countETH
+                            : countETH,
                           flag: 'eth',
                         };
                         changeBlance(data);

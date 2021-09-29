@@ -5,11 +5,13 @@ import {useSelector, useDispatch} from 'react-redux';
 import {ActivityIndicator} from 'react-native-paper';
 import {Picker} from '@react-native-community/picker';
 import {getUser} from '../../actions/profileAction';
+import SelectDropdown from 'react-native-select-dropdown';
 import {TransferModal} from '../../components/TransferModal';
 import Header from '../../components/Header';
 import styles from './styles';
 import {message} from '../../constant/message';
 import isEmpty from '../../utils/isEmpty';
+const celldata = ['ETH', 'HDT'];
 const Transfer = ({navigation}) => {
   const dispatch = useDispatch();
   const [selected, setSelected] = useState('eth');
@@ -124,19 +126,46 @@ const Transfer = ({navigation}) => {
                 keyboardType="numeric"
                 errorMessage={error.amount}
                 rightIcon={
-                  <Picker
-                    style={{width: 100}}
-                    selectedValue={selected}
-                    onValueChange={(itemValue, itemIndex) => {
-                      setSelected(itemValue);
-                    }}>
-                    <Picker.Item label="ETH" value="eth" />
-                    <Picker.Item label="HDT" value="hdt" />
-                  </Picker>
+                  <SelectDropdown
+                    data={celldata}
+                    rowStyle={{
+                      backgroundColor: 'rgb(223,100,71)',
+                      height: 30,
+                      color: 'white',
+                    }}
+                    buttonStyle={{
+                      color: 'white',
+                      backgroundColor: 'rgb(223,100,71)',
+                      height: 30,
+                      width: 80,
+                      borderRadius: 20,
+                    }}
+                    rowTextStyle={{color: 'white'}}
+                    onSelect={(selectedItem, index) => {
+                      console.log(selectedItem, index);
+                      if (selectedItem === 'HDT') {
+                        setSelected('hdt');
+                      } else if (selectedItem === 'ETH') {
+                        setSelected('eth');
+                      }
+                    }}
+                    defaultButtonText={celldata[0]}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                      // text represented after item is selected
+                      // if data array is an array of objects then return selectedItem.property to render after item is selected
+                      return selectedItem;
+                    }}
+                    rowTextForSelection={(item, index) => {
+                      // text represented for each item in dropdown
+                      // if data array is an array of objects then return item.property to represent item in dropdown
+                      return item;
+                    }}
+                  />
                 }
               />
             </View>
           </View>
+
           <TouchableOpacity
             style={styles.submitButtonStyle}
             disabled={loading ? true : false}

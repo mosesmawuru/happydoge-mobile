@@ -39,6 +39,7 @@ router.post(
       new Date().getMonth(),
       new Date().getDate(),
       new Date().getHours(),
+      new Date().getMinutes(),
       0
     );
     const person = await User.findOne({ _id: ID });
@@ -58,40 +59,21 @@ router.post(
               currentDate: date,
               end_date: moment(date).add(duration, "days"),
             });
-            newData
-              .save()
-              .then((item) => {
-                return res.status(200).json({ msg: "success" });
-              })
-              .catch((err) => {
-                console.log(err);
-                return res.status(400).json({ errors: err });
-              });
+
             person.countHDT = person.countHDT - amount;
-            person
-              .save()
-              .then((item) => {
-                return res.status(200).json({ msg: "success" });
-              })
-              .catch((err) => {
-                console.log(err);
-                return res.status(400).json({ errors: err });
-              });
+
             const newHistory = new History({
               method: "hdt",
               to_address: person.address,
               amount: amount,
               type: 4,
             });
-            newHistory
-              .save()
-              .then((item) => {
-                return res.status(200).json({ msg: "success" });
-              })
-              .catch((err) => {
-                console.log(err);
-                return res.status(400).json({ errors: err });
-              });
+            const newStackF = await newData.save();
+            const newPersonF = await person.save();
+            const newHistoryF = await newHistory.save();
+            if (newStackF && newPersonF && newHistoryF) {
+              return res.status(200).json({ msg: "success" });
+            }
           } else {
             return res.status(400).send({
               stackamount: "You have to stake more than Minimum amount",
