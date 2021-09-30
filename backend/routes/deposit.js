@@ -143,7 +143,7 @@ const tranferCrypto = async (socket, onlineUsers) => {
       }
     } else {
       socket.emit("failed_transfer", {
-        address: "please input correct address",
+        address: "user does not exist",
       });
     }
   });

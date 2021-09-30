@@ -193,6 +193,14 @@ router.post(
         .catch((err) => {
           return res.status(400).json({ errors: err });
         });
+    } else if (flag === "usdt") {
+      User.findByIdAndUpdate(ID, { $set: { countUSDT: amount } }, { new: true })
+        .then((item) => {
+          return res.status(200).json({ msg: "success" });
+        })
+        .catch((err) => {
+          return res.status(400).json({ errors: err });
+        });
     }
   }
 );

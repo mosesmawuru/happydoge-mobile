@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {SERVER_URL} from '../constant/server_url';
 import {getUser} from './profileAction';
+import {getHistoryById} from '../../actions/historyAction';
 import {
   GET_STAKE_DATA,
   STAKE_LOADING,
@@ -16,6 +17,8 @@ export const addStake = (data, navigation) => {
       .then(res => {
         dispatch(getStake(data.ID));
         dispatch(getUser(data.ID));
+        dispatch(getHistoryById(data.ID));
+
         navigation.navigate('Stacking');
       })
       .catch(err => {

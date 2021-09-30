@@ -66,18 +66,6 @@ const Signup = ({navigation}) => {
             multiline={true}
           />
 
-          {/* <Input
-            value={address}
-            placeholder="Ethererum Address"
-            onChangeText={message => {
-              setAddress(message);
-            }}
-            textAlign={'center'}
-            multiline={true}
-            errorStyle={{color: 'red'}}
-            errorMessage={errors.address}
-          /> */}
-
           <Input
             value={referralcode}
             placeholder="Referral Code"
@@ -97,6 +85,14 @@ const Signup = ({navigation}) => {
           }}>
           <Text style={styles.TextStyle}>Sign Up</Text>
         </TouchableOpacity>
+        <View style={styles.footertext}>
+          <Text>Already Have an Account?</Text>
+          <Text
+            style={styles.signDiv}
+            onPress={() => navigation.navigate('Login')}>
+            Sign In
+          </Text>
+        </View>
       </View>
     </ScrollView>
   );

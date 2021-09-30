@@ -13,8 +13,9 @@ const styles = StyleSheet.create({
     borderColor: 'rgb(102,59,8)',
   },
   img: {
-    width: 70,
-    height: 70,
+    width: 50,
+    height: 50,
+    borderWidth:1
   },
   curDiv: {
     marginTop: 20,

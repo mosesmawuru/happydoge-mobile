@@ -35,7 +35,7 @@ const App = () => {
         if (store.user.id === item.id) {
           dispatch(getUser(store.user.id));
           const message = `Houlry is staked`;
-          const title = 'Complete Hourly Staking';
+          const title = `Complete Hourly Staking. You got ${item.amount} HDT`;
           service.localNotif(message, title);
         }
       });
@@ -43,7 +43,7 @@ const App = () => {
         if (store.user.id === item.id) {
           dispatch(getUser(store.user.id));
           const message = `Staking is completed`;
-          const title = 'Complete Staking';
+          const title = `Complete Staking. You earned ${item.earned_amount} HDT`;
           service.localNotif(message, title);
         }
       });

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     width: width * 0.7,
   },
   footertext: {
-    marginTop: 60,
+    marginVertical: 20,
     flexDirection: 'row',
   },
   submitButtonStyle: {
@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff',
-    marginBottom: 20,
   },
   TextStyle: {
     color: 'white',

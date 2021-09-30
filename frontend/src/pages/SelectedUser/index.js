@@ -25,6 +25,7 @@ const SelectedUser = ({navigation, route}) => {
   const dispatch = useDispatch();
   const [countHDT, setCountHDT] = useState();
   const [countETH, setCountETH] = useState();
+  const [countUSDT, setCountUSDT] = useState();
   const [ethprice, setEthprice] = useState(0);
   const [activeSections, setActiveSections] = useState([]);
   const store = useSelector(state => state.user);
@@ -356,6 +357,26 @@ const SelectedUser = ({navigation, route}) => {
               }}>
               <View>
                 <CommonText color="rgb(223, 100, 71)" fontSize="15px">
+                  Username
+                </CommonText>
+              </View>
+              <View
+                style={{
+                  width: '50%',
+                }}>
+                <CommonText color="rgb(223, 100, 71)" fontSize="14px">
+                  {store.selectedUser.name}
+                </CommonText>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 10,
+              }}>
+              <View>
+                <CommonText color="rgb(223, 100, 71)" fontSize="15px">
                   PASSWORD
                 </CommonText>
               </View>
@@ -544,6 +565,79 @@ const SelectedUser = ({navigation, route}) => {
                             ? store.selectedUser.countETH
                             : countETH,
                           flag: 'eth',
+                        };
+                        changeBlance(data);
+                      }}>
+                      <CommonText color="white" fontSize="12px">
+                        APPLY
+                      </CommonText>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+              <View style={{marginTop: 10}}>
+                <View
+                  style={{backgroundColor: 'rgb(223, 100, 71)', padding: 10}}>
+                  <CommonText>USDT BALANCE</CommonText>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: 'rgb(248,227,224)',
+                  }}>
+                  <View style={{padding: 15}}>
+                    <View
+                      style={{
+                        borderWidth: 3,
+                        borderColor: 'rgb(223, 100, 71)',
+                      }}>
+                      <TextInput
+                        keyboardType="numeric"
+                        style={{padding: 4, fontWeight: 'bold'}}
+                        onChangeText={msg => {
+                          setCountUSDT(msg);
+                        }}>
+                        {store.selectedUser.countUSDT}
+                      </TextInput>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginHorizontal: 10,
+                      marginBottom: 10,
+                    }}>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      style={{
+                        paddingVertical: 3,
+                        backgroundColor: 'rgb(223,100,71)',
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        width: 60,
+                        borderColor: '#fff',
+                      }}>
+                      <CommonText color="white" fontSize="12px">
+                        EDIT
+                      </CommonText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      style={{
+                        paddingVertical: 3,
+                        backgroundColor: 'rgb(223,100,71)',
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        width: 60,
+                        borderColor: '#fff',
+                      }}
+                      onPress={() => {
+                        const data = {
+                          ID: route.params.item._id,
+                          amount: isEmpty(countUSDT)
+                            ? store.selectedUser.countUSDT
+                            : countUSDT,
+                          flag: 'usdt',
                         };
                         changeBlance(data);
                       }}>

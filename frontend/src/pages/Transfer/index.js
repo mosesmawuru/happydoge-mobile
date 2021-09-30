@@ -104,7 +104,13 @@ const Transfer = ({navigation}) => {
             <View>
               <Text style={styles.labelText}>To</Text>
               <Input
-                value={address}
+                value={
+                  address
+                    ? address.substring(0, 6) +
+                      '....' +
+                      address.substring(address.length - 6, address.length)
+                    : ''
+                }
                 placeholder="Please input address"
                 onChangeText={message => {
                   setAddress(message);
@@ -129,20 +135,19 @@ const Transfer = ({navigation}) => {
                   <SelectDropdown
                     data={celldata}
                     rowStyle={{
-                      backgroundColor: 'rgb(223,100,71)',
                       height: 30,
                       color: 'white',
                     }}
                     buttonStyle={{
                       color: 'white',
-                      backgroundColor: 'rgb(223,100,71)',
+                      backgroundColor: 'white',
+                      borderWidth: 1,
+                      borderRadius: 8,
                       height: 30,
                       width: 80,
-                      borderRadius: 20,
                     }}
-                    rowTextStyle={{color: 'white'}}
+                    rowTextStyle={{color: 'black'}}
                     onSelect={(selectedItem, index) => {
-                      console.log(selectedItem, index);
                       if (selectedItem === 'HDT') {
                         setSelected('hdt');
                       } else if (selectedItem === 'ETH') {

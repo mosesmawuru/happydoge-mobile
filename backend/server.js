@@ -54,10 +54,10 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 const doEveryMinute = async (socket) => {
-  const today = new Date();
-
   // await cron.schedule("00 00 */1 * * * *", async () => {
   await cron.schedule("* * * * *", async () => {
+    const today = new Date();
+
     const currentHour = new Date(
       today.getFullYear(),
       today.getMonth(),
@@ -126,7 +126,12 @@ const doEveryMinute = async (socket) => {
                         new Date(currentHour) - new Date(item.currentDate)
                       )) /
                       36e5;
-
+                  const staked_amount =
+                    (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                      Math.abs(
+                        new Date(currentHour) - new Date(item.currentDate)
+                      )) /
+                    36e5;
                   item.earned_amount =
                     item.earned_amount +
                     (((item.stack_amount * hdtitem.stack_rate) / 100) *
@@ -142,13 +147,7 @@ const doEveryMinute = async (socket) => {
                     const data = {
                       id: itemUser.user,
                       message: "Hourly stake is completed",
-                      amount:
-                        (((itemUser.stack_amount * hdtitem.stack_rate) / 100) *
-                          Math.abs(
-                            new Date(currentHour) -
-                              new Date(itemUser.currentDate)
-                          )) /
-                        36e5,
+                      amount: staked_amount,
                     };
                     socket.emit("hourly_stake", data);
                   }
