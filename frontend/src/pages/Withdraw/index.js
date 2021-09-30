@@ -6,13 +6,16 @@ import {Picker} from '@react-native-community/picker';
 import Header from '../../components/Header';
 import {withdraw} from '../../actions/withdrawAction';
 import {DepositModal} from '../../components/DepositModal';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {message} from '../../constant/message';
-import Clipboard from '@react-native-clipboard/clipboard';
+import SelectDropdown from 'react-native-select-dropdown';
 import {useIsFocused} from '@react-navigation/native';
 import animal from '../../assets/img/animal.png';
 import ethImg from '../../assets/img/eth.png';
 import usdtImg from '../../assets/img/usdt.png';
 import styles from './styles';
+
+const celldata = ['ETH', 'HDT', 'USDT'];
 const Withdraw = ({navigation, props}) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -22,15 +25,8 @@ const Withdraw = ({navigation, props}) => {
   const [modalData, setModalData] = useState('');
   const [selected, setSelected] = useState('eth');
   const [address, setAddress] = useState('');
-  const [isCopied, setIsCopied] = useState(false);
   const profile = useSelector(state => state.profile);
   const errors = useSelector(state => state.errors);
-  const onCopyText = flag => {
-    setIsCopied(true);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 1000);
-  };
 
   const onSubmit = async () => {
     if (isNaN(amount)) {
@@ -93,7 +89,13 @@ const Withdraw = ({navigation, props}) => {
               leftIcon={<Image style={styles.imgUnit} source={usdtImg} />}
             />
             <Input
-              value={address}
+              value={
+                address
+                  ? address.substring(0, 6) +
+                    '....' +
+                    address.substring(address.length - 6, address.length)
+                  : ''
+              }
               placeholder="Please input address."
               onChangeText={text => {
                 setAddress(text);
@@ -110,16 +112,53 @@ const Withdraw = ({navigation, props}) => {
               keyboardType="numeric"
               errorMessage={error.amount}
               rightIcon={
-                <Picker
-                  style={{width: 110}}
-                  selectedValue={selected}
-                  onValueChange={(itemValue, itemIndex) => {
-                    setSelected(itemValue);
-                  }}>
-                  <Picker.Item label="ETH" value="eth" />
-                  <Picker.Item label="HDT" value="hdt" />
-                  <Picker.Item label="USDT" value="usdt" />
-                </Picker>
+                <SelectDropdown
+                  data={celldata}
+                  rowStyle={{
+                    height: 40,
+                    color: 'white',
+                  }}
+                  renderDropdownIcon={() => {
+                    return (
+                      <FontAwesome
+                        name="chevron-down"
+                        color={'#444'}
+                        size={18}
+                      />
+                    );
+                  }}
+                  buttonStyle={{
+                    color: 'white',
+                    backgroundColor: 'white',
+                    textAlign: 'left',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    height: 40,
+                    width: 90,
+                  }}
+                  rowTextStyle={{color: 'black'}}
+                  onSelect={(selectedItem, index) => {
+                    if (selectedItem === 'HDT') {
+                      setSelected('hdt');
+                    } else if (selectedItem === 'ETH') {
+                      setSelected('eth');
+                    } else if (selectedItem === 'USDT') {
+                      setSelected('usdt');
+                    }
+                  }}
+                  defaultButtonText={celldata[0]}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem;
+                  }}
+                  dropdownIconPosition="right"
+                  rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item;
+                  }}
+                />
               }
             />
           </View>

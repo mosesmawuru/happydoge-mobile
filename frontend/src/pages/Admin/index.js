@@ -10,32 +10,8 @@ const index = ({navigation}) => {
   return (
     <>
       <Header text="USER SELECT" navigation={navigation} />
-      {/* <Tab
-        value={selectedIndex}
-        onChange={e => {
-          setSelectedIndex(e);
-        }}>
-        <Tab.Item title="SET VALUE" />
-        <Tab.Item title="USERS" />
-        <Tab.Item title="WITHDRAW" />
-      </Tab> */}
 
-      {/* <TabView
-        value={selectedIndex}
-        onChange={e => {
-          setSelectedIndex(e);
-        }}>
-        <TabView.Item style={{width: '100%'}}> */}
-      {/* <SetValue /> */}
       <UserProfile />
-      {/* </TabView.Item>
-        <TabView.Item style={{width: '100%'}}>
-          <UserList />
-        </TabView.Item>
-        <TabView.Item style={{width: '100%'}}>
-          <UserProfile />
-        </TabView.Item>
-      </TabView> */}
     </>
   );
 };

@@ -6,11 +6,13 @@ import {ActivityIndicator} from 'react-native-paper';
 import {useIsFocused} from '@react-navigation/native';
 import {getUser} from '../../actions/profileAction';
 import SelectDropdown from 'react-native-select-dropdown';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {TransferModal} from '../../components/TransferModal';
 import Header from '../../components/Header';
 import styles from './styles';
 import {message} from '../../constant/message';
 import isEmpty from '../../utils/isEmpty';
+
 const celldata = ['ETH', 'HDT'];
 const Transfer = ({navigation, props}) => {
   const isFocused = useIsFocused();
@@ -142,16 +144,26 @@ const Transfer = ({navigation, props}) => {
                   <SelectDropdown
                     data={celldata}
                     rowStyle={{
-                      height: 30,
+                      height: 40,
                       color: 'white',
+                    }}
+                    renderDropdownIcon={() => {
+                      return (
+                        <FontAwesome
+                          name="chevron-down"
+                          color={'#444'}
+                          size={18}
+                        />
+                      );
                     }}
                     buttonStyle={{
                       color: 'white',
                       backgroundColor: 'white',
+                      textAlign: 'left',
                       borderWidth: 1,
-                      borderRadius: 8,
-                      height: 30,
-                      width: 80,
+                      borderRadius: 5,
+                      height: 40,
+                      width: 90,
                     }}
                     rowTextStyle={{color: 'black'}}
                     onSelect={(selectedItem, index) => {
@@ -167,6 +179,7 @@ const Transfer = ({navigation, props}) => {
                       // if data array is an array of objects then return selectedItem.property to render after item is selected
                       return selectedItem;
                     }}
+                    dropdownIconPosition="right"
                     rowTextForSelection={(item, index) => {
                       // text represented for each item in dropdown
                       // if data array is an array of objects then return item.property to represent item in dropdown

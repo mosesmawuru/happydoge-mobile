@@ -38,17 +38,11 @@ const UserSelect = ({navigation, props}) => {
                 alignItems: 'center',
                 paddingVertical: 10,
               }}>
-              <Col size={2.4}>
+              <Col size={1}>
+                <CommonText fontSize="15px">USERNAME</CommonText>
+              </Col>
+              <Col size={3}>
                 <CommonText fontSize="15px">USER ETH ADDRESS</CommonText>
-              </Col>
-              <Col size={1.2}>
-                <CommonText fontSize="15px">HDT</CommonText>
-              </Col>
-              <Col size={1}>
-                <CommonText fontSize="15px">ETH</CommonText>
-              </Col>
-              <Col size={1}>
-                <CommonText fontSize="15px">USDT</CommonText>
               </Col>
             </Row>
             {store.loading ? (
@@ -73,7 +67,20 @@ const UserSelect = ({navigation, props}) => {
                         backgroundColor: 'white',
                         paddingHorizontal: 5,
                       }}>
-                      <Col size={2.4}>
+                      <Col size={1}>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            fontWeight: '100',
+                            textAlign: 'center',
+                            paddingVertical: 5,
+                            color: 'rgb(120,121,133)',
+                            fontWeight: '800',
+                          }}>
+                          {item.name}
+                        </Text>
+                      </Col>
+                      <Col size={3}>
                         <Text
                           style={{
                             fontSize: 12,
@@ -85,43 +92,6 @@ const UserSelect = ({navigation, props}) => {
                           }}>
                           {item.address}
                         </Text>
-                      </Col>
-                      <Col
-                        size={1.2}
-                        style={{
-                          paddingVertical: 5,
-                        }}>
-                        <CommonText
-                          color="rgb(223,100,71)"
-                          fontSize="12px"
-                          fontWeight="bold"
-                          textAlign="center">
-                          {item.countHDT}
-                        </CommonText>
-                      </Col>
-                      <Col
-                        size={1.2}
-                        style={{
-                          paddingVertical: 5,
-                        }}>
-                        <CommonText
-                          color="rgb(223,100,71)"
-                          fontSize="12px"
-                          fontWeight="bold">
-                          {item.countETH}
-                        </CommonText>
-                      </Col>
-                      <Col
-                        size={1.2}
-                        style={{
-                          paddingVertical: 5,
-                        }}>
-                        <CommonText
-                          color="rgb(223,100,71)"
-                          fontSize="12px"
-                          fontWeight="bold">
-                          {item.countUSDT}
-                        </CommonText>
                       </Col>
                     </Row>
                   </TouchableOpacity>
