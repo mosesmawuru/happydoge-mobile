@@ -4,6 +4,7 @@ import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {ActivityIndicator, Colors} from 'react-native-paper';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useIsFocused} from '@react-navigation/native';
 import {getUser} from '../../actions/profileAction';
 import {getPrice} from '../../actions/exchangeAction';
 import {getHistoryById} from '../../actions/historyAction';
@@ -13,8 +14,9 @@ import usdtImg from '../../assets/img/usdt.png';
 import {mainText, subText} from '../../constant/history';
 import isEmpty from '../../utils/isEmpty';
 
-const Home = ({navigation}) => {
+const Home = ({navigation, props}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [money, setMoney] = useState(0);
   const price = useSelector(state => state.price);
   const store = useSelector(state => state.auth);
@@ -31,7 +33,7 @@ const Home = ({navigation}) => {
     return () => {
       isMount = false;
     };
-  }, []);
+  }, [isFocused, props]);
   useEffect(() => {
     let isMount = true;
     if (isMount) {
@@ -51,7 +53,7 @@ const Home = ({navigation}) => {
     return () => {
       isMount = false;
     };
-  }, [socket, price, profile]);
+  }, [socket, price, profile, isFocused, props]);
   return (
     <>
       <View style={styles.container}>

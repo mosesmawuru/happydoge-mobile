@@ -5,8 +5,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import styles from './styles';
 import {userRegister, clearErrors} from '../../actions/authAction';
 import animal from '../../assets/img/animal.png';
-
-const Signup = ({navigation}) => {
+import {useIsFocused} from '@react-navigation/native';
+const Signup = ({navigation, props}) => {
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +27,7 @@ const Signup = ({navigation}) => {
     return () => {
       isMount = false;
     };
-  }, []);
+  }, [isFocused, props]);
   const selection = {
     start: 0,
     end: 0,

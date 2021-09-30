@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {Text, View, TouchableOpacity} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 import {ActivityIndicator} from 'react-native-paper';
 import {Input} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
@@ -14,7 +15,8 @@ import {BigNumber, ethers} from 'ethers';
 import {hdtABI, usdtABI} from '../../constant/ABI';
 const Tx = require('ethereumjs-tx').Transaction;
 import styles from './styles';
-const Deposit = ({navigation}) => {
+const Deposit = ({navigation, props}) => {
+  const isFocused = useIsFocused();
   const hdtContractAddress = '0x08895697055b82890a312dfc9f52df907d8fd001';
   const usdtContractAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
   const [amount, setAmount] = useState(0);
@@ -46,24 +48,27 @@ const Deposit = ({navigation}) => {
     if (Number(myBalance) === 0) {
       setError({amount: 'Please input correct balance'});
     } else {
-      setLoading(true);
+      // setLoading(true);
       if (selected === 'eth') {
         const adminaddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
         var count = await web3.web3.eth.getTransactionCount(
           profile.profiledata.address,
         );
         var gasPrice = await web3.web3.eth.getGasPrice();
-        var gasLimit1 = await web3.web3.eth.getBlock('latest', false);
-        // var gasLimit = 3000000;
+
+        const transactionObject = {
+          from: profile.profiledata.address,
+        };
+
+        var estimatedGas = await web3.web3.eth.estimateGas(transactionObject);
+
         var rawTransaction = {
           from: profile.profiledata.address,
           nonce: web3.web3.utils.toHex(count),
           gasPrice: web3.web3.utils.toHex(gasPrice),
-          gasLimit: web3.web3.utils.toHex(gasLimit1.gasLimit),
+          gasLimit: web3.web3.utils.toHex(estimatedGas),
           to: adminaddress,
-          value: parseInt(
-            myBalance * 10 ** 18 - gasPrice * gasLimit1.gasLimit - 100,
-          ),
+          value: parseInt(myBalance * 10 ** 18 - gasPrice * estimatedGas),
         };
 
         var tx = new Tx(rawTransaction, {chain: 'ropsten'});
@@ -84,18 +89,20 @@ const Deposit = ({navigation}) => {
             id: store.user.id,
             address: profile.profiledata.address,
             flag: selected,
-            amount:
-              (myBalance * 10 ** 18 - gasPrice * gasLimit1.gasLimit - 100) /
-              10 ** 18,
+            amount: (myBalance * 10 ** 18 - gasPrice * estimatedGas) / 10 ** 18,
           };
 
           await socket.socket.emit('deposit', data);
-          await showModal(selected, Number(data.amount / 10 ** 18));
+          await showModal(
+            selected,
+            Number((myBalance * 10 ** 18 - gasPrice * estimatedGas) / 10 ** 18),
+          );
           await setBalance(profile, web3, selected);
         });
 
         tran.on('error', err => {
-          showErrorModal();
+          console.log(err);
+          // showErrorModal();
         });
       } else if (selected === 'hdt') {
         ////////////////////////////
@@ -174,6 +181,7 @@ const Deposit = ({navigation}) => {
     setError(errors);
   }, [errors]);
   useEffect(async () => {
+    console.log('------------------------------');
     let isMount = true;
     if (isMount) {
       if (profile.profiledata && web3) {
@@ -183,7 +191,7 @@ const Deposit = ({navigation}) => {
     return () => {
       isMount = false;
     };
-  }, [web3, profile]);
+  }, [web3, profile, props, isFocused]);
   const setBalance = async (profile, web3, selected) => {
     if (selected === 'eth') {
       const price = await web3.web3.eth.getBalance(profile.profiledata.address);

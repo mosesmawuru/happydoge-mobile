@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {CheckBox, Input} from 'react-native-elements';
 import {ActivityIndicator} from 'react-native-paper';
+import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {swaptoeth} from '../../actions/swapAction';
@@ -10,8 +11,9 @@ import {CustomModal} from '../../components/CustomModal';
 import {message} from '../../constant/message';
 
 import styles from './styles';
-const SwapToEth = ({navigation}) => {
+const SwapToEth = ({navigation, props}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [countHDT, setCountHDT] = useState(0);
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
@@ -72,7 +74,7 @@ const SwapToEth = ({navigation}) => {
   };
   useEffect(() => {
     setError(errors);
-  }, [errors]);
+  }, [errors, props, isFocused]);
 
   return (
     <>

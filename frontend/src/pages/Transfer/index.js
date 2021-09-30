@@ -3,7 +3,7 @@ import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {Input} from 'react-native-elements';
 import {useSelector, useDispatch} from 'react-redux';
 import {ActivityIndicator} from 'react-native-paper';
-import {Picker} from '@react-native-community/picker';
+import {useIsFocused} from '@react-navigation/native';
 import {getUser} from '../../actions/profileAction';
 import SelectDropdown from 'react-native-select-dropdown';
 import {TransferModal} from '../../components/TransferModal';
@@ -12,7 +12,8 @@ import styles from './styles';
 import {message} from '../../constant/message';
 import isEmpty from '../../utils/isEmpty';
 const celldata = ['ETH', 'HDT'];
-const Transfer = ({navigation}) => {
+const Transfer = ({navigation, props}) => {
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [selected, setSelected] = useState('eth');
   const [error, setError] = useState({});
@@ -58,9 +59,15 @@ const Transfer = ({navigation}) => {
     await setError({});
     await setLoading(false);
   };
+
+  useEffect(async () => {
+    await setAddress('');
+    await setAmount(0);
+    await setError({});
+  }, [isFocused, props]);
   useEffect(() => {
     setError(errors);
-  }, [errors]);
+  }, [errors, isFocused, props]);
   useEffect(() => {
     socket.socket.on('sent_money', async item => {
       await dispatch(getUser(item.id));
@@ -69,7 +76,7 @@ const Transfer = ({navigation}) => {
     socket.socket.on('failed_transfer', item => {
       setError(item);
     });
-  }, [socket]);
+  }, [socket, isFocused, props]);
   return (
     <>
       <TransferModal

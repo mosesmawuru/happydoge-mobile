@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Text, View, Image, ScrollView, TouchableOpacity} from 'react-native';
 import {Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useIsFocused} from '@react-navigation/native';
 import {useTheme} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useDispatch, useSelector} from 'react-redux';
@@ -10,8 +11,9 @@ import animal from '../../assets/img/animal.png';
 
 import Header from '../../components/Header';
 import {getUser} from '../../actions/profileAction';
-const Profile = ({navigation}) => {
+const Profile = ({navigation, props}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const store = useSelector(state => state.auth);
   const profile = useSelector(state => state.profile);
   const [isCopied, setIsCopied] = useState(false);
@@ -31,7 +33,7 @@ const Profile = ({navigation}) => {
   };
   useEffect(() => {
     dispatch(getUser(store.user.id));
-  }, []);
+  }, [isFocused, props]);
 
   const copyToClipboard = (value, flag) => {
     onCopyText(flag);

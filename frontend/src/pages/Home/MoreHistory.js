@@ -1,14 +1,14 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Text, View, ScrollView} from 'react-native';
 import {ActivityIndicator, Colors} from 'react-native-paper';
 import styles from './styles';
 import {useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 import {mainText, subText} from '../../constant/history';
 import Header from '../../components/Header';
 const MoreHistory = ({navigation}) => {
   const store = useSelector(state => state.auth);
   const history = useSelector(state => state.history);
-
   return (
     <>
       <Header text="HISTORY" navigation={navigation} />

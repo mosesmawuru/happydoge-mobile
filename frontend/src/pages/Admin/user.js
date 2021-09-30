@@ -5,6 +5,7 @@ import {ListItem, Button} from 'react-native-elements';
 import {BottomNavigation} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SearchBar, Badge} from 'react-native-elements';
+import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import Header from '../../components/Header';
 import {getWithdraw} from '../../actions/adminAction';
@@ -12,7 +13,7 @@ import {getUser} from '../../actions/profileAction';
 import {getPrice} from '../../actions/exchangeAction';
 const Tx = require('ethereumjs-tx').Transaction;
 
-const MyComponent = ({navigation}) => {
+const MyComponent = ({navigation, props}) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'music', title: 'Pending', icon: 'close'},
@@ -20,6 +21,7 @@ const MyComponent = ({navigation}) => {
   ]);
 
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const store = useSelector(state => state.transaction);
@@ -36,8 +38,7 @@ const MyComponent = ({navigation}) => {
     return () => {
       isMount = false;
     };
-  }, []);
-  console.log(price);
+  }, [isFocused, props]);
   const MusicRoute = () => (
     <ScrollView style={{backgroundColor: '#fff'}}>
       {loading ? (

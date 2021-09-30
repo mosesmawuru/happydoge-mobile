@@ -2,26 +2,28 @@ import React, {useState, useEffect} from 'react';
 import {Text, View, Image, ScrollView, TouchableOpacity} from 'react-native';
 import {Input} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 import styles from './styles';
 import animal from '../../assets/img/animal.png';
 import {userLogin, clearErrors} from '../../actions/authAction';
 import {useTheme} from '@react-navigation/native';
-const Login = ({navigation}) => {
+const Login = ({navigation, props}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [username, setUsername] = useState('jacky');
   const [password, setPassword] = useState('111111');
   const onLogin = () => {
     dispatch(userLogin(username, password, navigation));
   };
   const errors = useSelector(state => state.errors);
-  const store = useSelector(state => state.auth);
-  const {color} = useTheme();
+  // const store = useSelector(state => state.auth);
+  // const {color} = useTheme();
   useEffect(() => {
     dispatch(clearErrors());
-    if (store.isAuthenticated) {
-      navigation.navigate('Main');
-    }
-  }, []);
+    // if (store.isAuthenticated) {
+    //   navigation.navigate('Main');
+    // }
+  }, [isFocused, props]);
 
   return (
     <ScrollView>

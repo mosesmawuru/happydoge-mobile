@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {ActivityIndicator, Colors} from 'react-native-paper';
 import ProgressCircle from 'react-native-progress-circle';
 import {getStake, getStakeByID, Clear} from '../../actions/stackAction';
-
+import {useIsFocused} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
 import NumberFormat from 'react-number-format';
 import Header from '../../components/Header';
@@ -20,7 +20,8 @@ import isEmpty from '../../utils/isEmpty';
 import styles from './styles';
 const SLIDER_WIDTH = Dimensions.get('window').width + 80;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.3);
-const Stacking = ({navigation}) => {
+const Stacking = ({navigation, props}) => {
+  const isFocused = useIsFocused();
   const isCarousel = React.useRef(null);
   const dispatch = useDispatch();
   const [selected, setSelected] = useState('');
@@ -74,7 +75,7 @@ const Stacking = ({navigation}) => {
     return () => {
       isMount = false;
     };
-  }, []);
+  }, [isFocused, props]);
 
   return (
     <>

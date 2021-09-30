@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {CheckBox} from 'react-native-elements';
+import {useIsFocused} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {swaptohdt} from '../../actions/swapAction';
@@ -11,8 +12,9 @@ import {CustomModal} from '../../components/CustomModal';
 import {message} from '../../constant/message';
 
 import styles from './styles';
-const SwapToHdt = ({navigation}) => {
+const SwapToHdt = ({navigation, props}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [countETH, setCountETH] = useState(0);
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
@@ -73,7 +75,7 @@ const SwapToHdt = ({navigation}) => {
   };
   useEffect(() => {
     setError(errors);
-  }, [errors]);
+  }, [errors, props, isFocused]);
   return (
     <>
       <Header text="SWAP TO HDT" navigation={navigation} />

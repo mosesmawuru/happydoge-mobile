@@ -2,19 +2,21 @@ import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
+import {useIsFocused} from '@react-navigation/native';
 import {Searchbar, ActivityIndicator, Colors} from 'react-native-paper';
 import {CommonText} from '../../components/Common';
 import Header from '../../components/Header';
 import {getAllUser} from '../../actions/userAction';
-const UserSelect = ({navigation}) => {
+const UserSelect = ({navigation, props}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [searchQuery, setSearchQuery] = useState('');
   const store = useSelector(state => state.user);
   const onChangeSearch = query => setSearchQuery(query);
 
   useEffect(() => {
     dispatch(getAllUser());
-  }, []);
+  }, [isFocused, props]);
 
   return (
     <>

@@ -8,12 +8,14 @@ import {withdraw} from '../../actions/withdrawAction';
 import {DepositModal} from '../../components/DepositModal';
 import {message} from '../../constant/message';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {useIsFocused} from '@react-navigation/native';
 import animal from '../../assets/img/animal.png';
 import ethImg from '../../assets/img/eth.png';
 import usdtImg from '../../assets/img/usdt.png';
 import styles from './styles';
-const Withdraw = ({navigation}) => {
+const Withdraw = ({navigation, props}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [amount, setAmount] = useState(0);
   const [error, setError] = useState({});
   const [visible, setVisible] = useState(false);
@@ -28,10 +30,6 @@ const Withdraw = ({navigation}) => {
     setTimeout(() => {
       setIsCopied(false);
     }, 1000);
-  };
-  const copyToClipboard = (value, flag) => {
-    onCopyText(flag);
-    Clipboard.setString(value);
   };
 
   const onSubmit = async () => {
@@ -63,7 +61,7 @@ const Withdraw = ({navigation}) => {
   };
   useEffect(() => {
     setError(errors);
-  }, [errors]);
+  }, [errors, props, isFocused]);
   return (
     <>
       <DepositModal

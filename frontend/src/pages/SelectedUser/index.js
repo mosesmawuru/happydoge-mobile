@@ -10,6 +10,7 @@ import {
 import NumberFormat from 'react-number-format';
 import Accordion from 'react-native-collapsible/Accordion';
 import {CommonText} from '../../components/Common';
+import {useIsFocused} from '@react-navigation/native';
 import {ActivityIndicator, Colors} from 'react-native-paper';
 import Header from '../../components/Header';
 import {
@@ -21,8 +22,9 @@ import {
   setBalance,
 } from '../../actions/userAction';
 import isEmpty from '../../utils/isEmpty';
-const SelectedUser = ({navigation, route}) => {
+const SelectedUser = ({navigation, route, props}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [countHDT, setCountHDT] = useState();
   const [countETH, setCountETH] = useState();
   const [countUSDT, setCountUSDT] = useState();
@@ -43,7 +45,7 @@ const SelectedUser = ({navigation, route}) => {
     return () => {
       isMount = false;
     };
-  }, [socket, price]);
+  }, [socket, price, isFocused, props]);
   const changeBlance = data => {
     dispatch(setBalance(data));
   };
@@ -313,7 +315,7 @@ const SelectedUser = ({navigation, route}) => {
     return () => {
       isMount = false;
     };
-  }, [route]);
+  }, [route, isFocused, props]);
 
   return (
     <>

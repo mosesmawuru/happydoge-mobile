@@ -4,10 +4,12 @@ import {Input} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {getPrice, addPrice} from '../../actions/exchangeAction';
+import {useIsFocused} from '@react-navigation/native';
 import Header from '../../components/Header';
 import styles from './styles';
-const Price = ({navigation}) => {
+const Price = ({navigation, props}) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [price, setPrice] = useState(0);
   const [error, setError] = useState({});
   const store = useSelector(state => state.price);
@@ -19,7 +21,7 @@ const Price = ({navigation}) => {
     return () => {
       isMount = false;
     };
-  }, []);
+  }, [props, isFocused]);
   const onSave = () => {
     if (isNaN(price)) {
       setError({price: 'Only input number'});
