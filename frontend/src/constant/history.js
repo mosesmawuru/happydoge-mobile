@@ -33,3 +33,17 @@ export const mainText = [
   {text: 'Staked Money'},
   {text: 'Swapped Money'},
 ];
+
+export const newText = [
+  {text: 'Deposit Transaction'},
+  {text: 'Referral Transaction'},
+  {text: 'Swap To HDT'},
+  {text: 'Swap To ETH'},
+  {text: 'ETH Transfer'},
+  {text: 'HDT Transfer'},
+  {text: 'Staking Transaction'},
+  {text: 'Completed Staking'},
+  {text: 'ETH withdrawal'},
+  {text: 'HDT withdrawal'},
+  {text: 'USDT withdrawal'},
+];

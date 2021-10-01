@@ -5,13 +5,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    minHeight: height - 45,
+    minHeight: height,
+  },
+  scrollMenu: {
+    alignItems: 'center',
   },
   imgDiv: {
     borderRadius: 100,
     padding: 15,
     borderWidth: 15,
     borderColor: 'rgb(102,59,8)',
+    textAlign: 'center',
   },
   img: {
     width: 50,
@@ -95,6 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'right',
     color: 'rgb(1,154,213)',
+    marginRight: 20,
   },
   imgUnit: {
     width: 20,
@@ -103,7 +108,7 @@ const styles = StyleSheet.create({
   footTxt: {
     width: width,
     justifyContent: 'flex-end',
-    paddingRight: 40,
+    marginBottom: 30,
   },
   iconDiv: {
     flexDirection: 'row',
