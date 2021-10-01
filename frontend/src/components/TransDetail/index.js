@@ -28,7 +28,9 @@ export const TransDetail = props => {
         <View style={styles.countView}>
           <View>
             <Text style={styles.countText}>Username</Text>
-            <Text style={styles.commonText}>{props.item.user.name}</Text>
+            <Text style={styles.commonText}>
+              {props.item.user ? props.item.user.name : ''}
+            </Text>
             <Text style={styles.countText}>Withdrawal address entered</Text>
             <Text style={styles.commonText}>{props.item.address}</Text>
             <Text style={styles.countText}>Date</Text>

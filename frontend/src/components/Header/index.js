@@ -19,10 +19,17 @@ const Header = ({text, navigation}) => {
               navigation.toggleDrawer();
             }}
           />
-
+          <Icon
+            name="arrow-left"
+            size={25}
+            color={'#fff'}
+            onPress={() => {
+              navigation.goBack();
+              dispatch({type: GET_ERRORS, payload: []});
+            }}
+          />
           <Text style={styles.headertxt}>{text}</Text>
         </View>
-        <Icon style={{paddingRight: 10}} name="cog" size={30} color={'#fff'} />
       </View>
     </View>
   );

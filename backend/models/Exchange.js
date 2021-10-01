@@ -19,6 +19,9 @@ const ExchangeSchema = new mongoose.Schema({
   minium_amount: {
     type: Number,
   },
+  admin_address: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("price", ExchangeSchema);

@@ -7,6 +7,7 @@ const Exchange = require("../models/Exchange");
 const validatePrice = require("../validation/price");
 //@import util
 const isEmpty = require("../utils/is-Empty");
+var nodeEth = require("node-eth-address");
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
@@ -20,6 +21,12 @@ router.post(
     if (amount <= 0) {
       return res.status(400).send({ countETH: "please input correct" });
     }
+    if (label === "admin_address") {
+      if (!nodeEth.validateAddress(amount)) {
+        return res.status(400).json({ amount: "Address in not valid" });
+      }
+    }
+
     Exchange.findOne({})
       .then((item) => {
         if (!isEmpty(item)) {
@@ -81,6 +88,17 @@ router.post(
           }
           if (label === "minium_amount") {
             item.minium_amount = amount;
+            item
+              .save()
+              .then((item) => {
+                return res.status(200).json({ msg: "success" });
+              })
+              .catch((err) => {
+                return res.status(400).json({ errors: err });
+              });
+          }
+          if (label === "admin_address") {
+            item.admin_address = amount;
             item
               .save()
               .then((item) => {
@@ -174,6 +192,20 @@ router.post(
               .catch((err) => {
                 return res.status(400).json({ errors: err });
               });
+            if (label === "admin_address") {
+              const newData = new Exchange({
+                admin_address: amount,
+              });
+
+              newData
+                .save()
+                .then((item) => {
+                  return res.status(200).json({ msg: "success" });
+                })
+                .catch((err) => {
+                  return res.status(400).json({ errors: err });
+                });
+            }
           }
         }
       })

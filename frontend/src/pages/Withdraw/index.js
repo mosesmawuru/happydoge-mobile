@@ -74,17 +74,19 @@ const Withdraw = ({navigation, props}) => {
 
           <View style={styles.crypto}>
             <Input
-              value={profile.profiledata.countHDT.toString()}
+              value={Number(profile.profiledata.countHDT).toFixed(2).toString()}
               disabled
               leftIcon={<Image style={styles.imgUnit} source={animal} />}
             />
             <Input
-              value={profile.profiledata.countETH.toString()}
+              value={Number(profile.profiledata.countETH).toFixed(2).toString()}
               disabled
               leftIcon={<Image style={styles.imgUnit} source={ethImg} />}
             />
             <Input
-              value={profile.profiledata.countUSDT.toString()}
+              value={Number(profile.profiledata.countUSDT)
+                .toFixed(2)
+                .toString()}
               disabled
               leftIcon={<Image style={styles.imgUnit} source={usdtImg} />}
             />

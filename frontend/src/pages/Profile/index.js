@@ -90,20 +90,38 @@ const Profile = ({navigation, props}) => {
               <Text style={styles.txt}>ETH Balance</Text>
               <Input
                 placeholder="INPUT WITH ERROR MESSAGE"
-                value={profile.profiledata.countETH + ' ' + 'ETH'}
+                value={
+                  profile.profiledata.countETH
+                    ? Number(profile.profiledata.countETH).toFixed(2) +
+                      ' ' +
+                      'ETH'
+                    : '0 ETH'
+                }
                 disabled
               />
 
               <Text style={styles.txt}>HDT Balance</Text>
               <Input
                 placeholder="HDT"
-                value={profile.profiledata.countHDT + ' ' + 'HDT'}
+                value={
+                  profile.profiledata.countHDT
+                    ? Number(profile.profiledata.countHDT).toFixed(2) +
+                      ' ' +
+                      'HDT'
+                    : '0 HDT'
+                }
                 disabled
               />
               <Text style={styles.txt}>USDT Balance</Text>
               <Input
                 placeholder="USDT"
-                value={profile.profiledata.countUSDT + ' ' + 'HDT'}
+                value={
+                  profile.profiledata.countUSDT
+                    ? Number(profile.profiledata.countUSDT).toFixed(2) +
+                      ' ' +
+                      'USDT'
+                    : '0 USDT'
+                }
                 disabled
               />
               <Text style={styles.txt}>My Referral Code</Text>
