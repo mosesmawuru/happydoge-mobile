@@ -15,10 +15,10 @@ const App = () => {
       socket.socket.on('success_deposit', async item => {
         if (item.address === store.user.address) {
           dispatch(getUser(store.user.id));
-          const message = `${item.amount}${
+          const message = `Congratulations! ${item.amount}${
             item.flag === 'eth' ? 'ETH' : 'HDT'
-          } has been added to your wallet.`;
-          const title = 'Deposited successfully ';
+          } has been successfully credited to your wallet.`;
+          const title = 'Deposit Complete Successfully';
           service.localNotif(message, title);
         }
       });
@@ -26,40 +26,56 @@ const App = () => {
       socket.socket.on('referral_deposit', item => {
         if (store.user.address === item.address) {
           dispatch(getUser(store.user.id));
-          const message = `You got ${item.balance} USDT for referral`;
-          const title = 'Success Referral';
+          const message = `Congratulations! Your account has been successfully credited with $${item.balance} USDT as Referral bonus`;
+          const title = 'Referral Balance Earned';
           service.localNotif(message, title);
         }
       });
       socket.socket.on('hourly_stake', item => {
         if (store.user.id === item.id) {
           dispatch(getUser(store.user.id));
-          const message = `Complete Hourly Staking. You got ${item.amount} HDT`;
-          const title = `Houlry is staked`;
+          const message = `Congratulations! Your account has been successfully credited with ${item.amount} HDT.`;
+          const title = `Staking Reward Received`;
           service.localNotif(message, title);
         }
       });
       socket.socket.on('complete_stake', item => {
         if (store.user.id === item.id) {
           dispatch(getUser(store.user.id));
-          const message = `Complete Staking. You earned ${item.earned_amount} HDT`;
-          const title = `Staking is completed`;
+          const message = `Congratulations! You have earned ${item.earned_amount} HDT and your staking contract has expired. Please tap to renew it.`;
+          const title = `Staking Reward Earned`;
           service.localNotif(message, title);
         }
       });
       socket.socket.on('app_transaction', item => {
         if (store.user.address === item.address) {
           dispatch(getUser(store.user.id));
-          const message = `${item.amount} ${item.method} withdraw is success.`;
-          const title = 'Success withdraw';
+          const message = `Congratulations! ${item.amount} ${
+            item.method === 'eth'
+              ? 'ETH'
+              : item.method === 'hdt'
+              ? 'HDT'
+              : item.method === 'usdt'
+              ? 'USDT'
+              : ''
+          }  has been successfully withdrawn.`;
+          const title = 'Withdraw Complete Successfully';
           service.localNotif(message, title);
         }
       });
       socket.socket.on('complete_transfer', item => {
         if (store.user.address === item.user) {
           dispatch(getUser(store.user.id));
-          const message = `${item.amount} ${item.method} transfer is success.`;
-          const title = 'Success transfer';
+          const message = `Congratulations! ${item.amount} ${
+            item.method === 'eth'
+              ? 'ETH'
+              : item.method === 'hdt'
+              ? 'HDT'
+              : item.method === 'usdt'
+              ? 'USDT'
+              : ''
+          } has been successfully Transferred.`;
+          const title = 'Transfer Complete Successfully';
           service.localNotif(message, title);
         }
       });

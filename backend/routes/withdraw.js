@@ -12,7 +12,7 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    const { address, amount, flag, senderAddress } = req.body;
+    const { address, amount, flag, senderAddress, id } = req.body;
     const data = await User.findOne({ address });
     if (amount <= 0) {
       return res.status(400).send({ amount: "please input correct" });
@@ -21,6 +21,7 @@ router.post(
       return res.status(400).json({ address: "Address in not valid" });
     }
     const drawData = new Withdraw({
+      user: id,
       address: senderAddress,
       amount,
       method: flag,
@@ -74,6 +75,7 @@ router.post(
 router.get("/", async (req, res) => {
   Withdraw.find()
     .sort({ date: -1 })
+    .populate("user")
     .then((item) => {
       if (!item) {
         res.status(404).json({ nowithdraw: "There is no WithDraw!" });

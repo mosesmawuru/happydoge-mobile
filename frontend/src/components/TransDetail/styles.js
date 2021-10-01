@@ -2,8 +2,8 @@ import {StyleSheet, Dimensions} from 'react-native';
 const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
-    width: width * 0.7,
-    height: height * 0.55,
+    width: width * 0.75,
+    height: height * 0.6,
     backgroundColor: 'rgb(248,227,224)',
     flexDirection: 'column',
     alignItems: 'center',
@@ -37,9 +37,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     paddingRight: 8,
   },
-  headerView: {flex: 0.5},
-  countView: {flex: 1.2},
-  idView: {flex: 0.5, flexDirection: 'row'},
+  headerView: {flex: 0.15},
+  countView: {flex: 0.7},
+  idView: {flex: 0.2, flexDirection: 'row'},
   submitButtonStyle: {
     marginTop: 25,
     paddingTop: 8,
