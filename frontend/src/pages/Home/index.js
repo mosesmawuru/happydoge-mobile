@@ -8,7 +8,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {getUser} from '../../actions/profileAction';
 import {getPrice} from '../../actions/exchangeAction';
 import {getHistoryById} from '../../actions/historyAction';
-import animal from '../../assets/img/animal.png';
+import animal from '../../assets/img/doge.png';
 import ethImg from '../../assets/img/eth.png';
 import usdtImg from '../../assets/img/usdt.png';
 import {mainText, subText} from '../../constant/history';

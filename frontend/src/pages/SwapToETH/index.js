@@ -92,20 +92,26 @@ const SwapToEth = ({navigation, props}) => {
           <View style={styles.userDiv}>
             <Text style={styles.labelText}>Current HDT Balance</Text>
             <Input
-              value={profile.profiledata.countHDT.toString() + ' HDT'}
+              value={
+                Number(profile.profiledata.countHDT).toFixed(2).toString() +
+                ' HDT'
+              }
               disabled
             />
             <Text style={styles.labelText}>Current ETH Balance</Text>
             <Input
-              value={profile.profiledata.countETH.toString() + ' ETH'}
+              value={
+                Number(profile.profiledata.countETH).toFixed(2).toString() +
+                ' ETH'
+              }
               disabled
             />
             <Text style={styles.labelText}>HDT</Text>
             <Input
               value={
                 checked
-                  ? profile.profiledata.countHDT.toString()
-                  : countHDT.toString()
+                  ? Number(profile.profiledata.countHDT).toFixed(2).toString()
+                  : Number(countHDT).toFixed(2).toString()
               }
               placeholder="Please input HDT Balance"
               onChangeText={message => {

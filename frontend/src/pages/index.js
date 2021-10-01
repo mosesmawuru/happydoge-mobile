@@ -150,7 +150,7 @@ function Main({}) {
         <>
           <Drawer.Screen
             name="Admin"
-            options={{drawerLabel: 'Admin'}}
+            options={{drawerLabel: 'Withdrawals'}}
             component={Admin}
           />
           <Drawer.Screen
