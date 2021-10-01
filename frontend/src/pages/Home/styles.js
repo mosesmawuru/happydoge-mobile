@@ -1,10 +1,11 @@
 import {StyleSheet, Dimensions} from 'react-native';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
+    minHeight: height - 45,
   },
   imgDiv: {
     borderRadius: 100,
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
   img: {
     width: 50,
     height: 50,
-    borderWidth:1
+    borderWidth: 1,
   },
   curDiv: {
     marginTop: 20,

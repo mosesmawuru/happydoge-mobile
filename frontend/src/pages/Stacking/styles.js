@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     width: width,
-    minHeight: height,
+    minHeight: height - 45,
   },
   headText: {
     marginTop: 30,

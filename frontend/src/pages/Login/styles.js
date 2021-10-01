@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     width: width,
-    minHeight: height,
+    minHeight: height - 45,
   },
   headText: {
     color: 'rgb(102,59,8)',
