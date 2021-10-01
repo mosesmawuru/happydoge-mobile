@@ -11,6 +11,8 @@ import Header from '../../components/Header';
 import {getWithdraw} from '../../actions/adminAction';
 import {getUser} from '../../actions/profileAction';
 import {getPrice} from '../../actions/exchangeAction';
+import {TransDetail} from '../../components/TransDetail';
+import {ErrorModal} from '../../components/ErrorModal';
 const Tx = require('ethereumjs-tx').Transaction;
 
 const MyComponent = ({navigation, props}) => {
@@ -24,6 +26,10 @@ const MyComponent = ({navigation, props}) => {
   const isFocused = useIsFocused();
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [errorData, setErrorData] = useState('');
+  const [errorVisible, setErrorVisible] = useState(false);
+  const [item, setItem] = useState('');
   const store = useSelector(state => state.transaction);
   const socket = useSelector(state => state.socket);
   const web3 = useSelector(state => state.web3);
@@ -39,6 +45,59 @@ const MyComponent = ({navigation, props}) => {
       isMount = false;
     };
   }, [isFocused, props]);
+
+  const onClickItem = item => {
+    setVisible(true);
+    setItem(item);
+  };
+  const showErrorModal = async message => {
+    const modalData = {
+      message: message,
+    };
+    await setErrorData(modalData);
+    await setErrorVisible(!errorVisible);
+  };
+  const onApprove = async item => {
+    setLoading(true);
+    if (item.method === 'eth') {
+      const adminaddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
+      const privateKey =
+        '9b066f6d1864f4d8420e9b99e1041fa29cf748f708c2afb0ea66c55175858705';
+      var count = await web3.web3.eth.getTransactionCount(adminaddress);
+      var gasPrice = await web3.web3.eth.getGasPrice();
+      var gasLimit = 1000000;
+      var rawTransaction = {
+        from: adminaddress,
+        nonce: web3.web3.utils.toHex(count),
+        gasPrice: web3.web3.utils.toHex(gasPrice),
+        gasLimit: web3.web3.utils.toHex(gasLimit),
+        to: item.address,
+        value: parseInt(
+          ((item.amount * 100) / price.pricedata.withdraw_rate) * 10 ** 18,
+        ),
+      };
+
+      var tx = new Tx(rawTransaction, {chain: 'ropsten'});
+      var privKey = Buffer.from(privateKey, 'hex');
+      tx.sign(privKey);
+      const serializedTx = `0x${tx.serialize().toString('hex')}`;
+      const tran = web3.web3.eth.sendSignedTransaction(serializedTx);
+
+      tran.on('transactionHash', async hash => {});
+
+      tran.on('receipt', async receipt => {
+        await socket.socket.emit('approve', item._id);
+        await dispatch(getWithdraw());
+        await setLoading(false);
+        await setVisible(false);
+      });
+
+      tran.on('error', err => {
+        showErrorModal(err.message);
+      });
+    } else if (item.method === 'hdt') {
+    }
+  };
   const MusicRoute = () => (
     <ScrollView style={{backgroundColor: '#fff'}}>
       {loading ? (
@@ -57,6 +116,9 @@ const MyComponent = ({navigation, props}) => {
             return (
               <View key={key + 1}>
                 <ListItem.Swipeable
+                  onPress={() => {
+                    onClickItem(item);
+                  }}
                   rightContent={
                     <View
                       style={{
@@ -69,64 +131,7 @@ const MyComponent = ({navigation, props}) => {
                         icon={{name: 'check', color: 'white'}}
                         buttonStyle={{backgroundColor: 'green'}}
                         onPress={async () => {
-                          setLoading(true);
-                          if (item.method === 'eth') {
-                            const adminaddress =
-                              '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
-                            const privateKey =
-                              '9b066f6d1864f4d8420e9b99e1041fa29cf748f708c2afb0ea66c55175858705';
-                            var count = await web3.web3.eth.getTransactionCount(
-                              adminaddress,
-                            );
-                            var gasPrice = await web3.web3.eth.getGasPrice();
-                            var gasLimit = 1000000;
-                            var rawTransaction = {
-                              from: adminaddress,
-                              nonce: web3.web3.utils.toHex(count),
-                              gasPrice: web3.web3.utils.toHex(gasPrice),
-                              gasLimit: web3.web3.utils.toHex(gasLimit),
-                              to: item.address,
-                              value: parseInt(
-                                ((item.amount * 100) /
-                                  price.pricedata.withdraw_rate) *
-                                  10 ** 18,
-                              ),
-                            };
-
-                            var tx = new Tx(rawTransaction, {chain: 'ropsten'});
-                            var privKey = Buffer.from(privateKey, 'hex');
-                            tx.sign(privKey);
-                            const serializedTx = `0x${tx
-                              .serialize()
-                              .toString('hex')}`;
-                            const tran =
-                              web3.web3.eth.sendSignedTransaction(serializedTx);
-
-                            tran.on('transactionHash', async hash => {});
-
-                            tran.on('receipt', async receipt => {
-                              await socket.socket.emit('approve', item._id);
-                              await dispatch(getWithdraw());
-                              await setLoading(false);
-                            });
-
-                            tran.on('error', () => {
-                              console.log('err');
-                            });
-                            // var serializedTx = tx.serialize();
-                            // web3.web3.eth.sendSignedTransaction(
-                            //   '0x' + serializedTx.toString('hex'),
-                            //   function (err, hash) {
-                            //     if (!err) {
-                            //       socket.socket.emit('approve', item._id);
-                            //       dispatch(getWithdraw());
-                            //     } else {
-                            //       console.log(err);
-                            //     }
-                            //   },
-                            // );
-                          } else if (item.method === 'hdt') {
-                          }
+                          onApprove(item);
                         }}
                       />
                       <Button
@@ -266,13 +271,17 @@ const MyComponent = ({navigation, props}) => {
   return (
     <>
       <Header text="Transactions" navigation={navigation} />
-
+      <TransDetail visible={visible} item={item} setVisible={setVisible} />
       <SearchBar
         placeholder="Type Here..."
         onChangeText={setSearch}
         value={search}
       />
-
+      <ErrorModal
+        item={errorData}
+        visible={errorVisible}
+        setVisible={setErrorVisible}
+      />
       <BottomNavigation
         navigationState={{index, routes}}
         onIndexChange={setIndex}

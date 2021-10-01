@@ -71,7 +71,7 @@ export default class NotifService {
     );
   }
 
-  localNotif(title, message) {
+  localNotif(message, title) {
     this.lastId++;
     PushNotification.localNotification({
       /* Android Only Properties */

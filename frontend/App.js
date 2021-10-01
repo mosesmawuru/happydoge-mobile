@@ -17,8 +17,8 @@ const App = () => {
           dispatch(getUser(store.user.id));
           const message = `${item.amount}${
             item.flag === 'eth' ? 'ETH' : 'HDT'
-          } is deposited`;
-          const title = 'Success Deposit';
+          } has been added to your wallet.`;
+          const title = 'Deposited successfully ';
           service.localNotif(message, title);
         }
       });
@@ -34,16 +34,16 @@ const App = () => {
       socket.socket.on('hourly_stake', item => {
         if (store.user.id === item.id) {
           dispatch(getUser(store.user.id));
-          const message = `Houlry is staked`;
-          const title = `Complete Hourly Staking. You got ${item.amount} HDT`;
+          const message = `Complete Hourly Staking. You got ${item.amount} HDT`;
+          const title = `Houlry is staked`;
           service.localNotif(message, title);
         }
       });
       socket.socket.on('complete_stake', item => {
         if (store.user.id === item.id) {
           dispatch(getUser(store.user.id));
-          const message = `Staking is completed`;
-          const title = `Complete Staking. You earned ${item.earned_amount} HDT`;
+          const message = `Complete Staking. You earned ${item.earned_amount} HDT`;
+          const title = `Staking is completed`;
           service.localNotif(message, title);
         }
       });

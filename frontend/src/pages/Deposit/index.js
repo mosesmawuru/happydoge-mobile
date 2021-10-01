@@ -17,11 +17,13 @@ const Tx = require('ethereumjs-tx').Transaction;
 import styles from './styles';
 const Deposit = ({navigation, props}) => {
   const isFocused = useIsFocused();
+  const adminaddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
   const hdtContractAddress = '0x08895697055b82890a312dfc9f52df907d8fd001';
   const usdtContractAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [myBalance, setMyBalance] = useState(0);
+  const [maxValue, setMaxValue] = useState(0);
   const [selected, setSelected] = useState('eth');
   const [visible, setVisible] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
@@ -48,107 +50,155 @@ const Deposit = ({navigation, props}) => {
     if (Number(myBalance) === 0) {
       setError({amount: 'Please input correct balance'});
     } else {
-      // setLoading(true);
+      setLoading(true);
+      console.log(selected);
       if (selected === 'eth') {
-        const adminaddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
-        var count = await web3.web3.eth.getTransactionCount(
-          profile.profiledata.address,
-        );
-        var gasPrice = await web3.web3.eth.getGasPrice();
-
-        const transactionObject = {
-          from: profile.profiledata.address,
-        };
-
-        var estimatedGas = await web3.web3.eth.estimateGas(transactionObject);
-
-        var rawTransaction = {
-          from: profile.profiledata.address,
-          nonce: web3.web3.utils.toHex(count),
-          gasPrice: web3.web3.utils.toHex(gasPrice),
-          gasLimit: web3.web3.utils.toHex(estimatedGas),
-          to: adminaddress,
-          value: parseInt(myBalance * 10 ** 18 - gasPrice * estimatedGas),
-        };
-
-        var tx = new Tx(rawTransaction, {chain: 'ropsten'});
-        const privatekey = profile.profiledata.privateKey.substring(
-          2,
-          profile.profiledata.privateKey.length,
-        );
-        var privKey = Buffer.from(privatekey, 'hex');
-        tx.sign(privKey);
-
-        const serializedTx = `0x${tx.serialize().toString('hex')}`;
-        const tran = web3.web3.eth.sendSignedTransaction(serializedTx);
-
-        tran.on('transactionHash', async hash => {});
-
-        tran.on('receipt', async receipt => {
-          const data = {
-            id: store.user.id,
-            address: profile.profiledata.address,
-            flag: selected,
-            amount: (myBalance * 10 ** 18 - gasPrice * estimatedGas) / 10 ** 18,
+        if (Number(maxValue) === 0) {
+          setError({amount: 'Please input correct balance'});
+        } else {
+          var count = await web3.web3.eth.getTransactionCount(
+            profile.profiledata.address,
+          );
+          var gasPrice = await web3.web3.eth.getGasPrice();
+          const amount = await web3.web3.utils.toWei(
+            maxValue.toString(),
+            'ether',
+          );
+          const transactionObject = {
+            from: profile.profiledata.address,
+            to: adminaddress,
+            value: amount,
+          };
+          var estimatedGas = await web3.web3.eth.estimateGas(transactionObject);
+          const tx = {
+            from: profile.profiledata.address,
+            to: adminaddress,
+            value: amount,
+            gas: estimatedGas,
           };
 
-          await socket.socket.emit('deposit', data);
-          await showModal(
-            selected,
-            Number((myBalance * 10 ** 18 - gasPrice * estimatedGas) / 10 ** 18),
+          const privatekey = profile.profiledata.privateKey.substring(
+            2,
+            profile.profiledata.privateKey.length,
           );
-          await setBalance(profile, web3, selected);
-        });
 
-        tran.on('error', err => {
-          console.log(err);
-          // showErrorModal();
-        });
+          web3.web3.eth.accounts
+            .signTransaction(tx, privatekey)
+            .then(signedTx => {
+              const sentTx = web3.web3.eth.sendSignedTransaction(
+                signedTx.raw || signedTx.rawTransaction,
+              );
+              sentTx.on('receipt', async receipt => {
+                const data = {
+                  id: store.user.id,
+                  address: profile.profiledata.address,
+                  flag: selected,
+                  amount: amount / 10 ** 18,
+                };
+
+                await socket.socket.emit('deposit', data);
+                await showModal(selected, Number(amount / 10 ** 18));
+                await setBalance(profile, web3, selected);
+              });
+              sentTx.on('error', err => {
+                showErrorModal(err.message);
+
+                // do something on transaction error
+              });
+            });
+        }
+
+        // var tx = new Tx(rawTransaction, {chain: 'ropsten'});
+
+        // var privKey = Buffer.from(privatekey, 'hex');
+        // console.log(privKey);
+        // tx.sign(privKey);
+
+        // const serializedTx = `0x${tx.serialize().toString('hex')}`;
+        // const tran = web3.web3.eth.sendSignedTransaction(serializedTx);
+
+        // tran.on('transactionHash', async hash => {});
+
+        // tran.on('receipt', async receipt => {
+        //   const data = {
+        //     id: store.user.id,
+        //     address: profile.profiledata.address,
+        //     flag: selected,
+        //     amount: maxVal / 10 ** 18,
+        //   };
+
+        //   await socket.socket.emit('deposit', data);
+        //   await showModal(selected, Number(maxVal / 10 ** 18));
+        //   await setBalance(profile, web3, selected);
+        // });
+
+        // tran.on('error', err => {
+        //   console.log(err);
+        //   // ;
+        // });
       } else if (selected === 'hdt') {
         ////////////////////////////
         const myAddress = '0xE34440801560549F7d575Aa449562536346c0777';
         const destAddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
-        const contract = new web3.web3.eth.Contract(hdtABI, hdtContractAddress);
-        var count = await web3.web3.eth.getTransactionCount(myAddress);
-        var transfer = contract.methods.transfer(
-          destAddress,
-          10 ** 6 * myBalance,
-        );
-        var encodedABI = transfer.encodeABI();
-        var gasPrice = await web3.web3.eth.getGasPrice();
-        var gasValue = await web3.web3.eth.getBlock('latest', false);
-        const realLimit = gasValue.gasLimit;
-
-        var rawTransaction = {
-          from: myAddress,
-          to: hdtContractAddress,
-          data: encodedABI,
-          nonce: '0x' + count.toString(16),
-          gasPrice: gasPrice,
-          gasLimit: web3.web3.utils.toHex(realLimit),
-          // chainId: 1,
-        };
-        var tx = new Tx(rawTransaction);
-
         const privatekey =
           'e1aa9022d303c6bedd2503b24d92be7bd28d1f84a48bd3f56608ff9264926354';
-        web3.web3.eth.accounts
-          .signTransaction(rawTransaction, privatekey)
-          .then(async signedTx => {
-            console.log(signedTx);
-            await web3.web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-          })
-          .then(function (receipt) {
-            console.log('Transaction receipt: ', receipt);
-          })
-          .then(async req => {
-            /* The trx was done. Write your acctions here. For example getBalance */
-            const balance = await contract.methods
-              .balanceOf(destAddress)
-              .call();
-            await setBalance(profile, web3, selected);
-            return true;
+
+        web3.web3.eth.accounts.wallet.add(privatekey);
+        const contract = new web3.web3.eth.Contract(
+          usdtABI,
+          usdtContractAddress,
+        );
+        const gasLimit = await contract.methods
+          .transfer(destAddress, 10 ** 6 * 10) // the contract function
+          .estimateGas({from: myAddress}); // the transaction object
+
+        contract.method
+          .transfer(destAddress, 10 ** 6 * 10)
+          .send({from: myAddress, gas: gasLimit}, function (error, result) {
+            //get callback from function which is your transaction key
+            if (!error) {
+              console.log(result);
+            } else {
+              console.log(error);
+            }
           });
+        //Finally, you can check if usdt tranaction success through this code.
+        // tokenInst.methods.balanceOf(receiver).call().then(console.log)
+        // .catch(console.error);
+        // var count = await web3.web3.eth.getTransactionCount(myAddress);
+        // var transfer = contract.methods.transfer(destAddress, 10 ** 6 * 10);
+        // var encodedABI = transfer.encodeABI();
+        // var gasPrice = await web3.web3.eth.getGasPrice();
+        // const gasLimit = await contract.methods
+        //   .transfer(destAddress, 10 ** 6 * 10) // the contract function
+        //   .estimateGas({from: myAddress}); // the transaction object
+        // console.log(gasLimit);
+        // var rawTransaction = {
+        //   from: myAddress,
+        //   to: hdtContractAddress,
+        //   data: encodedABI,
+        //   nonce: '0x' + count.toString(16),
+        //   gasPrice: gasPrice,
+        //   gas: gasLimit,
+        //   // chainId: 1,
+        // };
+
+        // web3.web3.eth.accounts
+        //   .signTransaction(rawTransaction, privatekey)
+        //   .then(async signedTx => {
+        //     await web3.web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+        //   })
+        //   .then(function (receipt) {
+        //     console.log('Transaction receipt: ', receipt);
+        //   })
+        //   .then(async req => {
+        //     /* The trx was done. Write your acctions here. For example getBalance */
+        //     const balance = await contract.methods
+        //       .balanceOf(destAddress)
+        //       .call();
+        //     await setBalance(profile, web3, selected);
+        //     return true;
+        //   });
 
         ////////////////////////
       } else if (selected === 'usdt') {
@@ -167,9 +217,9 @@ const Deposit = ({navigation, props}) => {
     await setVisible(!visible);
     await setError({});
   };
-  const showErrorModal = async () => {
+  const showErrorModal = async message => {
     const modalData = {
-      message: 'Please check transaction status or balance.',
+      message: message,
     };
     await setErrorData(modalData);
     await setErrorVisible(!errorVisible);
@@ -181,11 +231,11 @@ const Deposit = ({navigation, props}) => {
     setError(errors);
   }, [errors]);
   useEffect(async () => {
-    console.log('------------------------------');
     let isMount = true;
     if (isMount) {
       if (profile.profiledata && web3) {
-        setBalance(profile, web3, selected);
+        await setBalance(profile, web3, selected);
+        await setMaxBalance(profile, web3, selected);
       }
     }
     return () => {
@@ -203,8 +253,35 @@ const Deposit = ({navigation, props}) => {
         .balanceOf('0x17b546D3179ca33b542eD6BD9fE6656fb5D5b70E')
         .call(); // 29803630997051883414242659
       const format = web3.web3.utils.fromWei(result); // 29803630.997051883414242659
+
       await setMyBalance(format);
       await setLoading(false);
+    }
+  };
+  const setMaxBalance = async (profile, web3, selected) => {
+    if (selected === 'eth') {
+      web3.web3.eth
+        .getBalance(profile.profiledata.address)
+        .then(async wei => {
+          console.log(wei);
+          const balance = web3.web3.utils.fromWei(wei, 'ether');
+          const transactionObject = {
+            from: profile.profiledata.address,
+            to: adminaddress,
+            value: wei,
+          };
+          var estimatedGas = await web3.web3.eth.estimateGas(transactionObject);
+          const gasPrice = await web3.web3.eth.getGasPrice();
+          var maxVal = Math.max(
+            0,
+            balance - (await web3.web3.utils.fromWei(gasPrice)) * estimatedGas,
+          );
+
+          setMaxValue(maxVal);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   };
 
@@ -257,7 +334,7 @@ const Deposit = ({navigation, props}) => {
           />
           <Text style={styles.txt}>Wallet Balance</Text>
           <Input
-            value={myBalance.toString()}
+            value={Number(myBalance).toFixed(2).toString()}
             disabled
             rightIcon={
               <Picker
