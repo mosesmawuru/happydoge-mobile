@@ -112,7 +112,7 @@ const SwapToHdt = ({navigation, props}) => {
               value={
                 checked
                   ? Number(profile.profiledata.countETH).toFixed(2).toString()
-                  : Number(countETH).toFixed(2).toString()
+                  : countETH.toString()
               }
               placeholder="Please input ETH "
               onChangeText={message => {

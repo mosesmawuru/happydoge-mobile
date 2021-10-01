@@ -111,7 +111,7 @@ const SwapToEth = ({navigation, props}) => {
               value={
                 checked
                   ? Number(profile.profiledata.countHDT).toFixed(2).toString()
-                  : Number(countHDT).toFixed(2).toString()
+                  : countHDT.toString()
               }
               placeholder="Please input HDT Balance"
               onChangeText={message => {

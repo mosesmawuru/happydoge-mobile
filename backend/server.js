@@ -10,10 +10,12 @@ const isEmpty = require("./utils/is-Empty");
 //@import
 const User = require("./models/User");
 const Exchange = require("./models/Exchange");
+const History = require("./models/History");
 require("dotenv").config();
 const getBalance = require("./routes/getBalance");
 const { deposit, tranferCrypto } = require("./routes/deposit");
 const { approve, reject } = require("./routes/admin");
+const moment = require("moment");
 const app = express();
 
 // Connect Database
@@ -97,7 +99,14 @@ const doEveryMinute = async (socket) => {
 
                 const saveUser = await userdata.save();
                 const itemUser = await item.save();
-                if (saveUser && itemUser) {
+                const newHistory = new History({
+                  method: "hdt",
+                  to_address: userdata.address,
+                  amount: itemUser.earned_amount,
+                  type: 7,
+                });
+                const saveHistory = await newHistory.save();
+                if (saveUser && itemUser && saveHistory) {
                   const data = {
                     id: itemUser.user,
                     message: "Staking is completed",
@@ -107,11 +116,14 @@ const doEveryMinute = async (socket) => {
                 }
               }
             } else if (item.end_date > currentHour) {
+              console.log(currentHour, item.currentDate);
               var seconds =
                 Math.floor(new Date(currentHour) - new Date(item.currentDate)) /
                 1000;
+              console.log(seconds);
               var minutes = Math.floor(seconds / 60);
               var hours = Math.floor(minutes / 60);
+              console.log(hours);
               if (hours === 1) {
                 if (isEmpty(hdtitem.stack_rate)) {
                   return res.status(400).send({
@@ -140,10 +152,68 @@ const doEveryMinute = async (socket) => {
                       )) /
                       36e5;
 
-                  item.currentDate = currentHour;
+                  item.currentDate = moment(item.date).add(hours, "hours");
                   const saveUser = await userdata.save();
                   const itemUser = await item.save();
-                  if (saveUser && itemUser) {
+
+                  const newHistory = new History({
+                    method: "hdt",
+                    to_address: userdata.address,
+                    amount: staked_amount,
+                    type: 4,
+                  });
+                  const saveHistory = await newHistory.save();
+                  console.log(saveUser, itemUser, saveHistory);
+                  if (saveUser && itemUser && saveHistory) {
+                    const data = {
+                      id: itemUser.user,
+                      message: "Hourly stake is completed",
+                      amount: staked_amount,
+                    };
+                    socket.emit("hourly_stake", data);
+                  }
+                }
+              } else if (hours > 1) {
+                if (isEmpty(hdtitem.stack_rate)) {
+                  return res.status(400).send({
+                    error: "Stake rate is not setted",
+                  });
+                } else {
+                  const userdata = await User.findById(item.user);
+                  userdata.countHDT =
+                    userdata.countHDT +
+                    (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                      Math.abs(
+                        new Date(currentHour) - new Date(item.currentDate)
+                      )) /
+                      36e5;
+                  const staked_amount =
+                    (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                      Math.abs(
+                        new Date(currentHour) - new Date(item.currentDate)
+                      )) /
+                    36e5;
+                  item.earned_amount =
+                    item.earned_amount +
+                    (((item.stack_amount * hdtitem.stack_rate) / 100) *
+                      Math.abs(
+                        new Date(currentHour) - new Date(item.currentDate)
+                      )) /
+                      36e5;
+
+                  item.currentDate = moment(item.date).add(hours, "hours");
+                  const saveUser = await userdata.save();
+                  const itemUser = await item.save();
+
+                  const newHistory = new History({
+                    method: "hdt",
+                    to_address: userdata.address,
+                    amount: staked_amount,
+                    type: 4,
+                  });
+                  const saveHistory = await newHistory.save();
+                  console.log(saveUser, itemUser, saveHistory);
+                  if (saveUser && itemUser && saveHistory) {
                     const data = {
                       id: itemUser.user,
                       message: "Hourly stake is completed",
@@ -175,7 +245,14 @@ const doEveryMinute = async (socket) => {
 
                 const saveUser = await userdata.save();
                 const itemUser = await item.save();
-                if (saveUser && itemUser) {
+                const newHistory = new History({
+                  method: "hdt",
+                  to_address: userdata.address,
+                  amount: itemUser.earned_amount,
+                  type: 7,
+                });
+                const saveHistory = await newHistory.save();
+                if (saveUser && itemUser && saveHistory) {
                   const data = {
                     id: itemUser.user,
                     message: "Staking is completed",

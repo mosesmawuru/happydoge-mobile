@@ -17,7 +17,7 @@ const HistorySchema = new mongoose.Schema({
     required: true,
   },
   type: {
-    type: Number, //1=deposit,2=withdraw,3=tranfer, 4=stack,5=swapped,6=referral
+    type: Number, //1=deposit,2=withdraw,3=tranfer,4=hourly_stack,5=swapped,6=referral,7=complete
     required: true,
   },
   date: {

@@ -13,6 +13,7 @@ import styles from './styles';
 import {FlexLayout, CommonText} from '../../components/Common';
 import {addStake} from '../../actions/stackAction';
 import {getPrice} from '../../actions/exchangeAction';
+
 const Stacking = ({navigation}) => {
   const dispatch = useDispatch();
   const [amount, setAmount] = useState();
@@ -68,7 +69,7 @@ const Stacking = ({navigation}) => {
                           paddingTop: 5,
                           paddingBottom: 5,
                           fontWeight: 'bold',
-                          fontSize: 14,
+                          fontSize: 10,
                         }}
                         keyboardType="numeric"
                         onChangeText={msg => {
@@ -117,7 +118,7 @@ const Stacking = ({navigation}) => {
                           paddingTop: 5,
                           paddingBottom: 5,
                           fontWeight: 'bold',
-                          fontSize: 12,
+                          fontSize: 10,
                         }}
                         keyboardType="numeric"
                         onChangeText={msg => {

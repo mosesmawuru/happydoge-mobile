@@ -5,6 +5,7 @@ import styles from './styles';
 import {useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {mainText, subText} from '../../constant/history';
+import moment from 'moment';
 import Header from '../../components/Header';
 const MoreHistory = ({navigation}) => {
   const store = useSelector(state => state.auth);
@@ -31,53 +32,80 @@ const MoreHistory = ({navigation}) => {
                     <View style={styles.rowDiv}>
                       <View style={styles.circle} />
                       <View>
+                        {item.type === 1 ? (
+                          item.method === 'eth' ? (
+                            <Text>Deposit Completed. {item.amount} ETH</Text>
+                          ) : item.method === 'hdt' ? (
+                            <Text>Deposit Completed. {item.amount} HDT</Text>
+                          ) : (
+                            ''
+                          )
+                        ) : item.type === 2 ? (
+                          item.method === 'eth' ? (
+                            <Text>Withdraw Completed. {item.amount} ETH</Text>
+                          ) : item.method === 'hdt' ? (
+                            <Text>Withdraw Completed. {item.amount} HDT</Text>
+                          ) : item.method === 'usdt' ? (
+                            <Text>Withdraw Completed. {item.amount} USDT</Text>
+                          ) : (
+                            ''
+                          )
+                        ) : item.type === 3 ? (
+                          item.method === 'eth' ? (
+                            <Text>
+                              Transferred to{' '}
+                              {item.to_address
+                                ? item.to_address.substring(0, 3) +
+                                  '...' +
+                                  item.to_address.substring(
+                                    item.to_address.length - 3,
+                                    item.to_address,
+                                  )
+                                : ''}{' '}
+                              {item.amount} ETH
+                            </Text>
+                          ) : item.method === 'hdt' ? (
+                            <Text>
+                              Transferred to{' '}
+                              {item.to_address
+                                ? item.to_address.substring(0, 3) +
+                                  '...' +
+                                  item.to_address.substring(
+                                    item.to_address.length - 3,
+                                    item.to_address,
+                                  )
+                                : ''}{' '}
+                              {item.amount} HDT
+                            </Text>
+                          ) : (
+                            ''
+                          )
+                        ) : item.type === 4 ? (
+                          <Text>HDT Staked Successfully {item.amount} HDT</Text>
+                        ) : item.type === 5 ? (
+                          item.method === 'eth' ? (
+                            <Text>{item.amount} ETH Swapped to HDT</Text>
+                          ) : item.method === 'hdt' ? (
+                            <Text>{item.amount} HDT Swapped to ETH</Text>
+                          ) : (
+                            ''
+                          )
+                        ) : item.type === 6 ? (
+                          <Text>
+                            Referral Commission Received. {item.amount} USDT
+                          </Text>
+                        ) : item.type === 7 ? (
+                          <Text>
+                            Staking Reward Added to Balance {item.amount} HDT
+                          </Text>
+                        ) : (
+                          ''
+                        )}
                         <Text>
-                          {item.type === 6
-                            ? subText[0].description
-                            : item.type === 1
-                            ? item.method === 'eth'
-                              ? mainText[1].text
-                              : mainText[5].text
-                            : item.type === 2
-                            ? mainText[1].text
-                            : item.type === 3
-                            ? item.from_address === store.user.address
-                              ? mainText[0].text
-                              : subText[0].description
-                            : item.type === 4
-                            ? mainText[0].text
-                            : item.type === 5
-                            ? mainText[0].text
-                            : ''}
-                        </Text>
-                        <Text>
-                          {item.type === 1
-                            ? 'Deposit Money'
-                            : item.type === 2
-                            ? 'Withdraw Money'
-                            : item.type === 6
-                            ? 'Referral Money'
-                            : item.type === 3
-                            ? 'Transfer Money'
-                            : item.type === 5
-                            ? 'Swapped Money'
-                            : item.type === 4
-                            ? 'Staked HDT'
-                            : ''}
+                          {moment(item.date).format('DD/MM/YYYY hh:mm A')}
                         </Text>
                       </View>
                     </View>
-
-                    <Text>
-                      {item.from_address
-                        ? item.from_address === store.user.address ||
-                          item.type === 4
-                          ? '-'
-                          : ''
-                        : ''}
-                      {item.type === 4 ? '-' : ''}
-                      {item.amount} {item.method === 'eth' ? 'ETH' : 'HDT'}
-                    </Text>
                   </View>
                 );
               })
