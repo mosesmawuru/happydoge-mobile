@@ -13,7 +13,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const { errors, isValid } = validatePrice(req.body);
-    console.log(req.body);
     const { amount, label } = req.body;
     if (!isValid) {
       return res.status(400).send(errors);
@@ -38,7 +37,6 @@ router.post(
                 return res.status(200).json({ msg: "success" });
               })
               .catch((err) => {
-                console.log(err);
                 return res.status(400).json({ errors: err });
               });
           }
@@ -210,7 +208,6 @@ router.post(
         }
       })
       .catch((err) => {
-        console.log(err);
         return res.status(400).json({ errors: err });
       });
   }

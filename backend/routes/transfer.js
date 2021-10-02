@@ -50,7 +50,6 @@ router.post(
               return res.status(200).json({ msg: "success" });
             })
             .catch((err) => {
-              console.log(err);
               return res.status(400).json({ errors: err });
             });
           const newHistory = new History({
