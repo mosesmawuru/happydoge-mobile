@@ -11,7 +11,6 @@ import {getHistoryById} from '../../actions/historyAction';
 import animal from '../../assets/img/doge.png';
 import ethImg from '../../assets/img/eth.png';
 import usdtImg from '../../assets/img/usdt.png';
-import {newText} from '../../constant/history';
 import isEmpty from '../../utils/isEmpty';
 import moment from 'moment';
 
@@ -154,11 +153,13 @@ const Home = ({navigation, props}) => {
                             {item.type === 1 ? (
                               item.method === 'eth' ? (
                                 <Text>
-                                  Deposit Completed. {item.amount} ETH
+                                  Deposit Completed.{' '}
+                                  {Number(item.amount).toFixed(2)} ETH
                                 </Text>
                               ) : item.method === 'hdt' ? (
                                 <Text>
-                                  Deposit Completed. {item.amount} HDT
+                                  Deposit Completed.{' '}
+                                  {Number(item.amount).toFixed(2)} HDT
                                 </Text>
                               ) : (
                                 ''
@@ -166,15 +167,18 @@ const Home = ({navigation, props}) => {
                             ) : item.type === 2 ? (
                               item.method === 'eth' ? (
                                 <Text>
-                                  Withdraw Completed. {item.amount} ETH
+                                  Withdraw Completed.{' '}
+                                  {Number(item.amount).toFixed(2)} ETH
                                 </Text>
                               ) : item.method === 'hdt' ? (
                                 <Text>
-                                  Withdraw Completed. {item.amount} HDT
+                                  Withdraw Completed.{' '}
+                                  {Number(item.amount).toFixed(2)} HDT
                                 </Text>
                               ) : item.method === 'usdt' ? (
                                 <Text>
-                                  Withdraw Completed. {item.amount} USDT
+                                  Withdraw Completed.{' '}
+                                  {Number(item.amount).toFixed(2)} USDT
                                 </Text>
                               ) : (
                                 ''
@@ -191,7 +195,7 @@ const Home = ({navigation, props}) => {
                                         item.to_address,
                                       )
                                     : ''}{' '}
-                                  {item.amount} ETH
+                                  {Number(item.amount).toFixed(2)} ETH
                                 </Text>
                               ) : item.method === 'hdt' ? (
                                 <Text>
@@ -204,31 +208,39 @@ const Home = ({navigation, props}) => {
                                         item.to_address,
                                       )
                                     : ''}{' '}
-                                  {item.amount} HDT
+                                  {Number(item.amount).toFixed(2)} HDT
                                 </Text>
                               ) : (
                                 ''
                               )
                             ) : item.type === 4 ? (
                               <Text>
-                                HDT Staked Successfully {item.amount} HDT
+                                HDT Staked Successfully{' '}
+                                {Number(item.amount).toFixed(2)} HDT
                               </Text>
                             ) : item.type === 5 ? (
                               item.method === 'eth' ? (
-                                <Text>{item.amount} ETH Swapped to HDT</Text>
+                                <Text>
+                                  {Number(item.amount).toFixed(2)} ETH Swapped
+                                  to HDT
+                                </Text>
                               ) : item.method === 'hdt' ? (
-                                <Text>{item.amount} HDT Swapped to ETH</Text>
+                                <Text>
+                                  {Number(item.amount).toFixed(2)} HDT Swapped
+                                  to ETH
+                                </Text>
                               ) : (
                                 ''
                               )
                             ) : item.type === 6 ? (
                               <Text>
-                                Referral Commission Received. {item.amount} USDT
+                                Referral Commission.{' '}
+                                {Number(item.amount).toFixed(2)} USDT
                               </Text>
                             ) : item.type === 7 ? (
                               <Text>
-                                Staking Reward Added to Balance {item.amount}{' '}
-                                HDT
+                                Staking Reward Added to Balance{' '}
+                                {Number(item.amount).toFixed(2)} HDT
                               </Text>
                             ) : (
                               ''

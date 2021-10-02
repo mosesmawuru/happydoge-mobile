@@ -7,7 +7,7 @@ import {useTheme} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from './styles';
-import animal from '../../assets/img/animal.png';
+import animal from '../../assets/img/doge.png';
 
 import Header from '../../components/Header';
 import {getUser} from '../../actions/profileAction';
@@ -18,6 +18,7 @@ const Profile = ({navigation, props}) => {
   const profile = useSelector(state => state.profile);
   const [isCopied, setIsCopied] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
+
   const onCopyText = flag => {
     if (flag === 'address') {
       setIsCopied(true);
@@ -128,7 +129,16 @@ const Profile = ({navigation, props}) => {
 
               <Input
                 placeholder="Referral Code"
-                value={store.user.owncode}
+                value={
+                  profile.profiledata.owncode
+                    ? profile.profiledata.owncode.substring(0, 6) +
+                      '....' +
+                      profile.profiledata.owncode.substring(
+                        profile.profiledata.owncode.length - 6,
+                        profile.profiledata.owncode.length,
+                      )
+                    : ''
+                }
                 disabled
                 rightIcon={
                   <Icon
@@ -147,7 +157,16 @@ const Profile = ({navigation, props}) => {
 
                   <Input
                     placeholder="Referral Code"
-                    value={store.user.referralcode}
+                    value={
+                      store.user.referralcode
+                        ? store.user.referralcode.substring(0, 6) +
+                          '....' +
+                          store.user.referralcode.substring(
+                            store.user.referralcode.length - 6,
+                            store.user.referralcode.length,
+                          )
+                        : ''
+                    }
                     disabled
                     rightIcon={
                       <Icon

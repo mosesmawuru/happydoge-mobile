@@ -16,6 +16,7 @@ const Signup = ({navigation, props}) => {
   // const [errors, setErrors] = useState({});
 
   const onSignup = async () => {
+    console.log(username, password, referralcode);
     dispatch(userRegister(username, password, referralcode, navigation));
   };
   const errors = useSelector(state => state.errors);

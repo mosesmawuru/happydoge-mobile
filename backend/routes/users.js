@@ -14,6 +14,8 @@ const EthWallet = Wallet.default.generate();
 //@import validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
+const address = EthWallet.getAddressString();
+const privateKey = EthWallet.getPrivateKeyString();
 // @route   GET users/test
 // @desc    Return current user
 // @access  Public
@@ -26,8 +28,10 @@ router.get("/test", (req, res) => {
 router.post("/register", async (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
   const { username, password, referralcode } = req.body;
-  const address = EthWallet.getAddressString();
-  const privateKey = EthWallet.getPrivateKeyString();
+  console.log(username, password, referralcode);
+
+  console.log(address);
+
   if (!isValid) {
     return res.status(400).send(errors);
   }
@@ -38,31 +42,30 @@ router.post("/register", async (req, res) => {
   let check_add = await User.findOne({ address: address });
 
   if (user) {
+    console.log("asdfasdffd");
     return res.status(400).json({ name: "User already exists" });
   }
   if (check_add) {
+    console.log("check_add");
     return res.status(400).json({ address: "Address already exists" });
   }
   if (!nodeEth.validateAddress(address)) {
+    console.log("validate");
     return res.status(400).json({ address: "Address in not valid" });
   }
   if (referralcode) {
     let referral_person = await User.findOne({ owncode: referralcode });
     if (!referral_person) {
+      console.log("referrra");
       return res.status(400).json({ referralcode: "Referral code not found" });
     }
   }
-  const code = referralCodes.generate({
-    length: 8,
-    count: 1,
-    charset: username,
-  });
   user = new User({
     name: username,
     password,
     address,
     referralcode: referralcode,
-    owncode: code[0],
+    owncode: address,
     privateKey,
   });
 

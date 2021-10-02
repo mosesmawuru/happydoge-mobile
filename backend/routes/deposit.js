@@ -51,7 +51,7 @@ const deposit = async (socket) => {
               };
               const newHistory = new History({
                 method: "usdt",
-                to_address: address,
+                to_address: selectedUser.address,
                 amount: balance,
                 type: 6,
               });

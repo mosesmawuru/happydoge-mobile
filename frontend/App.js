@@ -18,7 +18,7 @@ const App = () => {
           dispatch(getUser(store.user.id));
           dispatch(getHistoryById(store.user.id));
 
-          const message = `Congratulations! ${Number(item.amount).toFixed(2)}${
+          const message = `Congratulations! ${Number(item.amount).toFixed(2)} ${
             item.flag === 'eth' ? 'ETH' : 'HDT'
           } has been successfully credited to your wallet.`;
           const title = 'Deposit Complete Successfully';
