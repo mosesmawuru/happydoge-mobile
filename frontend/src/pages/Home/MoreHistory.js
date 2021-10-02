@@ -34,19 +34,34 @@ const MoreHistory = ({navigation}) => {
                       <View>
                         {item.type === 1 ? (
                           item.method === 'eth' ? (
-                            <Text>Deposit Completed. {item.amount} ETH</Text>
+                            <Text>
+                              Deposit Completed.{' '}
+                              {Number(item.amount).toFixed(2)} ETH
+                            </Text>
                           ) : item.method === 'hdt' ? (
-                            <Text>Deposit Completed. {item.amount} HDT</Text>
+                            <Text>
+                              Deposit Completed.{' '}
+                              {Number(item.amount).toFixed(2)} HDT
+                            </Text>
                           ) : (
                             ''
                           )
                         ) : item.type === 2 ? (
                           item.method === 'eth' ? (
-                            <Text>Withdraw Completed. {item.amount} ETH</Text>
+                            <Text>
+                              Withdraw Completed.{' '}
+                              {Number(item.amount).toFixed(2)} ETH
+                            </Text>
                           ) : item.method === 'hdt' ? (
-                            <Text>Withdraw Completed. {item.amount} HDT</Text>
+                            <Text>
+                              Withdraw Completed.{' '}
+                              {Number(item.amount).toFixed(2)} HDT
+                            </Text>
                           ) : item.method === 'usdt' ? (
-                            <Text>Withdraw Completed. {item.amount} USDT</Text>
+                            <Text>
+                              Withdraw Completed.{' '}
+                              {Number(item.amount).toFixed(2)} USDT
+                            </Text>
                           ) : (
                             ''
                           )
@@ -62,7 +77,7 @@ const MoreHistory = ({navigation}) => {
                                     item.to_address,
                                   )
                                 : ''}{' '}
-                              {item.amount} ETH
+                              {Number(item.amount).toFixed(2)} ETH
                             </Text>
                           ) : item.method === 'hdt' ? (
                             <Text>
@@ -75,28 +90,39 @@ const MoreHistory = ({navigation}) => {
                                     item.to_address,
                                   )
                                 : ''}{' '}
-                              {item.amount} HDT
+                              {Number(item.amount).toFixed(2)} HDT
                             </Text>
                           ) : (
                             ''
                           )
                         ) : item.type === 4 ? (
-                          <Text>HDT Staked Successfully {item.amount} HDT</Text>
+                          <Text>
+                            HDT Staked Successfully{' '}
+                            {Number(item.amount).toFixed(2)} HDT
+                          </Text>
                         ) : item.type === 5 ? (
                           item.method === 'eth' ? (
-                            <Text>{item.amount} ETH Swapped to HDT</Text>
+                            <Text>
+                              {Number(item.amount).toFixed(2)} ETH Swapped to
+                              HDT
+                            </Text>
                           ) : item.method === 'hdt' ? (
-                            <Text>{item.amount} HDT Swapped to ETH</Text>
+                            <Text>
+                              {Number(item.amount).toFixed(2)} HDT Swapped to
+                              ETH
+                            </Text>
                           ) : (
                             ''
                           )
                         ) : item.type === 6 ? (
                           <Text>
-                            Referral Commission Received. {item.amount} USDT
+                            Referral Commission.{' '}
+                            {Number(item.amount).toFixed(2)} USDT
                           </Text>
                         ) : item.type === 7 ? (
                           <Text>
-                            Staking Reward Added to Balance {item.amount} HDT
+                            Staking Reward Added to Balance{' '}
+                            {Number(item.amount).toFixed(2)} HDT
                           </Text>
                         ) : (
                           ''

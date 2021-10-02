@@ -1,17 +1,27 @@
 const express = require("express");
 //@import models
 const Withdraw = require("../models/Withdraw");
+const History = require("../models/History");
 const User = require("../models/User");
 const approve = async (socket) => {
   socket.on("approve", async (item) => {
-    const id = item;
+    const { id, amount, flag, address } = item;
     Withdraw.findByIdAndUpdate(
       id,
       { $set: { status: 1, date: Date.now() } },
       { new: true }
     )
-      .then((item) => {
-        socket.emit("app_transaction", item);
+      .then(async (item) => {
+        const newHistory = new History({
+          method: flag,
+          to_address: address,
+          amount: amount,
+          type: 2,
+        });
+        const hisFlag = await newHistory.save();
+        if (hisFlag) {
+          socket.emit("app_transaction", item);
+        }
       })
       .catch((err) => {
         console.log(err);

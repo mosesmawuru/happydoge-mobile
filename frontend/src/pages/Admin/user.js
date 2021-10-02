@@ -34,6 +34,7 @@ const MyComponent = ({navigation, props}) => {
   const socket = useSelector(state => state.socket);
   const web3 = useSelector(state => state.web3);
   const price = useSelector(state => state.price);
+  const auth = useSelector(state => state.auth);
 
   useEffect(() => {
     let isMount = true;
@@ -59,6 +60,8 @@ const MyComponent = ({navigation, props}) => {
   };
   const onApprove = async item => {
     setLoading(true);
+    setVisible(false);
+
     if (item.method === 'eth') {
       const adminaddress = '0x9C817E9A34ED3f6da12B09B4fcB6B90da461bAc6';
       const privateKey =
@@ -86,7 +89,12 @@ const MyComponent = ({navigation, props}) => {
       tran.on('transactionHash', async hash => {});
 
       tran.on('receipt', async receipt => {
-        await socket.socket.emit('approve', item._id);
+        await socket.socket.emit('approve', {
+          id: item._id,
+          amount: (item.amount * 100) / price.pricedata.withdraw_rate,
+          address: auth.user.address,
+          flag: 'eth',
+        });
         await dispatch(getWithdraw());
         await setLoading(false);
         await setVisible(false);
@@ -96,6 +104,7 @@ const MyComponent = ({navigation, props}) => {
         showErrorModal(err.message);
       });
     } else if (item.method === 'hdt') {
+    } else if (item.method === 'usdt') {
     }
   };
   const MusicRoute = () => (
@@ -115,7 +124,7 @@ const MyComponent = ({navigation, props}) => {
           .map((item, key) => {
             return (
               <View key={key + 1}>
-                <ListItem.Swipeable
+                <ListItem
                   onPress={() => {
                     onClickItem(item);
                   }}
@@ -195,7 +204,7 @@ const MyComponent = ({navigation, props}) => {
                     </ListItem.Subtitle>
                   </ListItem.Content>
                   <ListItem.Chevron />
-                </ListItem.Swipeable>
+                </ListItem>
               </View>
             );
           })
@@ -271,7 +280,12 @@ const MyComponent = ({navigation, props}) => {
   return (
     <>
       <Header text="Transactions" navigation={navigation} />
-      <TransDetail visible={visible} item={item} setVisible={setVisible} />
+      <TransDetail
+        visible={visible}
+        item={item}
+        setVisible={setVisible}
+        onApprove={onApprove}
+      />
       <SearchBar
         placeholder="Type Here..."
         onChangeText={setSearch}

@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   headerView: {flex: 0.15},
   countView: {flex: 0.7},
-  idView: {flex: 0.2, flexDirection: 'row'},
+  idView: {flex: 0.23, flexDirection: 'row'},
   submitButtonStyle: {
     marginTop: 25,
     paddingTop: 8,

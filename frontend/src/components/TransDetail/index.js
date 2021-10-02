@@ -4,7 +4,6 @@ import {Overlay, Text} from 'react-native-elements';
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 export const TransDetail = props => {
-  console.log(props.item);
   return (
     <Overlay
       overlayStyle={styles.container}
@@ -53,17 +52,9 @@ export const TransDetail = props => {
             style={styles.submitButtonStyle}
             activeOpacity={0.5}
             onPress={() => {
-              console.log(props.item);
+              props.onApprove(props.item);
             }}>
             <Text style={styles.TextStyle}>Approve</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.submitButtonStyle}
-            activeOpacity={0.5}
-            onPress={() => {
-              console.log(props.item);
-            }}>
-            <Text style={styles.TextStyle}>Reject</Text>
           </TouchableOpacity>
         </View>
       </View>

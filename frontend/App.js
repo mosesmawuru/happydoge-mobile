@@ -95,6 +95,23 @@ const App = () => {
           service.localNotif(message, title);
         }
       });
+      // socket.socket.on('rej_transaction', item => {
+      //   if (store.user.address === item.user) {
+      //     dispatch(getUser(store.user.id));
+      //     dispatch(getHistoryById(store.user.id));
+      //     const message = `Congratulations! ${Number(item.amount).toFixed(2)} ${
+      //       item.method === 'eth'
+      //         ? 'ETH'
+      //         : item.method === 'hdt'
+      //         ? 'HDT'
+      //         : item.method === 'usdt'
+      //         ? 'USDT'
+      //         : ''
+      //     } has been successfully Transferred.`;
+      //     const title = 'Transfer Complete Successfully';
+      //     service.localNotif(message, title);
+      //   }
+      // });
     }
   }, [socket]);
   return <Routes />;

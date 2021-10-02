@@ -1,13 +1,16 @@
 //@import models
 const User = require("../models/User");
 const History = require("../models/History");
-const Referral = require("../models/Referral");
+const Exchange = require("../models/Exchange");
+//@import util
+const isEmpty = require("../utils/is-Empty");
 const axios = require("axios");
 
 const deposit = async (socket) => {
   socket.on("deposit", async (item) => {
     const { id, address, flag, amount } = item;
     const userdata = await User.findById(id);
+    const value = await Exchange.findOne({});
     if (userdata) {
       if (flag === "eth") {
         userdata.countETH = userdata.countETH + amount;
@@ -40,10 +43,15 @@ const deposit = async (socket) => {
             const selectedUser = await User.findOne({
               owncode: item.referralcode,
             });
-
+            if (isEmpty(value.referral_rate)) {
+              socket.emit("failed_deposit", {
+                err: "referral_rate is not setted",
+              });
+            }
             if (selectedUser) {
               const balance =
-                ((ethPrice.data.weightedAvgPrice * amount) / 100) * 30;
+                ((ethPrice.data.weightedAvgPrice * amount) / 100) *
+                value.referral_rate;
               selectedUser.countUSDT = selectedUser.countUSDT + balance;
               const sendUser = {
                 address: selectedUser.address,
