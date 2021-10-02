@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   headerView: {flex: 0.2},
   checkView: {flex: 0.3},
-  countView: {flex: 0.15},
+  countView: {flex: 0.2},
 
   idView: {flex: 0.2},
 });

@@ -51,15 +51,11 @@ const Deposit = ({navigation, props}) => {
       setError({amount: 'Please input correct balance'});
     } else {
       setLoading(true);
-      console.log(selected);
+
       if (selected === 'eth') {
         if (Number(maxValue) === 0) {
           setError({amount: 'Please input correct balance'});
         } else {
-          var count = await web3.web3.eth.getTransactionCount(
-            profile.profiledata.address,
-          );
-          var gasPrice = await web3.web3.eth.getGasPrice();
           const amount = await web3.web3.utils.toWei(
             maxValue.toString(),
             'ether',
@@ -102,7 +98,6 @@ const Deposit = ({navigation, props}) => {
               });
               sentTx.on('error', err => {
                 showErrorModal(err.message);
-
                 // do something on transaction error
               });
             });
@@ -263,7 +258,6 @@ const Deposit = ({navigation, props}) => {
       web3.web3.eth
         .getBalance(profile.profiledata.address)
         .then(async wei => {
-          console.log(wei);
           const balance = web3.web3.utils.fromWei(wei, 'ether');
           const transactionObject = {
             from: profile.profiledata.address,

@@ -20,14 +20,23 @@ const deposit = async (socket) => {
       userdata
         .save()
         .then(async (item) => {
+          const newHistory = new History({
+            method: flag,
+            to_address: address,
+            amount: amount,
+            type: 1,
+          });
           const data = {
             amount,
             address,
             flag,
           };
-          socket.emit("success_deposit", data);
+          const hisFlag = await newHistory.save();
+          if (hisFlag) {
+            socket.emit("success_deposit", data);
+          }
 
-          if (item.referralcode) {
+          if (item.referralcode && flag === "eth") {
             const selectedUser = await User.findOne({
               owncode: item.referralcode,
             });
@@ -40,21 +49,16 @@ const deposit = async (socket) => {
                 address: selectedUser.address,
                 balance,
               };
-              const depoHistory = new History({
-                method: flag,
+              const newHistory = new History({
+                method: "usdt",
                 to_address: address,
-                amount,
-                type: 1,
+                amount: balance,
+                type: 6,
               });
-              const newReferral = new Referral({
-                address: selectedUser.address,
-                referral_amount: balance,
-              });
-
               const selUser = await selectedUser.save();
-              const refUser = await newReferral.save();
-              const depoFlag = await depoHistory.save();
-              if (selUser && refUser && depoFlag) {
+              const refUser = await newHistory.save();
+
+              if (selUser && refUser) {
                 socket.emit("referral_deposit", sendUser);
               }
             }

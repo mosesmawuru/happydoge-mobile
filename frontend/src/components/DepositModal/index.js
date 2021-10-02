@@ -29,7 +29,8 @@ export const DepositModal = props => {
         </View>
         <View style={styles.countView}>
           <Text style={styles.countText}>
-            {props.item.flag === 'eth' ? 'ETH' : 'HDT'} {props.item.amount}
+            {props.item.flag === 'eth' ? 'ETH' : 'HDT'}{' '}
+            {Number(props.item.amount).toFixed(2)}
           </Text>
         </View>
         <View style={styles.idView}>
